@@ -8,7 +8,8 @@
 
 module cpu_adapter_tb;
     reg clk;
-        
+    reg rst;
+    
     reg [`BYTE_ADDR_WIDTH-1:0] byte_rd_addr;
     reg cpu_rd_en;
     reg [1:0] transfer_sz;
@@ -28,6 +29,7 @@ module cpu_adapter_tb;
         $dumplimit(1024000);
             
         clk <= 0;
+        rst <= 0;
         byte_rd_addr <= 'hd;
         cpu_rd_en <= 0;
         transfer_sz <= 0;
@@ -58,11 +60,12 @@ module cpu_adapter_tb;
     cpu_adapter # (
         .BYTE_ADDR_WIDTH(`BYTE_ADDR_WIDTH), 
         .ADDR_WIDTH(`ADDR_WIDTH),
-        .BUF_IN(0),
+        .BUF_IN(1),
         .BUF_OUT(1),
-        .PESS(0)
+        .PESS(1)
     ) DUT (
         .clk(clk),
+        .rst(rst),
         
         .byte_rd_addr(byte_rd_addr), 
         .cpu_rd_en(cpu_rd_en), 
