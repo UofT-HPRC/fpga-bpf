@@ -103,15 +103,20 @@ module p_ng # (
     
     assign byte_length = byte_length_i;
     
-    //Declare internal signals. These may get hooked up directly to module
-    //inputs or outputs, or buffered, depending on parameters
+    /************************************/
+    /**Forward-declare internal signals**/
+    /************************************/
     wire rd_en_i;
     wire wr_en_i; 
     wire [ADDR_WIDTH-1:0] addr_i; 
     wire [SN_FWD_WIDTH-1:0] idata_i;
     wire [SN_FWD_WIDTH-1:0] odata_i;
-
-//////Select whether the inputs are buffered or not
+    
+    /***************************************/
+    /**Assign internal signals from inputs**/
+    /***************************************/
+    
+    //Select whether the inputs are buffered or not
 generate
     if (BUF_IN) begin
         reg rd_en_r = 0;                     
@@ -146,6 +151,10 @@ generate
     end
 endgenerate
 
+    /****************/
+    /**Do the logic**/
+    /****************/
+
     wire [ADDR_WIDTH-1:0] addrb;
     assign addrb = addr_i + 1;
 
@@ -169,7 +178,11 @@ endgenerate
         .dob(odata_i[PORT_WIDTH-1:0]) //@1
     );
     
-//////Select whether the outputs are buffered or not
+    /****************************************/
+    /**Assign outputs from internal signals**/
+    /****************************************/
+    
+    //Select whether the outputs are buffered or not
 generate
     if (BUF_OUT) begin
         reg [SN_FWD_WIDTH-1:0] odata_r = 0;
