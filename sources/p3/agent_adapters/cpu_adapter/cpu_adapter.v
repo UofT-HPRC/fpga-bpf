@@ -28,7 +28,7 @@ C1: (Input: bigword; Output: resized_mem_data)
 
 
 //I kept needing this value in the code
-`define N (BYTE_ADDR_WIDTH - ADDR_WIDTH)
+`define N (BYTE_ADDR_WIDTH - ADDR_WIDTH - 1)
 
 //Assumes that 2**ADDR_WIDTH * PORT_DATA_WIDTH == 2**BYTE_ADDR_WIDTH
 //where PORT_DATA_WIDTH is in bytes
@@ -73,7 +73,7 @@ module cpu_adapter # (
     
     //Need to hang onto transfer_sz until memory returns the value
     wire [1:0] transfer_sz_i;
-    reg [1:0] transfer_sz_r [0:MEM_LAT-1];
+    reg [2*MEM_LAT-1:0] transfer_sz_r;
     
     wire rd_en_i;
     wire [ADDR_WIDTH-1:0] word_rd_addra_i;
@@ -87,7 +87,7 @@ module cpu_adapter # (
     //This is the offset into bigword. We'll grab it in cycle 0, and hold it
     //until the memory is ready
     wire [`N-1:0] offset_i;
-    reg [`N-1:0] offset_r [0:MEM_LAT-1];
+    reg [`N*MEM_LAT-1:0] offset_r;
     
     
     
@@ -102,18 +102,18 @@ module cpu_adapter # (
     assign bigword_i = bigword;
     
     //Buffer transfer_sz for MEM_LAT cycles
-    always @(posedge clk) transfer_sz_r[0] <= transfer_sz;
+    always @(posedge clk) transfer_sz_r[1:0] <= transfer_sz[1:0];
     for (i = 1; i < MEM_LAT; i = i + 1) begin
-        always @(posedge clk) transfer_sz_r[i] <= transfer_sz_r[i-1];
+        always @(posedge clk) transfer_sz_r[2*(i+1)-1 -: 2] <= transfer_sz_r[2*i-1 -: 2];
     end
-    assign transfer_sz_i = transfer_sz_r[MEM_LAT-1];
+    assign transfer_sz_i = transfer_sz_r[2*MEM_LAT-1 -: 2];
     
     //Buffer offset for MEM_LAT cycles
-    always @(posedge clk) offset_r[0] <= byte_rd_addr_i[`N-1:0];
+    always @(posedge clk) offset_r[`N-1:0] <= byte_rd_addr_i[`N-1:0];
     for (i = 1; i < MEM_LAT; i = i + 1) begin
-        always @(posedge clk) offset_r[i] <= offset_r[i-1];
+        always @(posedge clk) offset_r[`N*(i+1) - 1 -: `N] <= offset_r[`N*i -1 -: `N];
     end
-    assign offset_i = offset_r[MEM_LAT-1];
+    assign offset_i = offset_r[`N*MEM_LAT-1 -: `N];
     
     
     /****************/
@@ -130,7 +130,7 @@ module cpu_adapter # (
     
     //This "selected" vector is the desired part of the bigword, based on the offset
     wire [31:0] selected;
-    assign selected = bigword[(DATA_WIDTH - {offset_i, 3'b0} )-1 -: 32];
+    assign selected = bigword_i[(DATA_WIDTH - {offset_i, 3'b0} )-1 -: 32];
     
     //resized_mem_data is zero-padded if you ask for a smaller size
     assign resized_mem_data_i[7:0] = (transfer_sz_i == `BPF_W) ? selected[7:0]: 

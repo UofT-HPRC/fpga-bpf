@@ -20,6 +20,7 @@ module cpu_adapter_tb;
     wire [31:0] resized_mem_data;
 
     integer fd;
+    integer dummy;
 
     initial begin
         $dumpfile("cpu_adapter.vcd");
@@ -39,16 +40,26 @@ module cpu_adapter_tb;
         end
         while($fgetc(fd) != "\n") begin end //Skip first line of comments
         
-        #200 $finish;
+        #2000 $finish;
     end
 
     always #5 clk <= ~clk;
-
+    
+    always @(posedge clk) begin
+        if ($feof(fd)) begin
+            $display("Reached end of drivers file");
+            #20
+            $finish;
+        end
+        #0.01
+        dummy = $fscanf(fd, "%h%b%b%h", byte_rd_addr, cpu_rd_en, transfer_sz, bigword);
+    end
+    
     cpu_adapter # (
         .BYTE_ADDR_WIDTH(`BYTE_ADDR_WIDTH), 
         .ADDR_WIDTH(`ADDR_WIDTH),
         .BUF_IN(0),
-        .BUF_OUT(0),
+        .BUF_OUT(1),
         .PESS(0)
     ) DUT (
         .clk(clk),

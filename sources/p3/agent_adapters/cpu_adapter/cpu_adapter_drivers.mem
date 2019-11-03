@@ -1,3 +1,11 @@
-Nothing in here!
-
-Check again later
+byte_rd_addr    rd_en   transfer_sz     bigword (memory latency of 3)
+7               1       00              1001200230034004
+10              1       01              5005600670078008
+2               1       10              9009A00AB00BC00C
+0               1       00              DEADBEEFCAFEDEAD
+0               0       00              FAFFADAFFABEDAFF
+0               0       00              BAAAAAAAAAAAAAAD
+0               0       00              ABCDEF0123456789
+0               0       00              5555555555555555
+0               0       00              5555555555555555
+0               0       00              5555555555555555
