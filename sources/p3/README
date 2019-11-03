@@ -1,0 +1,37 @@
+This directory contains the files for the "ping-pang-pong" system (which I call 
+p3).
+
+Essentially, the packet filter has three agents, which all need access to 
+memory:
+
+ - The snooper
+ - The CPU
+ - The forwarder
+ 
+To allow them all to run in parallel, I have three BRAMS, which I call ping, 
+pang, and pong. The goal of the p3 system is to internally connect each of the 
+three agents to a BRAM.
+
+The general structure is like this:
+
+                   +-------------------------------------------+
+                   |           +---------+                     |
++-------------+    |           | P3 CTRL |        +----------+ |
+|   Snooper   |<--------+      +---------+   +--->|   Ping   | |
++-------------+    |    |          |||       |    +----------+ |
+                   |    |      +---------+   |                 |
++-------------+    |    +----->|         |<--+    +----------+ |
+|     CPU     |<-------------->|  MUXES  |<------>|   Pang   | |
++-------------+    |    +----->|         |<--+    +----------+ |
+                   |    |      +---------+   |                 |
++-------------+    |    |                    |    +----------+ |
+|  Forwarder  |<--------+                    +--->|   Pong   | |
++-------------+    |                              +----------+ |
+                   |                                           |
+                   +-------------------------------------------+
+                                    P3 System
+
+
+There is one extra snag: each of the agents has a slightly different interface. 
+So, each of the lines from the agents to the MUXes actually has a different 
+adapter.
