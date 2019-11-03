@@ -34,4 +34,25 @@ The general structure is like this:
 
 There is one extra snag: each of the agents has a slightly different interface. 
 So, each of the lines from the agents to the MUXes actually has a different 
-adapter.
+adapter. So, actually, it's more like:
+
+
+                   +-------------------------------------------+
+                   |           +---------+                     |
++-------------+    |           | P3 CTRL |        +----------+ |
+|   Snooper   |<--------+      +---------+   +--->|   Ping   | |
++-------------+    |   /\          |||       |    +----------+ |
+                   |   \/      +---------+   |                 |
++-------------+    |    +----->|         |<--+    +----------+ |
+|     CPU     |<----/\-------->|  MUXES  |<------>|   Pang   | |
++-------------+    |\/  +----->|         |<--+    +----------+ |
+                   |   /\      +---------+   |                 |
++-------------+    |   \/                    |    +----------+ |
+|  Forwarder  |<--------+                    +--->|   Pong   | |
++-------------+    |                              +----------+ |
+                   |                                           |
+                   +-------------------------------------------+
+                                    P3 System
+
+where /\ is an adapter.
+      \/

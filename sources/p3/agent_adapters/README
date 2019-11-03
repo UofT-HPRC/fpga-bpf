@@ -1,0 +1,55 @@
+The interface to a p_ng buffer looks like this:
+
+p_ng buffer
+-----------
+input@0 rd_en
+input@0 wr_en
+input@0 [ADDR_WIDTH-1:0] addr
+input@0 [SN_FWD_WIDTH-1:0] idata
+input@0 [8:0] byte_inc
+output@1 [SN_FWD_WIDTH-1:0] odata
+output@1 [32:0] byte_length 
+
+
+However, the agents each have a specific interface:
+
+
+Snooper
+-------
+input@0 ready_for_sn
+output@0 [SN_FWD_WIDTH-1:0] wr_data
+output@0 [ADDR_WIDTH-1-1:0] wr_addr
+output@0 wr_enable
+output@0 [8:0] byte_inc
+output@0 sn_done
+
+The ready_for_sn and sn_done signals are used by the p3 controller
+Also note the smaller address size
+
+
+Forwarder
+---------
+input@0 ready_for_fwd
+input@0 [31:0] bytes
+output@0 [ADDR_WIDTH-1-1:0] rd_addr
+output@0 rd_enable
+output@0 fwd_done
+
+input@1 [SN_FWD_WIDTH-1:0] rd_data
+
+
+
+CPU
+---
+input@0 ready_for_cpu
+input@0 [31:0] bytes
+output@0 [BYTE_ADDR_WIDTH-1:0] rd_addr
+output@0 rd_enable
+output@0 transfer_sz
+output@0 cpu_acc
+output@0 cpu_rej
+
+input@1 [31:0] rd_data
+
+This one takes the most effort to adapt to. Note that BYTE_ADDR_WIDTH can be 
+whatever you want in relation to ADDR_WIDTH

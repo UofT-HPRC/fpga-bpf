@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Sun Nov  3 21:59:00 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/p3/agent_adapters/cpu_adapter/cpu_adapter.vcd"
+[dumpfile_mtime] "Sun Nov  3 21:58:12 2019"
+[dumpfile_size] 1899
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/p3/agent_adapters/cpu_adapter/cpu_adapter.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-14.757648 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] cpu_adapter_tb.
+[sst_width] 214
+[signals_width] 206
+[sst_expanded] 1
+[sst_vpaned_height] 317
+@28
+cpu_adapter_tb.clk
+@22
+cpu_adapter_tb.byte_rd_addr[11:0]
+@28
+cpu_adapter_tb.cache_hit
+@22
+cpu_adapter_tb.cached_data[31:0]
+@28
+cpu_adapter_tb.cpu_rd_en
+@420
+cpu_adapter_tb.fd
+@28
+cpu_adapter_tb.rd_en
+@22
+cpu_adapter_tb.resized_mem_data[31:0]
+@28
+cpu_adapter_tb.transfer_sz[1:0]
+@22
+cpu_adapter_tb.DUT.word_rd_addra_i[8:0]
+@200
+-CPU
+@23
+cpu_adapter_tb.DUT.offset_i[2:0]
+[pattern_trace] 1
+[pattern_trace] 0

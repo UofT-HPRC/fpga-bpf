@@ -2,13 +2,12 @@ This Verilog file should synthesize to a dual-port BRAM.
 
 Suppose I want my snooper/forwarder to have a data width of 128. Internally, I 
 will actually make a dual-port BRAM with width 128/2. When the snooper and 
-forwarder request an address, I append a zero to it, or append one if it was 
-odd.
+forwarder request an address, I append a zero to it.
 
 Example: Snooper requests adress 0x3. This means the snooper wants the 4th 128 
 bit word. Since our memory uses 64 bit word addressing, this means we actually 
-want the 8th and 9th 64 bit words. Since the address was odd, a one was 
-appended and it became 0x7.
+want the 7th and 8th 64 bit words. We appended a zero to the address to get 
+0x6.
 
 Why would I do this?
 
