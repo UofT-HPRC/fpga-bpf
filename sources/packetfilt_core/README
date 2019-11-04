@@ -1,15 +1,35 @@
 These files form the "packet filter core". Essentially, this is the common 
 denominator to all the different variations you can make of the packet filter.
 
-Essentially, this is simply a CPU and the P3 system. The exposed interface is:
+Diagram:
+                +-------------------------------------+
+                |                     +-------------+ |
+                |                     |             | |
+Snooper---------|-------------------->|             | |
+                |                     |             | |
+Forwarder-------|-------------------->|  P3 System  | |
+                |          +-----+    |             | |
+New code--------|----+     | CPU |<-->|             | |
+                |    |     +-----+    |             | |
+                |    |        ^       +-------------+ |
+                |    |        |                       |
+                |    |        v                       |
+                |    |   +----------+                 |
+                |    +-->| inst mem |                 |
+                |        +----------+                 |
+                +-------------------------------------+
+                           Packet filter core
+
+
+The exposed interface is:
 
  - A "BRAM slave" interface to plug in a snooper 
  - A "BRAM slave" interface to plug in a forwarder
- - A "BRAM master" interface where the CPU will fetch its instructions
+ - A "BRAM slave" interface to write new instructions to the code memory
  - A couple of reset and handshaking signals
 
-First of all, the "BRAM" interfaces are a little non-standard. I also add some 
-extra sidechannels for keeping track of the lengths in memory.
+First of all, the "BRAM" interfaces are a little non-standard; I add some extra 
+sidechannels for keeping track of the lengths in memory.
 
-But anyway, when you ask for a bunch of parallel processors, it is this 
-packetfilt_core module that gets copied. 
+When you ask for a bunch of parallel processors, it is this packetfilt_core 
+module that gets replicated. 

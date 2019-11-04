@@ -1,5 +1,5 @@
 This directory contains the files for the "ping-pang-pong" system (which I call 
-p3).
+P3).
 
 Essentially, the packet filter has three agents, which all need access to 
 memory:

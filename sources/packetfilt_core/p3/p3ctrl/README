@@ -1,0 +1,128 @@
+This is a "ping-pang-pung" controller. The idea is as follows:
+We have three agents that all need to share memory. To make it possible
+for all three to run concurrently, we need three buffers. 
+
+Here is the strategy:
+
+Each agent (in our specific case, the snooper, CPU, and forwarder) will 
+have a queue of "jobs" (i.e. [pointers to] buffers to operate on). When one 
+agent is finished (e.g. the snooper) it will enqueue [a pointer to] the buffer 
+it has just processed to the jobs on the next agent's queue (e.g. the CPU).
+
+
+ +-------------------------------+        +----------------+
+ |  Snooper    CPU    Forwarder  |        |     Legend     |
+ |   Queue    Queue    Queue     |        |----------------|
+ |    +--+     +--+     +--+     |        | 00: no connect |
+ |    |11|     |00|     |00|     |        | 01: Ping       |
+ |    |--|     |--|     |--|     |        | 10: Pang       |
+ |    |10|     |00|     |00|     |        | 11: Pong       |
+ |    |--|     |--|     |--|     |        +----------------+
+ |    |01|     |00|     |00|     |
+ |    +--+     +--+     +--+     |
+ |     |        |        |       |
+ |     +-----+  |  +-----+       |
+ |           |  |  |             |
+ +-------------------------------+
+             |  |  |     p3ctrl
+             v  v  v
+            To muxes
+
+For this purpose, I wrote up snqueue.v, cpuqueue.v, and fwdqueue.v. They are
+the aforementioned "job queues".
+
+This module is intended to be used to generate the select lines on the MUXes
+in packetmem.v (in order to wire up certain packetrams to certain agents).
+
+
+
+A few examples:
+
+Starting with the first diagram, suppose the snooper signals that it is done 
+reading in a packet. This means that the Ping buffer is now full, and can be 
+added to the CPU's queue of packets to check:
+
+ +-------------------------------+        +----------------+
+ |  Snooper    CPU    Forwarder  |        |     Legend     |
+ |   Queue    Queue    Queue     |        |----------------|
+ |    +--+     +--+     +--+     |        | 00: no connect |
+ |    |00|     |00|     |00|     |        | 01: Ping       |
+ |    |--|     |--|     |--|     |        | 10: Pang       |
+ |    |11|     |00|     |00|     |        | 11: Pong       |
+ |    |--|     |--|     |--|     |        +----------------+
+ |    |10|     |01|     |00|     |
+ |    +--+     +--+     +--+     |
+ |     |        |        |       |
+ |     +-----+  |  +-----+       |
+ |           |  |  |             |
+ +-------------------------------+
+             |  |  |     p3ctrl
+             v  v  v
+            To muxes
+
+Note also that everything else in the snooper queue shifted down.
+
+Now, if the snooper finishes reading another packet, we have:
+
+ +-------------------------------+        +----------------+
+ |  Snooper    CPU    Forwarder  |        |     Legend     |
+ |   Queue    Queue    Queue     |        |----------------|
+ |    +--+     +--+     +--+     |        | 00: no connect |
+ |    |00|     |00|     |00|     |        | 01: Ping       |
+ |    |--|     |--|     |--|     |        | 10: Pang       |
+ |    |00|     |10|     |00|     |        | 11: Pong       |
+ |    |--|     |--|     |--|     |        +----------------+
+ |    |11|     |01|     |00|     |
+ |    +--+     +--+     +--+     |
+ |     |        |        |       |
+ |     +-----+  |  +-----+       |
+ |           |  |  |             |
+ +-------------------------------+
+             |  |  |     p3ctrl
+             v  v  v
+            To muxes
+
+Now the Pang buffer is added to the CPU's queue.
+
+Carrying on, suppose the CPU rejects the packet in Ping. Then, Ping will be 
+added back to the snooper's queue:
+
+ +-------------------------------+        +----------------+
+ |  Snooper    CPU    Forwarder  |        |     Legend     |
+ |   Queue    Queue    Queue     |        |----------------|
+ |    +--+     +--+     +--+     |        | 00: no connect |
+ |    |00|     |00|     |00|     |        | 01: Ping       |
+ |    |--|     |--|     |--|     |        | 10: Pang       |
+ |    |01|     |00|     |00|     |        | 11: Pong       |
+ |    |--|     |--|     |--|     |        +----------------+
+ |    |11|     |10|     |00|     |
+ |    +--+     +--+     +--+     |
+ |     |        |        |       |
+ |     +-----+  |  +-----+       |
+ |           |  |  |             |
+ +-------------------------------+
+             |  |  |     p3ctrl
+             v  v  v
+            To muxes
+
+And now suppose the CPU accepts the buffer in Pang:
+
+ +-------------------------------+        +----------------+
+ |  Snooper    CPU    Forwarder  |        |     Legend     |
+ |   Queue    Queue    Queue     |        |----------------|
+ |    +--+     +--+     +--+     |        | 00: no connect |
+ |    |00|     |00|     |00|     |        | 01: Ping       |
+ |    |--|     |--|     |--|     |        | 10: Pang       |
+ |    |01|     |00|     |00|     |        | 11: Pong       |
+ |    |--|     |--|     |--|     |        +----------------+
+ |    |11|     |00|     |10|     |
+ |    +--+     +--+     +--+     |
+ |     |        |        |       |
+ |     +-----+  |  +-----+       |
+ |           |  |  |             |
+ +-------------------------------+
+             |  |  |     p3ctrl
+             v  v  v
+            To muxes
+
+I think you get the point.

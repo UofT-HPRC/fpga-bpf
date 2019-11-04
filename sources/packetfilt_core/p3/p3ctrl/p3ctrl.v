@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
-`include "snqueue.v"
-`include "cpuqueue.v"
-`include "fwdqueue.v"
-`include "muxselinvert.v"
+`include "queues/snqueue.v"
+`include "queues/cpuqueue.v"
+`include "queues/fwdqueue.v"
+`include "muxselinvert/muxselinvert.v"
 
 
 //These files are mostly copied from my old code, but there are some minor 
@@ -10,42 +10,12 @@
 // - I moved the muxselinverter to this module, since it made more sense
 // - I added handshaking for the ready and done signals. It was giving me a 
 //   major headache when it came time to start adding delay stages here and 
-//   there
+//   there, and I hoe handshaking is the solution
 
 /*
 p3ctrl.v
 
-This is a "ping-pang-pung" controller. The idea is as follows:
-We have three agents that all need to share memory. To make it possible
-for all three to run concurrently, we need three buffers. 
-
-In a ping-pong scheme, the controller is fairly simple. Say the agents are
-named A and B, and the buffers are name Ping and Pong. Say Ping is being
-controlled by A, and Pong is being controlled by B. If A finishes its work,
-it gets disconnected from Ping and we wait for B to finish. Once B finishes,
-then we wire B to Ping and A to Pong and both can start. (If they finish at
-the same time, we skip the states where A waits for B).
-
-However, in a ping-pang-pong scheme, the controller is significantly more
-complicated. Suppose the connections are (A-ping), (B-pang), (C-pong). Now
-if B finishes first, we have to wait for C to finish. But when C finishes,
-we have to wait for A to finish? And what if A finishes before C?
-Yes, we both know what should happen in these cases, but writing something
-in Verilog to deal with all this spaghetti logic (while trying to keep it
-reasonably simple/performant/easy to debug) is quite challenging.
-
-So here is the strategy:
-
-Each agent (in our specific case, the snooper, CPU, and forwarder) will 
-have a queue of "jobs" (i.e. [pointers to] buffers to operate on). When one 
-agent is finished (e.g. the snooper) it will enqueue [a pointer to] the buffer 
-it has just processed to the jobs on the next agent's queue (e.g. the CPU).
-
-For this purpose, I wrote up snqueue.v, cpuqueue.v, and fwdqueue.v. They are
-the aforementioned "job queues".
-
-This module is intended to be used to generate the select lines on the MUXes
-in packetmem.v (in order to wire up certain packetrams to certain agents).
+Wires up the job queues into one module, and also produces all the MUX signals
 */
 
 //TODO: figure out a clean way to add handshaking

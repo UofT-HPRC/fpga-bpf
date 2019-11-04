@@ -1,0 +1,5 @@
+This module is part of p3ctrl.v. It converts the mux selections for SN, CPU, 
+and FWD to the corresponing "inverse" selections for ping, pang, and pung.
+
+Basically, this is here to implement the rule that:
+"If agent A selects buffer P, then buffer P selects agent A"
