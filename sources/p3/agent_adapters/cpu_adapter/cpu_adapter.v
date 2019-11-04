@@ -18,6 +18,8 @@ Note that the bigword input in C1 is the read data from the packet memory
 C1: (Input: bigword; Output: resized_mem_data)
 
 
+//TODO: Add all the rest of the signals?
+
 */
 
 
