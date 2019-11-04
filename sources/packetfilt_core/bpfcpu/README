@@ -1,1 +1,60 @@
-This is a pipelined soft CPU which implements the BPF instruction set. 
+This is a pipelined soft CPU which implements the BPF instruction set. I 
+implemented it in the usual datapath + controller paradigm:
+
+         +----------------------------------+
+         |            Controller            |
+         +----------------------------------+
+             |    |  ||  |     |    |||    |
+         +----------------------------------+
+         |                                  |
+ ------->|                                  |------->
+         |                                  |
+ ------->|                                  |------->
+         |             Data path            |
+ ------->|                                  |------->
+         |                                  |
+ ------->|                                  |------->
+         |                                  |
+         +----------------------------------+
+
+I started by drawing up a schematic for the datapath based on the BPF spec. 
+This left me with a couple dozen control bits (stuff like MUX selects, clock 
+enables, etc.).
+
+The job of the controller is to simply assert the right control bits on the 
+right cycles. In order to pipeline the controller, I used this strategy:
+
+
+ +------------+------------+------------+            +------------+
+ |  Stage 0   |  Stage 1   |  Stage 2   |            |  Stage n   |
+ |------------|------------|------------|            |------------|
+ |            |            |            |            |            |
+ |       +--+ |       +--+ |       +--+ |            |            |
+ | ==+===|  |=====+===|  |=====+===|  |====  ....  ------+        |
+ |   |   |> | |   |   |> | |   |   |> | |            |   |        |
+ |   |   +--+ |   |   +--+ |   |   +--+ |            |   |        |
+ |   |        |   |        |   |        |            |   |        |
+ |   |        |   |        |   |        |            |   |        |
+ +---|--------+---|--------+---|--------+-           +---|--------+
+     |            |            |                         |
+     v            v            v                         v
+
+Basically, the first stage will decide the control signals for the entire 
+instruction, and from that point on, each stage picks out the signals it uses 
+and sends everything else to the next sstage (through a register).
+
+Well, as they say, the devil is in the details, and my original implementation 
+has a few issues. Don't get me wrong; it does work, and I did deal with all the 
+hazards and stuff, but the code is not robust:
+
+ -> Since it was the first time I had done a pipelined controller, there are a 
+    lot of inconsistencies in the code (since I was learning as I went).
+
+ -> The lack of any consistent handshaking schemes has made it very difficult 
+    to modify the design to meet timing at high (> 300 MHz) frequencies.
+
+ -> In general, it would not be easy to modify it for eBPF (but I guess there 
+    currently is no "nice" way of editing CPU pipelines)
+
+So this project will take the old code and clean it up. Hopefully I can 
+increase the Fmax while I'm at it.
