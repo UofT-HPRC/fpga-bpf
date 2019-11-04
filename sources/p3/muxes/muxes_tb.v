@@ -102,6 +102,15 @@ module muxes_tb;
         
         while ($fgetc(fd) != "\n") begin end //Skip first line of comments
         
+        #100
+        sn_sel <= 2'b11;
+        cpu_sel <= 2'b01;
+        fwd_sel <= 2'b00;
+        
+        ping_sel <= 2'b10;
+        pang_sel <= 2'b00;
+        pong_sel <= 2'b01;
+        
         #200
         $display("Quitting...");
         $finish;
