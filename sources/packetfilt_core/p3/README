@@ -56,3 +56,8 @@ adapter. So, actually, it's more like:
 
 where /\ is an adapter.
       \/
+
+And one more thing: there are a bunch of handshake signals between each agent 
+and the P3 controller. Each agent has an output to say when it is done using a 
+buffer, and the controller has an output to each agent to tell it that a buffer 
+is free.

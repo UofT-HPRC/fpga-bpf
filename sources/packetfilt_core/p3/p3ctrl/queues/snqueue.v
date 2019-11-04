@@ -4,8 +4,8 @@
 
 snqueue.v
 
-Implements a queue for the snooper module. This is one of the three queues used in
-pingpangpungcontroller.v (refer to that file for details) 
+Implements a queue for the snooper module. This is one of the three queues used 
+in p3ctrl.v (refer to that file for details) 
 
 */
 

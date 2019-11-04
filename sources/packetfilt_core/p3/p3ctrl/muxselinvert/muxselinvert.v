@@ -16,7 +16,7 @@ module muxselinvert(
 	
 	output wire [1:0] ping_sel,
 	output wire [1:0] pang_sel,
-	output wire [1:0] pung_sel
+	output wire [1:0] pong_sel
 );
 
 assign ping_sel[1] = 	(~fwd_sel[1] & fwd_sel[0]) | (
@@ -32,12 +32,12 @@ assign pang_sel[1] =	(fwd_sel[1] & ~fwd_sel[0]) |
 assign pang_sel[0] =	(fwd_sel[1] & ~fwd_sel[0]) |
 						(sn_sel[1] & ~sn_sel[0]);
 
-assign pung_sel[1] = 	(fwd_sel[1] & fwd_sel[0]) | (
+assign pong_sel[1] = 	(fwd_sel[1] & fwd_sel[0]) | (
 						(cpu_sel[1] & cpu_sel[0]) &
 						 (~sn_sel[1] | ~sn_sel[0])
 						); 
 
-assign pung_sel[0] = 	(fwd_sel[1] & fwd_sel[0]) | 
+assign pong_sel[0] = 	(fwd_sel[1] & fwd_sel[0]) | 
 						(sn_sel[1] & sn_sel[0]);
 /*
 Ping select bit 1 = F'W+C'P(S+N')

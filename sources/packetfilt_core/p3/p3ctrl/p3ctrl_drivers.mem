@@ -1,0 +1,21 @@
+A_done  A_rdy_ack   B_acc   B_rej   B_rdy_ack   C_done  C_rdy_ack || This shoud match example in README
+0       0           0       0       0           0       0
+0       1           0       0       0           0       0
+0       0           0       0       0           0       0
+
+1       1           0       0       0           0       0
+0       1           0       0       1           0       0
+1       0           0       0       0           0       0
+0       0           0       0       0           0       0
+
+1       0           0       1       0           0       0
+0       0           0       0       1           0       0
+0       0           0       0       0           0       0
+
+0       0           1       0       0           0       1
+0       0           0       0       0           0       1
+0       0           0       0       0           0       0
+
+0       0           0       0       0           1       0
+0       0           0       0       0           0       0
+
