@@ -1,0 +1,6 @@
+When the packetfilt_core gets copied several times, you need arbitration 
+signals so that they all play nicely with the snooper(s) and forwarder(s). The 
+old method I used was very fragile and did not scale to higher frequencies, and 
+it also did not allow the possibility for more than one snooper/forwarder.
+
+So I'm gonna come up with some better ways to do it at some point
