@@ -167,7 +167,7 @@ module p3 # (
         .wr_data(sn_wr_data_i),
         .byte_inc(sn_byte_inc_i),
         .done(A_done),
-        .rdy_ack(A_done_ack),
+        .rdy_ack(rdy_for_A_ack),
         .done_ack(A_done_ack),
         .rdy(rdy_for_A)
     );  
@@ -307,6 +307,8 @@ module p3 # (
     p_ng # (
         .ADDR_WIDTH(ADDR_WIDTH),
         .SN_FWD_WIDTH(DATA_WIDTH),
+        .INC_WIDTH(INC_WIDTH),
+        .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT)
     ) ping (
@@ -317,12 +319,15 @@ module p3 # (
         .addr(ping_addr), //@0
         .idata(ping_idata), //@0
         .byte_inc(ping_byte_inc), //@0
-        .odata(ping_odata) //@1 + BUF_IN + BUF_OUT
+        .odata(ping_odata), //@1 + BUF_IN + BUF_OUT
+        .byte_length(ping_byte_length)
     );
 
     p_ng # (
         .ADDR_WIDTH(ADDR_WIDTH),
         .SN_FWD_WIDTH(DATA_WIDTH),
+        .INC_WIDTH(INC_WIDTH),
+        .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT)
     ) pang (
@@ -333,12 +338,15 @@ module p3 # (
         .addr(pang_addr), //@0
         .idata(pang_idata), //@0
         .byte_inc(pang_byte_inc), //@0
-        .odata(pang_odata) //@1 + BUF_IN + BUF_OUT
+        .odata(pang_odata), //@1 + BUF_IN + BUF_OUT
+        .byte_length(pang_byte_length)
     );
 
     p_ng # (
         .ADDR_WIDTH(ADDR_WIDTH),
         .SN_FWD_WIDTH(DATA_WIDTH),
+        .INC_WIDTH(INC_WIDTH),
+        .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT)
     ) pong (
@@ -349,7 +357,8 @@ module p3 # (
         .addr(pong_addr), //@0
         .idata(pong_idata), //@0
         .byte_inc(pong_byte_inc), //@0
-        .odata(pong_odata) //@1 + BUF_IN + BUF_OUT
+        .odata(pong_odata), //@1 + BUF_IN + BUF_OUT
+        .byte_length(pong_byte_length)
     );
 
 endmodule

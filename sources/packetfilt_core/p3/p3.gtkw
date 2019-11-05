@@ -1,0 +1,91 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Tue Nov  5 15:30:09 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/p3.vcd"
+[dumpfile_mtime] "Tue Nov  5 15:27:40 2019"
+[dumpfile_size] 48488
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/p3.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-15.057767 175000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] p3_tb.
+[treeopen] p3_tb.DUT.
+[sst_width] 214
+[signals_width] 206
+[sst_expanded] 1
+[sst_vpaned_height] 317
+@28
+p3_tb.clk
+@200
+-Snooper
+@22
+p3_tb.sn_addr[8:0]
+@28
+p3_tb.sn_wr_en
+@22
+p3_tb.sn_wr_data[63:0]
+p3_tb.sn_byte_inc[7:0]
+@28
+p3_tb.sn_done
+p3_tb.sn_done_ack
+p3_tb.rdy_for_sn
+p3_tb.rdy_for_sn_ack
+@200
+-CPU
+@28
+p3_tb.transfer_sz[1:0]
+@22
+p3_tb.byte_rd_addr[11:0]
+@28
+p3_tb.cache_hit
+@22
+p3_tb.cached_data[31:0]
+@28
+p3_tb.cpu_acc
+@22
+p3_tb.cpu_byte_len[31:0]
+@28
+p3_tb.cpu_done_ack
+p3_tb.cpu_rd_en
+p3_tb.cpu_rej
+p3_tb.rdy_for_cpu
+p3_tb.rdy_for_cpu_ack
+@22
+p3_tb.resized_mem_data[31:0]
+@200
+-Forwarder
+@22
+p3_tb.fwd_addr[8:0]
+p3_tb.fwd_byte_len[31:0]
+@28
+p3_tb.fwd_done
+p3_tb.fwd_done_ack
+@22
+p3_tb.fwd_rd_data[63:0]
+@28
+p3_tb.fwd_rd_en
+p3_tb.rdy_for_fwd
+p3_tb.rdy_for_fwd_ack
+@200
+-Ping
+@22
+p3_tb.DUT.ping.addr[9:0]
+p3_tb.DUT.ping.addr_i[9:0]
+p3_tb.DUT.ping.addrb[9:0]
+@28
+p3_tb.DUT.ping.rd_en
+p3_tb.DUT.ping.rd_en_i
+p3_tb.DUT.ping.wr_en
+p3_tb.DUT.ping.wr_en_i
+@22
+p3_tb.DUT.ping.byte_inc[7:0]
+p3_tb.DUT.ping.byte_length[31:0]
+p3_tb.DUT.ping.byte_length_i[32:0]
+p3_tb.DUT.ping.idata[63:0]
+p3_tb.DUT.ping.idata_i[63:0]
+p3_tb.DUT.ping.odata[63:0]
+p3_tb.DUT.ping.odata_i[63:0]
+[pattern_trace] 1
+[pattern_trace] 0
