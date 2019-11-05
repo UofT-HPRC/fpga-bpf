@@ -44,7 +44,7 @@ C1: (Input: bigword; Output: resized_mem_data)
 //where PORT_DATA_WIDTH is in bytes
 module cpu_adapter # (
     parameter BYTE_ADDR_WIDTH = 12, // packetmem depth = 2^BYTE_ADDR_WIDTH bytes
-    parameter ADDR_WIDTH = 10,
+    parameter ADDR_WIDTH = 9,
     parameter DATA_WIDTH = 2**(BYTE_ADDR_WIDTH - ADDR_WIDTH)*8,
     parameter PLEN_WIDTH = 32,
     //These control pessimistic registers in the p_ng buffers

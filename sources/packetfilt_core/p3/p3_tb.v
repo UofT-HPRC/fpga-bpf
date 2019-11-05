@@ -2,8 +2,8 @@
 
 `include "p3.v"
 
-`define SN_FWD_ADDR_WIDTH 9
-`define ADDR_WIDTH 10
+`define SN_FWD_ADDR_WIDTH 8
+`define ADDR_WIDTH 9
 `define BYTE_ADDR_WIDTH 12
 `define DATA_WIDTH 64
 `define INC_WIDTH 8
