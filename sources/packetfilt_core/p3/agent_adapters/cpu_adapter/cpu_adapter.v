@@ -25,9 +25,17 @@ C1: (Input: bigword; Output: resized_mem_data)
 
 //Assumes big-endianness
 
+`ifdef FROM_CPUADAPTER
+`include "../../../bpf_defs.vh"
+`else
+
+`ifdef FROM_P3
+`include "../bpf_defs.vh"
+`else
 
 `include "bpf_defs.vh"
-
+`endif
+`endif
 
 //I kept needing this value in the code
 `define N (BYTE_ADDR_WIDTH - ADDR_WIDTH - 1)
@@ -38,6 +46,7 @@ module cpu_adapter # (
     parameter BYTE_ADDR_WIDTH = 12, // packetmem depth = 2^BYTE_ADDR_WIDTH bytes
     parameter ADDR_WIDTH = 10,
     parameter DATA_WIDTH = 2**(BYTE_ADDR_WIDTH - ADDR_WIDTH)*8,
+    parameter PLEN_WIDTH = 32,
     //These control pessimistic registers in the p_ng buffers
     parameter BUF_IN = 0,
     parameter BUF_OUT = 0,
@@ -51,29 +60,29 @@ module cpu_adapter # (
     input wire [BYTE_ADDR_WIDTH-1:0] byte_rd_addr, //@0
     input wire cpu_rd_en, //@0
     input wire [1:0] transfer_sz, //@0
-    input wire cpu_done, //@0
-    input wire cpu_done_vld, //@0
+    input wire cpu_acc, //@0
+    input wire cpu_rej, //@0
     input wire rdy_for_cpu_ack, //@0
     
     output wire cpu_done_ack, //@0
     output wire rdy_for_cpu, //@0
-    output wire rdy_for_cpu_vld, //@0
     output wire cache_hit, //@1
     output wire [31:0] cached_data, //@1
     //zero-padded on the left (when necessary)
     output wire [31:0] resized_mem_data, //@1+BUF_IN+BUF_OUT+PESS
+    output wire [PLEN_WIDTH-1:0] cpu_byte_len,
     
     //Interface to memory
     output wire [ADDR_WIDTH-1:0] word_rd_addra, //@0
     output wire rd_en, //@0
-    output wire done, //@0
-    output wire done_vld, //@0
+    output wire acc, //@0
+    output wire rej, //@0
     output wire rdy_ack, //@0
     
     input wire done_ack, //@0
     input wire rdy, //@0
-    input wire rdy_vld, //@0
-    input wire [DATA_WIDTH-1:0] bigword //@1+BUF_IN+BUF_OUT
+    input wire [DATA_WIDTH-1:0] bigword, //@1+BUF_IN+BUF_OUT
+    input wire [PLEN_WIDTH-1:0] byte_len
 );
     
     //Memory latency
@@ -91,18 +100,18 @@ module cpu_adapter # (
     wire [1:0] transfer_sz_i;
     reg [2*MEM_LAT-1:0] transfer_sz_r; //Implements a shift register
     
-    wire cpu_done_i;
-    wire cpu_done_vld_i;
+    wire cpu_acc_i;
+    wire cpu_rej_i;
     wire rdy_for_cpu_ack_i; 
     
     wire cpu_done_ack_i; 
-    wire rdy_for_cpu_i; 
-    wire rdy_for_cpu_vld_i; 
+    wire rdy_for_cpu_i;  
     
     wire cache_hit_i;
     wire [31:0] cached_data_i;
     
     wire [31:0] resized_mem_data_i;
+    wire [PLEN_WIDTH-1:0] cpu_byte_len_i;
     
     
     //Interface to memory
@@ -110,14 +119,13 @@ module cpu_adapter # (
     wire rd_en_i;
     
     wire done_i; 
-    wire done_vld_i; 
     wire rdy_ack_i; 
     
     wire done_ack_i; 
-    wire rdy_i; 
-    wire rdy_vld_i; 
+    wire rdy_i;  
     
     wire [DATA_WIDTH-1:0] bigword_i;
+    wire [PLEN_WIDTH-1:0] byte_len_i;
     
     
     //Other internal signals
@@ -138,6 +146,7 @@ module cpu_adapter # (
     assign cpu_rd_en_i = cpu_rd_en;
     
     assign bigword_i = bigword;
+    assign byte_len_i = byte_len;
     
     //Buffer transfer_sz for MEM_LAT cycles
     always @(posedge clk) transfer_sz_r[1:0] <= transfer_sz[1:0];
@@ -153,13 +162,12 @@ module cpu_adapter # (
     end
     assign offset_i = offset_r[`N*MEM_LAT-1 -: `N];
     
-    assign cpu_done_i        = cpu_done;
-    assign cpu_done_vld_i    = cpu_done_vld;
+    assign cpu_acc_i         = cpu_acc;
+    assign cpu_rej_i         = cpu_rej;
     assign rdy_for_cpu_ack_i = rdy_for_cpu_ack;
     
     assign done_ack_i        = done_ack;
     assign rdy_i             = rdy;
-    assign rdy_vld_i         = rdy_vld;
     
     /****************/
     /**Do the logic**/
@@ -186,14 +194,15 @@ module cpu_adapter # (
 
     assign resized_mem_data_i[31:16] = (transfer_sz_i == `BPF_W) ? selected[31:16]: 0;
     
+    assign cpu_byte_len_i = byte_len_i;
+    
     //All that handshaking business
-    assign done_i      = cpu_done_i;
-    assign done_vld_i  = cpu_done_vld_i;
+    assign acc_i       = cpu_acc_i;
+    assign rej_i       = cpu_rej_i;
     assign rdy_ack_i   = rdy_for_cpu_ack_i; 
     
     assign cpu_done_ack_i    = done_ack_i; 
     assign rdy_for_cpu_i     = rdy_i; 
-    assign rdy_for_cpu_vld_i = rdy_vld_i; 
     
     /****************************************/
     /**Assign outputs from internal signals**/
@@ -215,12 +224,12 @@ generate
         assign resized_mem_data = resized_mem_data_i;
     end
 endgenerate
+    assign cpu_byte_len = cpu_byte_len_i;
     
-    assign done = done_i;
-    assign done_vld = done_vld_i;
+    assign acc = acc_i;
+    assign rej = rej_i;
     assign rdy_ack = rdy_ack_i; 
     
     assign cpu_done_ack = cpu_done_ack_i;
     assign rdy_for_cpu = rdy_for_cpu_i;
-    assign rdy_for_cpu_vld = rdy_for_cpu_vld_i;
 endmodule

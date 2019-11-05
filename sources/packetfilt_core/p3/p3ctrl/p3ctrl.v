@@ -1,8 +1,24 @@
 `timescale 1ns / 1ps
+
+//Finally now I understand that weird error with Vivado: when you compile
+//Verilog files, the include is relative to the compiler, not the file that
+//does the including. 
+
+//That's terrible!
+
+`ifdef FROM_P3CTRL
 `include "queues/snqueue.v"
 `include "queues/cpuqueue.v"
 `include "queues/fwdqueue.v"
 `include "muxselinvert/muxselinvert.v"
+`endif
+
+`ifdef FROM_P3
+`include "p3ctrl/queues/snqueue.v"
+`include "p3ctrl/queues/cpuqueue.v"
+`include "p3ctrl/queues/fwdqueue.v"
+`include "p3ctrl/muxselinvert/muxselinvert.v"
+`endif
 
 /*
 p3ctrl.v
@@ -18,29 +34,29 @@ Wires up the job queues into one module, and also produces all the MUX signals
 //   there, and I hoe handshaking is the solution
 
 module p3ctrl(
-	input wire clk,
-	input wire rst,
-    
-	input wire A_done,
+    input wire clk,
+    input wire rst,
+
+    input wire A_done,
     output wire A_done_ack,
     output wire rdy_for_A, //@1
     input wire rdy_for_A_ack,
-    
-	input wire B_acc,
-	input wire B_rej,
+
+    input wire B_acc,
+    input wire B_rej,
     output wire B_done_ack,
     output wire rdy_for_B, //@1
     input wire rdy_for_B_ack,
-    
-	input wire C_done,
+
+    input wire C_done,
     output wire C_done_ack,
     output wire rdy_for_C, //@1
     input wire rdy_for_C_ack,
-	
-	output wire [1:0] sn_sel,
-	output wire [1:0] cpu_sel,
-	output wire [1:0] fwd_sel,
-    
+
+    output wire [1:0] sn_sel,
+    output wire [1:0] cpu_sel,
+    output wire [1:0] fwd_sel,
+
     output wire [1:0] ping_sel,
     output wire [1:0] pang_sel,
     output wire [1:0] pong_sel
