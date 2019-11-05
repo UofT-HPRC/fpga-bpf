@@ -68,7 +68,8 @@ module p3 # (
     
     output wire rdy_for_fwd,
     input wire rdy_for_fwd_ack
-);
+);      
+    
     //p3ctrl outputs
     wire A_done_ack;
     wire rdy_for_A;
@@ -116,6 +117,7 @@ module p3 # (
     wire [ADDR_WIDTH-1:0] ping_addr; 
     wire [DATA_WIDTH-1:0] ping_idata;
     wire [INC_WIDTH-1:0] ping_byte_inc;
+    wire ping_reset_len;
     //ping outputs
     wire [DATA_WIDTH-1:0] ping_odata;
     wire [PLEN_WIDTH-1:0] ping_byte_length;
@@ -126,6 +128,7 @@ module p3 # (
     wire [ADDR_WIDTH-1:0] pang_addr; 
     wire [DATA_WIDTH-1:0] pang_idata;
     wire [INC_WIDTH-1:0] pang_byte_inc;
+    wire pang_reset_len;
     //pang outputs
     wire [DATA_WIDTH-1:0] pang_odata;
     wire [PLEN_WIDTH-1:0] pang_byte_length;
@@ -136,9 +139,17 @@ module p3 # (
     wire [ADDR_WIDTH-1:0] pong_addr; 
     wire [DATA_WIDTH-1:0] pong_idata;
     wire [INC_WIDTH-1:0] pong_byte_inc;
+    wire pong_reset_len;
     //pong outputs
     wire [DATA_WIDTH-1:0] pong_odata;
     wire [PLEN_WIDTH-1:0] pong_byte_length;
+    
+    
+    //I've been trying really hard to eliminate hacky code, but this is one 
+    //case where it's a lot easier to do
+    //When the snooper starts on a buffer, we should reset its length to 0
+    wire sn_start_sig;
+    assign sn_start_sig = rdy_for_A && rdy_for_A_ack;
     
     sn_adapter # (
         .SN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
@@ -242,7 +253,7 @@ module p3 # (
         .rd_data(fwd_rd_data_i),
         .bytes(fwd_byte_len_i)
     ); 
-    
+
     p3ctrl ctrlr (
         .clk(clk),
         .rst(rst),
@@ -274,8 +285,8 @@ module p3 # (
         .PLEN_WIDTH(PLEN_WIDTH) //TODO: make this a parameter everywhere else?
     ) themux (
 
-        //Format is {addr, wr_data, wr_en, bytes_inc}
-        .from_sn({sn_addr_i, sn_wr_data_i, sn_wr_en_i, sn_byte_inc_i}),
+        //Format is {addr, wr_data, wr_en, bytes_inc, reset_sig}
+        .from_sn({sn_addr_i, sn_wr_data_i, sn_wr_en_i, sn_byte_inc_i, sn_start_sig}),
         //Format is {addr, rd_en}
         .from_cpu({cpu_addr_i, cpu_rd_en_i}),
         .from_fwd({fwd_addr_i, fwd_rd_en_i}),
@@ -290,10 +301,10 @@ module p3 # (
         .to_cpu({cpu_bigword_i, cpu_byte_len_i}),
         .to_fwd({fwd_rd_data_i, fwd_byte_len_i}),
         
-        //Format here is {addr, wr_data, wr_en, bytes_inc, rd_en}
-        .to_ping({ping_addr, ping_idata, ping_wr_en, ping_byte_inc, ping_rd_en}),
-        .to_pang({pang_addr, pang_idata, pang_wr_en, pang_byte_inc, pang_rd_en}),
-        .to_pong({pong_addr, pong_idata, pong_wr_en, pong_byte_inc, pong_rd_en}),
+        //Format here is {addr, wr_data, wr_en, bytes_inc, reset_sig, rd_en}
+        .to_ping({ping_addr, ping_idata, ping_wr_en, ping_byte_inc, ping_reset_len, ping_rd_en}),
+        .to_pang({pang_addr, pang_idata, pang_wr_en, pang_byte_inc, pang_reset_len, pang_rd_en}),
+        .to_pong({pong_addr, pong_idata, pong_wr_en, pong_byte_inc, pong_reset_len, pong_rd_en}),
         
         .sn_sel(sn_sel),
         .cpu_sel(cpu_sel),
@@ -313,7 +324,7 @@ module p3 # (
         .BUF_OUT(BUF_OUT)
     ) ping (
         .clk(clk),
-        .rst(rst), //Note: does not actually change the stored memory
+        .rst(rst || ping_reset_len), //Note: does not actually change the stored memory
         .rd_en(ping_rd_en), //@0
         .wr_en(ping_wr_en), //@0
         .addr(ping_addr), //@0
@@ -332,7 +343,7 @@ module p3 # (
         .BUF_OUT(BUF_OUT)
     ) pang (
         .clk(clk),
-        .rst(rst), //Note: does not actually change the stored memory
+        .rst(rst || pang_reset_len), //Note: does not actually change the stored memory
         .rd_en(pang_rd_en), //@0
         .wr_en(pang_wr_en), //@0
         .addr(pang_addr), //@0
@@ -351,7 +362,7 @@ module p3 # (
         .BUF_OUT(BUF_OUT)
     ) pong (
         .clk(clk),
-        .rst(rst), //Note: does not actually change the stored memory
+        .rst(rst || pong_reset_len), //Note: does not actually change the stored memory
         .rd_en(pong_rd_en), //@0
         .wr_en(pong_wr_en), //@0
         .addr(pong_addr), //@0

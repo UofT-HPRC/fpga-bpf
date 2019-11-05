@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Tue Nov  5 16:05:43 2019
+[*] Tue Nov  5 18:45:18 2019
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/p3.vcd"
-[dumpfile_mtime] "Tue Nov  5 15:58:41 2019"
-[dumpfile_size] 56566
+[dumpfile_mtime] "Tue Nov  5 18:41:14 2019"
+[dumpfile_size] 49494
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/p3.gtkw"
 [timestart] 0
 [size] 1916 1060
 [pos] -1 -1
-*-15.057767 75010 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-15.057767 55000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] p3_tb.
 [treeopen] p3_tb.DUT.
 [sst_width] 380
@@ -59,7 +59,7 @@ p3_tb.resized_mem_data[31:0]
 -Forwarder
 @22
 p3_tb.DUT.fwd_addr[7:0]
-@25
+@24
 p3_tb.fwd_byte_len[31:0]
 @28
 p3_tb.fwd_done
@@ -72,6 +72,8 @@ p3_tb.rdy_for_fwd
 p3_tb.rdy_for_fwd_ack
 @200
 -Ping
+@29
+p3_tb.DUT.ping.rst
 @22
 p3_tb.DUT.ping.addr[8:0]
 p3_tb.DUT.ping.addr_i[8:0]
@@ -89,5 +91,14 @@ p3_tb.DUT.ping.idata[63:0]
 p3_tb.DUT.ping.idata_i[63:0]
 p3_tb.DUT.ping.odata[63:0]
 p3_tb.DUT.ping.odata_i[63:0]
+@200
+-p3ctrl
+@28
+p3_tb.DUT.ctrlr.sn_sel[1:0]
+p3_tb.DUT.ctrlr.cpu_sel[1:0]
+p3_tb.DUT.ctrlr.fwd_sel[1:0]
+p3_tb.DUT.ctrlr.ping_sel[1:0]
+p3_tb.DUT.ctrlr.pang_sel[1:0]
+p3_tb.DUT.ctrlr.pong_sel[1:0]
 [pattern_trace] 1
 [pattern_trace] 0
