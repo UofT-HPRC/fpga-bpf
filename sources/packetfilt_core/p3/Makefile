@@ -12,3 +12,7 @@ open:	p3.vcd
 clean:
 	rm -rf p3.vvp
 	rm -rf p3.vcd
+
+force:
+	touch p3_tb.v
+	make

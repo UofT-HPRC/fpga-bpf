@@ -16,7 +16,7 @@ the stuff together.
 */
 
 module p3 # (
-    parameter SN_FWD_ADDR_WIDTH = 9
+    parameter SN_FWD_ADDR_WIDTH = 9,
     parameter ADDR_WIDTH = 10,
     parameter BYTE_ADDR_WIDTH = 12,
 	parameter DATA_WIDTH = 64,
@@ -30,7 +30,7 @@ module p3 # (
     input wire rst,
     
     //Interface to snooper
-    input wire [SN_ADDR_WIDTH-1:0] sn_addr,
+    input wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr,
     input wire [DATA_WIDTH-1:0] sn_wr_data,
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
@@ -48,7 +48,7 @@ module p3 # (
     output wire cache_hit,
     output wire [31:0] cached_data,
     output wire [31:0] resized_mem_data,
-    output wire [PLEN_WIDTH-1:0] cpu_bytes,
+    output wire [PLEN_WIDTH-1:0] cpu_byte_len,
     
     input wire cpu_acc,
     input wire cpu_rej,
@@ -61,14 +61,14 @@ module p3 # (
     input wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr,
     input wire fwd_rd_en,
     output wire [DATA_WIDTH-1:0] fwd_rd_data,
-    output wire [PLEN_WIDTH-1:0] fwd_byte_len;
+    output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     
     input wire fwd_done,
     output wire fwd_done_ack,
     
     output wire rdy_for_fwd,
     input wire rdy_for_fwd_ack
-)
+);
     //p3ctrl outputs
     wire A_done_ack;
     wire rdy_for_A;
@@ -114,31 +114,31 @@ module p3 # (
     wire ping_rd_en; 
     wire ping_wr_en; 
     wire [ADDR_WIDTH-1:0] ping_addr; 
-    wire [SN_FWD_WIDTH-1:0] ping_idata;
-    wire [8:0] ping_byte_inc;
+    wire [DATA_WIDTH-1:0] ping_idata;
+    wire [INC_WIDTH-1:0] ping_byte_inc;
     //ping outputs
-    wire [SN_FWD_WIDTH-1:0] ping_odata;
-    wire [32:0] ping_byte_length
+    wire [DATA_WIDTH-1:0] ping_odata;
+    wire [PLEN_WIDTH-1:0] ping_byte_length;
     
     //pang inputs
     wire pang_rd_en; 
     wire pang_wr_en; 
     wire [ADDR_WIDTH-1:0] pang_addr; 
-    wire [SN_FWD_WIDTH-1:0] pang_idata;
-    wire [8:0] pang_byte_inc;
+    wire [DATA_WIDTH-1:0] pang_idata;
+    wire [INC_WIDTH-1:0] pang_byte_inc;
     //pang outputs
-    wire [SN_FWD_WIDTH-1:0] pang_odata;
-    wire [32:0] pang_byte_length
+    wire [DATA_WIDTH-1:0] pang_odata;
+    wire [PLEN_WIDTH-1:0] pang_byte_length;
     
     //pong inputs
     wire pong_rd_en; 
     wire pong_wr_en; 
     wire [ADDR_WIDTH-1:0] pong_addr; 
-    wire [SN_FWD_WIDTH-1:0] pong_idata;
-    wire [8:0] pong_byte_inc;
+    wire [DATA_WIDTH-1:0] pong_idata;
+    wire [INC_WIDTH-1:0] pong_byte_inc;
     //pong outputs
-    wire [SN_FWD_WIDTH-1:0] pong_odata;
-    wire [32:0] pong_byte_length
+    wire [DATA_WIDTH-1:0] pong_odata;
+    wire [PLEN_WIDTH-1:0] pong_byte_length;
     
     sn_adapter # (
         .SN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
@@ -207,7 +207,7 @@ module p3 # (
         .done_ack(B_done_ack),
         .rdy(rdy_for_B),
         .bigword(cpu_bigword_i),
-        .len(cpu_byte_len_i)
+        .byte_len(cpu_byte_len_i)
     );
     
     fwd_adapter # (
@@ -267,12 +267,12 @@ module p3 # (
         .pong_sel(pong_sel)
     );
 
-    muxes themux # (
+    muxes # (
         .ADDR_WIDTH(ADDR_WIDTH),
         .DATA_WIDTH(DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH), //TODO: make this a parameter everywhere else?
         .PLEN_WIDTH(PLEN_WIDTH) //TODO: make this a parameter everywhere else?
-    )(
+    ) themux (
 
         //Format is {addr, wr_data, wr_en, bytes_inc}
         .from_sn({sn_addr_i, sn_wr_data_i, sn_wr_en_i, sn_byte_inc_i}),

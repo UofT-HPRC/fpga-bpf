@@ -56,7 +56,7 @@ Ping/Pang/Pung:
 
 `define ENABLE_BIT 1
 module muxes # (
-    parameter ADDR_WIDTH = 9,
+    parameter ADDR_WIDTH = 10,
 	parameter DATA_WIDTH = 64,
     parameter INC_WIDTH = 8, //TODO: make this a parameter everywhere else?
 	parameter PLEN_WIDTH = 32 //TODO: make this a parameter everywhere else?

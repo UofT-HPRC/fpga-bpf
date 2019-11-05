@@ -68,6 +68,8 @@ endmodule
 module p_ng # (
     parameter ADDR_WIDTH = 10,
     parameter SN_FWD_WIDTH = 64,
+    parameter INC_WIDTH = 8,
+    parameter PLEN_WIDTH = 32,
     //parameters controlling addition of pessmistic registers
     parameter BUF_IN = 0,
     parameter BUF_OUT = 0
@@ -78,9 +80,9 @@ module p_ng # (
     input wire wr_en, //@0
     input wire [ADDR_WIDTH-1:0] addr, //@0
     input wire [SN_FWD_WIDTH-1:0] idata, //@0
-    input wire [8:0] byte_inc, //@0
+    input wire [INC_WIDTH-1:0] byte_inc, //@0
     output wire [SN_FWD_WIDTH-1:0] odata, //@1 + BUF_IN + BUF_OUT
-    output wire [32:0] byte_length //@1 + BUF_IN + BUF_OUT
+    output wire [PLEN_WIDTH-1:0] byte_length //@1 + BUF_IN + BUF_OUT
 );
 
     //Width of each port is half the total width
