@@ -1,0 +1,94 @@
+Diagram:
+
+
+                   A_sel    A_en                   ALU_en ALU_sel
+                     |        |                       |     |
+               imm--|\     +----+                   +----------+
+           rd_data--| |    | en |                   | En   Op  |
+   regfile_rd_data--| |----|D  Q|-------------------|A      out|--ALU_out
+        packet_len--| |    |    |           B_sel +-|B    flags|--ALU_flags
+                 X--| |    |>   |             |   | |>      vld|--ALU_vld
+           ALU_out--|/     +----+            |\   | +----------+
+                             A      +--------| |--+     ALU
+                                    | X+imm--| |
+                                    |        |/
+                                    |
+                   X_sel    X_en    |
+                     |        |     |                     addr_sel
+               imm--|\     +----+   |                         |
+           rd_data--| |    | en |   |                        |\
+   regfile_rd_data--| |----|D  Q|---+                   imm--| |--rd_addr
+        packet_len--| |    |    |                     X+imm--| |
+                 A--| |    |>   |                            |/
+  (rd_data&0xF)<<2--|/     +----+
+                             X
+
+
+                   PC_sel   PC_en
+                     |        |
+                    |\     +----+
+              PC+1--| |    | en |
+     +--->   PC+jt--| |----|D  Q|----+----------------------------inst_rd_addr
+     |       PC+jf--| |    |    |    |
+     |      PC+imm--|/     |>   |    |
+     |                     +----+    |
+     |                       PC      |
+     |                               |
+     +-------------------------------+
+
+    regfile_sel
+         |
+        |\
+     A--| |--+
+     X--| |  |
+        |/   |   +-------------+
+             +---|idata        |
+       imm[3:0]--|addr    odata|--regfile_rd_data
+  regfile_wr_en--|wr_en        |
+                 |>            |
+                 +-------------+
+                     regfile
+ 
+
+
+This datapath is mostly the same as the one from the original implementation. 
+However, there are a few key differences:
+
+ - The PC has a different mechanism. It is designed to keep fetching the next
+   instruction in memory, and correct itself if it turns out we needed to jump 
+   (this is explained in more detail in the controller's README)
+   
+ - The immediate has moved to the controller. By doing this, all the difficult 
+   handshaking business is in one place (rather than in both the datapath and 
+   controller)
+
+ - The ALU and packet memory now have valid signals, and the ALU also has an 
+   enable
+
+The inputs to the ALU are:
+
+    - A_sel, A_en
+    - X_sel, X_en
+    - PC_sel, PC_en
+    - B_sel, ALU_sel, ALU_en
+    - regfile_sel, regfile_wr_en
+    - addr_sel
+    - packet_len
+    - imm
+    - jt, jf
+
+The outputs are:
+
+    - ALU_flags, ALU_vld
+    - rd_addr
+    - inst_rd_addr
+
+Note that that controller deals with the rest of the CPU signals, including:
+    Inputs:
+    - instruction (opcode, jt, jf, imm)
+    - ALU_flags, ALU_vld
+    - rd_data_vld
+    
+    Outputs:
+    - rd_en
+    - inst_rd_en

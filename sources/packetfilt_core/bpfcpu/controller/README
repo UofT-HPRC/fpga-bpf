@@ -1,0 +1,115 @@
+The controller in my original implementation got a bit out of hand. So, I have 
+redesigned it from the ground up. There are a couple things to explain in this 
+doc:
+
+    - Description of each stage
+    - Pessimistic timing stage
+    - Dealing with jumps
+    - Data hazards
+
+By the way, I am using the "buffered handshake" technique. Dan Gisselquist has 
+written a really godo description of it here:
+https://zipcpu.com/blog/2017/08/14/strategies-for-pipelining.html
+
+
+=========================
+DESCRIPTION OF EACH STAGE
+=========================
+
+Stage 0 (fetch):
+----------------
+
+    Inputs: 
+        - branch_mispredict
+    Outputs: 
+        - inst_rd_en
+        - PC_en
+
+    (Handshake signals: stage0_vld, stage1_rdy)
+
+
+Stage 1 (decode):
+-----------------
+
+    Inputs: 
+        - inst_rd_data
+        - branch_mispredict
+
+    Outputs:
+        - B_sel, ALU_sel, ALU_en
+        - addr_sel, rd_en
+        - regfile_sel, regfile_wr_en
+        - imm
+
+    (Handshake signals: stage0_vld, stage1_rdy, stage1_vld, stage2_rdy)
+
+
+Stage 2 (writeback):
+--------------------
+
+    Inputs:
+        - rd_data_vld
+        - ALU_flags, ALU_vld
+    
+    Outputs:
+        - PC_sel
+        - X_sel, X_en
+        - A_sel, A_en
+        - imm
+        - jt, jf (kind of... see "Dealing with jumps")
+    
+    (Handshake signals: stage1_vld, stage2_rdy)
+
+
+========================
+PESSIMISTIC TIMING STAGE
+========================
+
+For the sake of meeting timing, an extra stage can be slotted between fetch and 
+decode. If this is the case, the extra stage will take in the instruction, and 
+buffer it for one cycle (with all the correct handshaking). 
+
+However, there are two extra nuances: 
+    - It must listen for the branch_mispredict signal and cancel instructions
+      correctly
+    - It must perform the correct decrementing of jt and jf (see "Dealing with 
+      jumps")
+
+
+==================
+DEALING WITH JUMPS
+==================
+
+I came up with a quick and dirty technique for dealing with jumps. Basically, 
+the PC will keep incrementing by one on each cycle. So long as the stage after 
+fetch is ready, a new instruction will be read on each cycle.
+
+So how do we correctly handle jumps? If the prediction was wrong, we will 
+simply move PC to the correct next instruction and cancel everything in the 
+pipeline. 
+
+Here's the trick for doing that: the jt and jf values are read into the 
+pipeline on stage 1. For every cycle they sit around in the pipeline, simply 
+decrement them by one. That way, when we add them to PC in stage 2 (potentially 
+after having waited for packet memory to be fetched) the will be the correct 
+increments (and they can be negative!)
+
+A couple extra corner cases to be careful of:
+    - jt and jf should only be decremented when PC is incremented 
+    - Suppose jt was originally zero. Then, if we do need to jump by jt, there 
+      is no need to cancel the other instructions in the pipeline (similarly 
+      for jf). Essentially, this means we correctly predicted the branch and 
+      can continue executing
+
+
+============
+DATA HAZARDS
+============
+
+There are only three writable locations: A, X, and the register file. Since the 
+register file is only (written to) or (read from) in stage 1, there are no data 
+hazards to worry about.
+
+However, A and X are potentially read in stage1, and potentially wirrten to in 
+stage2. So, in stage1, we will determine whether we read X or A, and check the 
+corresponding X_en or A_en wire in stage2. 
