@@ -160,6 +160,7 @@ module datapath # (
             endcase
         end
     end
+    assign inst_rd_addr = PC;
     
     //Address select
     //Note use of imm_stage1
