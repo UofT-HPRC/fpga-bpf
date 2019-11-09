@@ -15,6 +15,21 @@ datapath.v
 
 */
 
+/*
+TODO LIST:
+
+Move `defines to a header file
+Implement ALU
+Copy over old regfile code; there is nothing wrong with it
+Write up new PC code
+Whatever other small jobs are left
+
+*/
+
+
+//Named constants for A and X MUXes
+`include "bpf_defs.vh"
+
 module datapath # (
     parameter BYTE_ADDR_WIDTH = 12,
     parameter CODE_ADDR_WIDTH = 10
@@ -54,61 +69,46 @@ module datapath # (
     input wire [7:0] jf
 );
 
-    //Named constants for A register MUX
-    `ifndef A_SEL_IMM
-    `define		A_SEL_IMM 	3'b000
-    `endif 
-    `define		A_SEL_ABS	3'b001
-    `define		A_SEL_IND	3'b010 
-    `define		A_SEL_MEM	3'b011
-    `define		A_SEL_LEN	3'b100
-    `define		A_SEL_MSH	3'b101
-    `define		A_SEL_ALU	3'b110
-    `define		A_SEL_X		3'b111
+    //Forward-declare wires
+    wire [31:0] regfile_odata;
+    wire [31:0] ALU_out;
+    
     //Accumulator's new value
     always @(posedge clk) begin
         if (A_en == 1'b1) begin
             case (A_sel)
-                3'b000:
+                `A_SEL_IMM:
                     A <= imm_stage2; //Note use of imm_stage2
-                3'b001:
+                `A_SEL_ABS:
                     A <= packet_data;
-                3'b010:
+                `A_SEL_IND:
                     A <= packet_data; //Hmmmm... both ABS and IND addressing wire packet_data to A
-                3'b011:
-                    A <= scratch_odata; 
-                3'b100:
+                `A_SEL_MEM:
+                    A <= regfile_odata; 
+                `A_SEL_LEN:
                     A <= packet_len;
-                3'b101:
-                    A <= {26'b0, imm3[3:0], 2'b0}; //TODO: No MSH instruction is defined (by bpf) for A. Should I leave this?
-                3'b110:
+                `A_SEL_MSH:
+                    A <= {26'b0, imm_stage2[3:0], 2'b0}; //TODO: No MSH instruction is defined (by bpf) for A. Should I leave this?
+                `A_SEL_ALU:
                     A <= ALU_out;
-                3'b111: //for TXA instruction
+                `A_SEL_X: //for TXA instruction
                     A <= X;
             endcase
         end
     end
 
-    //Named constants for X register MUX
-    `define		X_SEL_IMM 	3'b000 
-    `define		X_SEL_ABS	3'b001
-    `define		X_SEL_IND	3'b010 
-    `define		X_SEL_MEM	3'b011
-    `define		X_SEL_LEN	3'b100
-    `define		X_SEL_MSH	3'b101
-    `define		X_SEL_A		3'b111
     //Auxiliary (X) register's new value
     always @(posedge clk) begin
         if (X_en == 1'b1) begin
             case (X_sel)
                 `X_SEL_IMM:
-                    X <= imm3; //Note use of imm3
+                    X <= imm_stage2; //Note use of imm_stage2
                 `X_SEL_ABS:
                     X <= packet_data;
                 `X_SEL_IND:
                     X <= packet_data; //Hmmmm... both ABS and IND addressing wire packet_data to X
                 `X_SEL_MEM:
-                    X <= scratch_odata;
+                    X <= regfile_odata;
                 `X_SEL_LEN:
                     X <= packet_len;
                 `X_SEL_MSH:

@@ -27,10 +27,8 @@
 `define		BPF_MSH		3'b101
 //Named constants for A register MUX
 `define		A_SEL_IMM 	3'b000
-`define		A_SEL_PACKET_MEM 3'b001
-// I noticed that both these selections do the same thing
-//`define		A_SEL_ABS	3'b001
-//`define		A_SEL_IND	3'b010 
+`define		A_SEL_ABS	3'b001
+`define		A_SEL_IND	3'b010 
 `define		A_SEL_MEM	3'b011
 `define		A_SEL_LEN	3'b100
 `define		A_SEL_MSH	3'b101
@@ -38,10 +36,8 @@
 `define		A_SEL_X		3'b111
 //Named constants for X register MUX
 `define		X_SEL_IMM 	3'b000 
-`define		X_SEL_PACKET_MEM 3'b001
-// I noticed that both these selections do the same thing
-//`define		X_SEL_ABS	3'b001
-//`define		X_SEL_IND	3'b010 
+`define		X_SEL_ABS	3'b001
+`define		X_SEL_IND	3'b010 
 `define		X_SEL_MEM	3'b011
 `define		X_SEL_LEN	3'b100
 `define		X_SEL_MSH	3'b101

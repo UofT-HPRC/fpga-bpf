@@ -1,0 +1,120 @@
+Verilog is not easy to read. It's one of those languages which does a really 
+good job of burying high-level intentions into a pile of messy details. To help
+with this, I have adopted some conventions.
+
+Essentially, I have two types of Verilog files: "logic" files and "hookup" 
+files. Basically, a hookup file is nothing more than a replacement for a block 
+diagram which wires things up together, and a logic file is just an ordinary 
+Verilog module that "does something".
+
+I also like to use parameters to control whether or not pessimistic timing 
+registers are used.
+
+=======================
+HOOKUP FILE CONVENTIONS
+=======================
+
+First of all, I make an effort to remove any logic from a hookup file. The only 
+things that should be in there are instantiations and declarations for internal 
+signals.
+
+Generally speaking, I structure these types of files as follows:
+
+    module hook_stuff_up (
+        inputs...
+        outputs...
+    );
+        wire <outputs of A>;
+        wire <outputs of B>;
+        wire <outputs of C>;
+        
+        A A_inst (
+            connections
+        );
+        
+        B B_inst (
+            connections
+        );
+        
+        C C_inst (
+            connections
+        )
+    
+    endmodule
+
+Sometimes I get into trouble with confusing variable names. Basically I try to 
+avoid it, but nobody's perfect!
+
+
+======================
+LOGIC FILE CONVENTIONS
+======================
+
+Here's where things might be different from what you're expecting. I adopt a 
+specific pattern for all but the most trivial modules:
+
+    module my_logic (
+        input wire clk,
+        input wire rst,
+        
+        input wire A,
+        input wire B,
+        output wire C,
+        output wire D
+    );
+    
+        //Forward-declare internal signals
+        wire A_i;
+        wire B_i;
+        wire C_i;
+        wire D_i;
+        reg D_r = 0;
+        
+        
+        //Assign internal signals from inputs
+        assign A_i = A;
+        assign B_i = B;
+        
+        
+        //Do the logic (using only internal signals)
+        assign C_i = A_i && !B_i;
+        assign D_i = A_i;
+        
+        
+        //Assign outputs from internal signals
+        assign C = C_i;
+        
+        always @(posedge clk) begin
+            if (rst) D_r <= 0;
+            else D_r <= D_i;
+        end
+        assign D = D_r;
+    endmodule
+
+
+The pattern is that my module inputs/outputs are always wires. For each one, I 
+define an internal signal which has the same name with "_i" at the end. 
+Essentially, I add a level of indirection between the inputs and the logic, as 
+well as between the logic and the outputs.
+
+Why on Earth would I go to all this trouble?
+
+The answer is because it makes it a lot easier to go in later and change the 
+"schedule" (i.e. which values are used on which clock cycles). The logic should 
+be written using only combinational statements (if possible); all delays should 
+be done in the "assign internal signals from inputs" or "assign outputs from 
+internal signals" sections.
+
+Also, behind the scenes I'm working on a new HDL which will end up generating 
+code that will look like this. So I'm working through this pattern to get a 
+better understanding of how to generate code.
+
+
+======================
+PARAMETERIZED SCHEDULE
+======================
+
+I alluded to this in my justification for the logic file conventions. 
+Basically, once you've adopted this indirection pattern, you can add in 
+parameterized scheduling. For example, see packetfilt_core/bpfcpu/alu.v or 
+packetfilt_core/p3/agent_adapters/cpu_adapter/cpu_adapter.v
