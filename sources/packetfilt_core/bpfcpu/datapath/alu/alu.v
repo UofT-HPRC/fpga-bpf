@@ -4,6 +4,9 @@ alu.v
 A simple ALU designed to match the needs of the BPF VM. 
 */
 
+`ifdef FROM_ALU
+`include "../../../bpf_defs.vh"
+`endif
 
 module alu # (
 	parameter PESS = 0
@@ -25,11 +28,12 @@ module alu # (
     /**Forward-declare internal signals**/
     /************************************/
     wire [31:0] A_i;
-    wire [31:0] B_i;
+    wire [31:0] B_i;
     wire [3:0] ALU_sel_i;
     wire ALU_en_i;
-    wire [31:0] ALU_out_i = 0;
+    reg [31:0] ALU_out_i;
     wire eq_i, gt_i, ge_i, set_i;
+    wire ALU_vld_i;
     
     /***************************************/
     /**Assign internal signals from inputs**/
@@ -85,42 +89,51 @@ module alu # (
 
 
     //These are used as the predicates for JMP instructions
-    assign eq_i = (A == B) ? 1'b1 : 1'b0;
-    assign gt_i = (A > B) ? 1'b1 : 1'b0;
+    assign eq_i = (A_i == B_i) ? 1'b1 : 1'b0;
+    assign gt_i = (A_i > B_i) ? 1'b1 : 1'b0;
     assign ge_i = gt_i | eq_i;
-    assign set_i = ((A & B) != 32'h00000000) ? 1'b1 : 1'b0;
+    assign set_i = ((A_i & B_i) != 32'h00000000) ? 1'b1 : 1'b0;
 
+    assign ALU_vld_i = ALU_en_i;
+    
     
     /****************************************/
     /**Assign outputs from internal signals**/
     /****************************************/
-generate
-    if (PESS) begin
-        reg eq_r, gt_r, ge_r, set_r;
-        always @(posedge clk) begin
+    
+    reg eq_r = 0;
+    reg gt_r = 0;
+    reg ge_r = 0;
+    reg set_r = 0;
+    always @(posedge clk) begin
+        if (ALU_en_i) begin
             eq_r <= eq_i;
             gt_r <= gt_i;
             ge_r <= ge_i;
             set_r <= set_i;
+        end else begin
+            eq_r <= eq_r;
+            gt_r <= gt_r;
+            ge_r <= ge_r;
+            set_r <= set_r;
         end
-        assign eq = eq_r;
-        assign gt = gt_r;
-        assign ge = ge_r;
-        assign set = set_r;
-        
-        reg [31:0] ALU_out_r;
-        always @(posedge clk) begin
-            ALU_out_r <= ALU_out_i;
-        end
-        assign ALU_out = ALU_out_r;
-    end else begin
-        assign eq = eq_i;
-        assign gt = gt_i;
-        assign ge = ge_i;
-        assign set = set_i;
-        
-        assign ALU_out = ALU_out_i;
     end
-endgenerate
+    assign eq = eq_r;
+    assign gt = gt_r;
+    assign ge = ge_r;
+    assign set = set_r;
+    
+    reg [31:0] ALU_out_r = 0;
+    always @(posedge clk) begin
+        if (ALU_en_i) ALU_out_r <= ALU_out_i;
+        else ALU_out_r <= ALU_out_r;
+    end
+    assign ALU_out = ALU_out_r;
+    
+    reg ALU_vld_r = 0;
+    always @(posedge clk) begin
+        ALU_vld_r <= ALU_vld_i;
+    end
+    assign ALU_vld = ALU_vld_r;
 
 endmodule
