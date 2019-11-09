@@ -27,14 +27,10 @@ C1: (Input: bigword; Output: resized_mem_data)
 
 `ifdef FROM_CPUADAPTER
 `include "../../../bpf_defs.vh"
-`else
-
-`ifdef FROM_P3
+`elsif FROM_P3
 `include "../bpf_defs.vh"
-`else
-
+`else /*For Vivado*/
 `include "bpf_defs.vh"
-`endif
 `endif
 
 //I kept needing this value in the code

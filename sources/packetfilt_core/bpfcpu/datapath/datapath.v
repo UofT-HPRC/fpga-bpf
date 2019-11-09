@@ -3,6 +3,10 @@
 /*
 datapath.v
 
+I am doing this like a hookup file, but against my better judgement I just left 
+the logic for the A, X, and PC registers in here instead of moving to their own
+module
+
     - A_sel, A_en
     - X_sel, X_en
     - PC_sel, PC_en
@@ -28,7 +32,13 @@ Whatever other small jobs are left
 
 
 //Named constants for A and X MUXes
+`ifdef FROM_DATAPATH
 `include "bpf_defs.vh"
+`include "alu/alu.v"
+`else /*For Vivado's sake*/
+`include "bpf_defs.vh"
+`endif
+
 
 module datapath # (
     parameter BYTE_ADDR_WIDTH = 12,
@@ -50,14 +60,17 @@ module datapath # (
     input wire B_sel,
     input wire [3:0] ALU_sel,
     input wire ALU_en,
-    output wire [3:0] ALU_flags,
+    output wire eq,
+    output wire gt,
+    output wire ge,
+    output wire set,
     output wire ALU_vld,
     
     input wire regfile_sel,
     input wire regfile_wr_en,
     
     input wire addr_sel,
-    output wire [BYTE_ADDR_WIDTH-1:0] rd_addr,
+    output wire [BYTE_ADDR_WIDTH-1:0] packet_rd_addr,
     input wire [31:0] packet_data,
     
     input wire [31:0] packet_len,
@@ -69,13 +82,21 @@ module datapath # (
     input wire [7:0] jf
 );
 
+    //Registers
+    reg [31:0] A = 0;
+    reg [31:0] X = 0;
+    reg [CODE_ADDR_WIDTH-1:0] PC = 0;
+
     //Forward-declare wires
+    wire [31:0] regfile_idata;
     wire [31:0] regfile_odata;
+    wire [31:0] B;
     wire [31:0] ALU_out;
     
     //Accumulator's new value
     always @(posedge clk) begin
-        if (A_en == 1'b1) begin
+        if (rst) A <= 0;
+        else if (A_en == 1'b1) begin
             case (A_sel)
                 `A_SEL_IMM:
                     A <= imm_stage2; //Note use of imm_stage2
@@ -99,7 +120,8 @@ module datapath # (
 
     //Auxiliary (X) register's new value
     always @(posedge clk) begin
-        if (X_en == 1'b1) begin
+        if (rst) X <= 0;
+        else if (X_en == 1'b1) begin
             case (X_sel)
                 `X_SEL_IMM:
                     X <= imm_stage2; //Note use of imm_stage2
@@ -120,5 +142,53 @@ module datapath # (
             endcase
         end
     end
-
+    
+    //Program Counter (PC) register's new value
+    //TODO: figure out JA strategy
+    always @(posedge clk) begin
+        if (rst) PC <= 0;
+        else if (PC_en == 1'b1) begin
+            case (PC_sel)
+                `PC_SEL_PLUS_1:
+                    PC <= PC + 1;
+                `PC_SEL_PLUS_JT:
+                    PC <= PC + jt; //Note: jt is correctly decremented
+                `PC_SEL_PLUS_JF:
+                    PC <= PC + jf; //Note: jf is correctly decremented
+                `PC_SEL_PLUS_IMM:
+                    PC <= PC + imm_stage2 - 1; //The -1 is a hack, and is probably wrong. FIX!
+            endcase
+        end
+    end
+    
+    //Address select
+    //Note use of imm_stage1
+    assign packet_rd_addr = (addr_sel == `PACK_ADDR_ABS) ? imm_stage1 : X + imm_stage1;
+    
+    //ALU
+    assign B = (B_sel == `ALU_B_SEL_IMM) ? imm_stage1 : X; //Note use of stage1
+    alu the_alu (
+        .clk(clk),
+        .A(A),
+        .B(B),
+        .ALU_sel(ALU_sel),
+        .ALU_en(ALU_en),
+        .ALU_out(ALU_out),
+        .set(set),
+        .eq(eq),
+        .gt(gt),
+        .ge(ge),
+        .ALU_vld(ALU_vld)
+    );
+    
+    //Register file
+    assign regfile_idata = (regfile_sel == `REGFILE_IN_A) ? A : X;
+    regfile scratch_mem (
+        .clk(clk),
+        .rst(rst),
+        .addr(imm_stage1[3:0]), //Note use of imm_stage1
+        .idata(regfile_idata),
+        .wr_en(regfile_wr_en),
+        .odata(regfile_odata)
+    );
 endmodule

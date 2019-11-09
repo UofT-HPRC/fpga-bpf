@@ -6,6 +6,8 @@ A simple ALU designed to match the needs of the BPF VM.
 
 `ifdef FROM_ALU
 `include "../../../bpf_defs.vh"
+`else /* For Vivado */
+`include "bpf_defs.vh"
 `endif
 
 module alu # (
