@@ -456,3 +456,52 @@ As promised, here is the two-column diff:
         assign odata_vld = mem_vld;                                                      
                                                                                          
     endmodule                                                                            
+
+
+=============
+COUNTING MODE
+=============
+
+One last thing: in some cases, I need to count how many cycles a value has been 
+in a pipeline. To do this, I can use almost the exact same code, except every 
+time I assign a value to mem or extra_mem, I increment it first (not forgetting 
+the case when the value doesn't change!)
+
+So, taking the extra_mem code,
+
+    always @(posedge clk) begin
+        //extra_mem's next value
+        if (extra_mem_en) begin
+            extra_mem <= idata;
+        end
+    end
+
+we simply change it to say:
+
+    always @(posedge clk) begin
+        //extra_mem's next value
+        if (extra_mem_en) begin
+            extra_mem <= idata + 1;
+        end else begin
+            extra_mem <= extra_mem + 1;
+    end
+
+And similarly for the mem code, take
+
+    always @(posedge clk) begin
+        //mem's next value
+        if (mem_en) begin
+            mem <= extra_mem_vld ? extra_mem : idata;
+        end
+    end
+
+and change it to
+
+    always @(posedge clk) begin
+        //mem's next value
+        if (mem_en) begin
+            mem <= extra_mem_vld ? extra_mem + 1 : idata + 1;
+        end else begin 
+            mem <= mem + 1;
+        end
+    end

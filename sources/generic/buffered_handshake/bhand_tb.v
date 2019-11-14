@@ -9,6 +9,8 @@ A testbench for the buffered handshake
 `include "bhand.v"
 
 `define DATA_WIDTH 8
+`define COUNT_WIDTH 4
+`define ENABLE_COUNT 1
 
 module bhand_tb;
 	reg clk;    
@@ -19,6 +21,9 @@ module bhand_tb;
     wire [`DATA_WIDTH-1:0] odata;
     wire odata_vld;
     reg odata_rdy;
+    
+    reg [`COUNT_WIDTH-1:0] icount;
+    wire [`COUNT_WIDTH-1:0] ocount;
     
     integer fd, dummy;
     
@@ -32,6 +37,7 @@ module bhand_tb;
         idata <= 0;
         idata_vld <= 0;
         odata_rdy <= 0;
+        icount <= 0;
         
         fd = $fopen("bhand_drivers.mem", "r");
         if (fd == 0) begin
@@ -61,7 +67,9 @@ module bhand_tb;
     end
 
     bhand # (
-        .DATA_WIDTH(`DATA_WIDTH)
+        .DATA_WIDTH(`DATA_WIDTH),
+        .COUNT_WIDTH(`COUNT_WIDTH),
+        .ENABLE_COUNT(`ENABLE_COUNT)
     ) DUT (
         .clk(clk),
         .rst(rst),
@@ -70,7 +78,9 @@ module bhand_tb;
         .idata_rdy(idata_rdy),
         .odata(odata),
         .odata_vld(odata_vld),
-        .odata_rdy(odata_rdy)
+        .odata_rdy(odata_rdy),
+        .icount(icount),
+        .ocount(ocount)
     );
 
 endmodule

@@ -1,9 +1,20 @@
 `timescale 1ns / 1ps
 
-//Implements a buffered handshake
+/*
+bhand.v
+
+Implements a buffered handshake. Also has a parameter for turning on a 
+"counting" mode. This counts how many cycles an input has been in the FIFO.
+
+*/
+
+`define genif generate if
+`define endgen end endgenerate
 
 module bhand # (
-    parameter DATA_WIDTH = 8
+    parameter DATA_WIDTH = 8,
+    parameter ENABLE_COUNT = 0,
+    parameter COUNT_WIDTH = 4
 ) (
     input wire clk,
     input wire rst,
@@ -14,7 +25,11 @@ module bhand # (
     
     output wire [DATA_WIDTH-1:0] odata,
     output wire odata_vld,
-    input wire odata_rdy
+    input wire odata_rdy,
+    
+    //Counting signals. Ignore these ports if ENABLE_COUNT == 0
+    input wire [COUNT_WIDTH-1:0] icount,
+    output wire [COUNT_WIDTH-1:0] ocount
 );
 
     //Some helper signals for neatening up the code
@@ -26,8 +41,10 @@ module bhand # (
     
     
     
+    
     //Forward-declare this signal since extra_mem needs it
     reg mem_vld = 0;
+    
     
     
     
@@ -46,8 +63,8 @@ module bhand # (
     
     always @(posedge clk) begin
         if (rst) begin
-            mem <= 0;
-            mem_vld <= 0;
+            extra_mem <= 0;
+            extra_mem_vld <= 0;
         end else begin
             //extra_mem's next value
             if (extra_mem_en) begin
@@ -65,6 +82,7 @@ module bhand # (
     
     
     
+    
     //Internal registers and signals for FIFO element
     reg [DATA_WIDTH-1:0] mem = 0;
     //reg mem_vld = 0; //moved
@@ -79,8 +97,8 @@ module bhand # (
     
     always @(posedge clk) begin
         if (rst) begin
-            extra_mem <= 0;
-            extra_mem_vld <= 0;
+            mem <= 0;
+            mem_vld <= 0;
         end else begin
             //mem's next value
             if (mem_en) begin
@@ -95,6 +113,42 @@ module bhand # (
             end
         end
     end
+
+`genif(ENABLE_COUNT) begin
+    //Declare internal registers
+    reg [COUNT_WIDTH-1:0] extra_cnt_reg = 0;
+    reg [COUNT_WIDTH-1:0] cnt_reg = 0;
+    
+    //extra_cnt_reg
+    always @(posedge clk) begin
+        if (rst) begin
+            extra_cnt_reg <= 0;
+        end else begin
+            if (extra_mem_en) begin
+                extra_cnt_reg <= icount + 1;
+            end else begin
+                extra_cnt_reg <= extra_cnt_reg + 1;
+            end
+        end
+    end
+    
+    //cnt_reg
+    always @(posedge clk) begin
+        if (rst) begin
+            cnt_reg <= 0;
+        end else begin
+            if (mem_en) begin
+                cnt_reg <= extra_mem_vld ? extra_cnt_reg + 1 : icount + 1;
+            end else begin
+                cnt_reg <= cnt_reg + 1;
+            end
+        end
+    end
+    
+    //Wire up outputs
+    assign ocount = cnt_reg;
+`endgen
+    
     
     
     
@@ -104,3 +158,6 @@ module bhand # (
     assign odata_vld = mem_vld;
     
 endmodule
+
+`undef genif
+`undef endgen
