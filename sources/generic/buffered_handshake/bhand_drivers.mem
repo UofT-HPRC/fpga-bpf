@@ -1,16 +1,31 @@
-idata   idata_vld   odata_rdy
-00      0           1
-DE      1           1
-AD      1           1
-00      0           1
-BE      1           1
-EF      1           1
-00      0           0
-FE      1           0
-ED      1           1
-ED      1           1
-BE      1           1
-00      0           1
-EF      1           1
-00      0           1
-00      0           1
+idata   idata_vld   odata_rdy   rst
+00      0           1           0
+DE      1           1           0
+AD      1           1           0
+00      0           1           0
+BE      1           1           0
+EF      1           1           0
+00      0           0           0
+FE      1           0           0
+ED      1           1           0
+ED      1           1           0
+BE      1           1           0
+00      0           1           0
+EF      1           1           0
+00      0           1           0
+00      0           1           1
+00      0           1           0
+DE      1           1           0
+AD      1           1           0
+00      0           1           1
+BE      1           1           0
+EF      1           1           0
+00      0           0           0
+FE      1           0           0
+ED      1           1           0
+ED      1           1           0
+BE      1           1           0
+00      0           1           0
+EF      1           1           0
+00      0           1           0
+00      0           1           0

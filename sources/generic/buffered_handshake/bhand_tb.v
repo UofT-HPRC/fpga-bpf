@@ -12,6 +12,7 @@ A testbench for the buffered handshake
 
 module bhand_tb;
 	reg clk;    
+    reg rst;
     reg [`DATA_WIDTH-1:0] idata;
     reg idata_vld;
     wire idata_rdy;
@@ -27,6 +28,7 @@ module bhand_tb;
         $dumplimit(512000);
         
         clk <= 0;
+        rst <= 0;
         idata <= 0;
         idata_vld <= 0;
         odata_rdy <= 0;
@@ -55,13 +57,14 @@ module bhand_tb;
         end
         
         #0.01
-        dummy = $fscanf(fd, "%x%b%b", idata, idata_vld, odata_rdy);
+        dummy = $fscanf(fd, "%x%b%b%b", idata, idata_vld, odata_rdy, rst);
     end
 
     bhand # (
         .DATA_WIDTH(`DATA_WIDTH)
     ) DUT (
         .clk(clk),
+        .rst(rst),
         .idata(idata),
         .idata_vld(idata_vld),
         .idata_rdy(idata_rdy),

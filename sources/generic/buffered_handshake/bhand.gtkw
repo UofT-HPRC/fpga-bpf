@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Thu Nov 14 00:36:09 2019
+[*] Thu Nov 14 00:49:24 2019
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/generic/buffered_handshake/bhand.vcd"
-[dumpfile_mtime] "Thu Nov 14 00:32:28 2019"
-[dumpfile_size] 2228
+[dumpfile_mtime] "Thu Nov 14 00:49:13 2019"
+[dumpfile_size] 3531
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/generic/buffered_handshake/bhand.gtkw"
 [timestart] 0
 [size] 1916 1060
-[pos] -1 -541
-*-14.479659 75000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-15.446916 205010 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bhand_tb.
 [sst_width] 214
 [signals_width] 150
@@ -17,6 +17,7 @@
 [sst_vpaned_height] 610
 @28
 bhand_tb.DUT.clk
+bhand_tb.rst
 @200
 -input side
 @22
@@ -35,7 +36,10 @@ bhand_tb.odata_rdy
 -bhand internals
 @22
 bhand_tb.DUT.extra_mem[7:0]
-@23
 bhand_tb.DUT.mem[7:0]
+@29
+bhand_tb.DUT.extra_mem_vld
+@28
+bhand_tb.DUT.mem_vld
 [pattern_trace] 1
 [pattern_trace] 0
