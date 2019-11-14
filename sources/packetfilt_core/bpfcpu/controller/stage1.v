@@ -50,13 +50,55 @@ module stage1 (
     output wire jt,
     output wire jf,
     
+    //count number of cycles instruction has been around for
+    input wire [5:0] icount,
+    output wire [5:0] ocount,
+    
     //Handshaking signals
     input wire prev_vld,
     output wire rdy,
     input wire next_rdy,
     output wire vld
 );
-
-
+    
+    //Start with the easy stuff: subfields of the instruction:
+    assign opcode = inst[55:48];
+    assign jt = inst[47:40];
+    assign jf = inst[39:32];
+    assign imm = inst[31:0];
+    assign imm_stage1 = imm;
+    
+        //Named subfields of the opcode (used internally to neaten the code)
+        wire [2:0] opcode_class;
+        assign opcode_class = opcode[2:0];
+        wire [2:0] addr_type;
+        assign addr_type = opcode[7:5];
+        wire [2:0] jmp_type;
+        assign jmp_type = opcode[6:4];
+        wire [4:0] miscop;
+        assign miscop = opcode[7:3];
+        wire [1:0] retval;
+        assign retval = opcode[4:3];
+    
+    //More easy stuff: a lot of control signals come straight from opcode bits
+    assign B_sel = opcode[3];
+    assign ALU_sel = opcode[7:4];
+    
+    //The rest of it requires us to look at the opcode and make decisions. This
+    //is my best attempt at keeping the code legible...
+    assign addr_sel = (addr_type == `BPF_IND) ? `PACK_ADDR_IND : `PACK_ADDR_ABS;
+    
+    always @(*) begin
+        if ((opcode_class == `BPF_LD) && (addr_type == `BPF_ABS || addr_type == `BPF_IND)) begin
+            rd_en <= 1;
+        end else if ((opcode_class == `BPF_LDX) && (addr_type == `BPF_ABS || addr_type == `BPF_IND || addr_type == `BPF_MSH)) begin
+            rd_en <= 1;
+        end else begin
+            rd_en <= 0;
+        end
+    end
+    
+    assign regfile_sel_decoded = (opcode_class == `BPF_STX) ? `REGFILE_IN_X : `REGFILE_IN_A;
+    assign regfile_wr_en_decoded = (opcode_class == `BPF_ST || opcode_class == `BPF_STX);
 
 endmodule

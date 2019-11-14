@@ -22,12 +22,12 @@ module stage0 (
     //However, if the branch_mispredict signal is asserted, it means PC is being
     //changed on this cycle, and we should wait
     
-    assign rd_en = next_rdy && !mispredict;
+    assign rd_en = next_rdy && !branch_mispredict;
     assign PC_en = rd_en;
     
     reg vld_r = 0;
     always @(posedge clk) begin
-        if (rst) vld_r <= 0;
+        if (rst || branch_mispredict) vld_r <= 0;
         else vld_r <= rd_en;
     end
     

@@ -114,6 +114,9 @@ module bhand # (
         end
     end
 
+
+
+
 `genif(ENABLE_COUNT) begin
     //Declare internal registers
     reg [COUNT_WIDTH-1:0] extra_cnt_reg = 0;
