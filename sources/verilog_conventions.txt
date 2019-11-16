@@ -105,6 +105,9 @@ be written using only combinational statements (if possible); all delays should
 be done in the "assign internal signals from inputs" or "assign outputs from 
 internal signals" sections.
 
+    -> Anyway, it doesn't take much extra time, since I use geany's block 
+    cursor and regex find+replace to do a lot of the tedious editing.
+
 Also, behind the scenes I'm working on a new HDL which will end up generating 
 code that will look like this. So I'm working through this pattern to get a 
 better understanding of how to generate code.
