@@ -29,6 +29,7 @@
 `define		A_SEL_IMM 	3'b000
 `define		A_SEL_ABS	3'b001
 `define		A_SEL_IND	3'b010 
+`define		A_SEL_PACKET_MEM	`A_SEL_ABS 
 `define		A_SEL_MEM	3'b011
 `define		A_SEL_LEN	3'b100
 `define		A_SEL_MSH	3'b101
@@ -38,6 +39,7 @@
 `define		X_SEL_IMM 	3'b000 
 `define		X_SEL_ABS	3'b001
 `define		X_SEL_IND	3'b010 
+`define		X_SEL_PACKET_MEM	`X_SEL_ABS
 `define		X_SEL_MEM	3'b011
 `define		X_SEL_LEN	3'b100
 `define		X_SEL_MSH	3'b101

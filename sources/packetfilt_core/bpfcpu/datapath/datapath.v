@@ -79,7 +79,8 @@ module datapath # (
     input wire [31:0] imm_stage2,
     
     input wire [7:0] jt,
-    input wire [7:0] jf
+    input wire [7:0] jf,
+    input wire [CODE_ADDR_WIDTH-1:0] jmp_correction
 );
 
     //Registers
@@ -109,7 +110,7 @@ module datapath # (
                 `A_SEL_LEN:
                     A <= packet_len;
                 `A_SEL_MSH:
-                    A <= {26'b0, imm_stage2[3:0], 2'b0}; //TODO: No MSH instruction is defined (by bpf) for A. Should I leave this?
+                    A <= {26'b0, packet_data[3:0], 2'b0}; //TODO: No MSH instruction is defined (by bpf) for A. Should I leave this?
                 `A_SEL_ALU:
                     A <= ALU_out;
                 `A_SEL_X: //for TXA instruction
@@ -152,11 +153,11 @@ module datapath # (
                 `PC_SEL_PLUS_1:
                     PC <= PC + 1;
                 `PC_SEL_PLUS_JT:
-                    PC <= PC + jt; //Note: jt is correctly decremented
+                    PC <= PC + jt - jmp_correction; 
                 `PC_SEL_PLUS_JF:
-                    PC <= PC + jf; //Note: jf is correctly decremented
+                    PC <= PC + jf - jmp_correction;
                 `PC_SEL_PLUS_IMM:
-                    PC <= PC + imm_stage2 - 1; //The -1 is a hack, and is probably wrong. FIX!
+                    PC <= PC + imm_stage2 - jmp_correction; 
             endcase
         end
     end

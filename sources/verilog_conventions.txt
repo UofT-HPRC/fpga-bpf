@@ -112,6 +112,9 @@ Also, behind the scenes I'm working on a new HDL which will end up generating
 code that will look like this. So I'm working through this pattern to get a 
 better understanding of how to generate code.
 
+One last justification: personally, I find it makes the code easier to write 
+correctly and to read. Partly, this is because it concentrates all the logic in 
+one place. The rest of the code is either boilerplate, or a simple delay.
 
 ======================
 PARAMETERIZED SCHEDULE

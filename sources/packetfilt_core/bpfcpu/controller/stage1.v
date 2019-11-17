@@ -17,6 +17,10 @@ Note: the outputs of a stage are combinational on the inputs. All the "hot" bus
 signals (such as write enables) are only asserted on the single cycle when 
 valid and ready are high (on the input side).
 
+TODO: At some point I'll write logic to detect when this stage is stalled. 
+Importantly, this needs to gate the output valid signal, and the output-side 
+ready signal on the bhand module.
+
 */
 
 `ifdef FROM_CONTROLLER
@@ -113,7 +117,6 @@ module stage1 (
     /**Do the logic**/
     /****************/
     
-    //More easy stuff: a lot of control signals come straight from opcode bits
     assign B_sel_i = opcode[3];
     
     assign ALU_sel_i = opcode[7:4];
@@ -135,6 +138,8 @@ module stage1 (
     assign imm_stage1_i = instr_in_i[31:0];
     
     assign instr_out_i = instr_in_i;
+    
+    assign ocount_i = icount_i;
     
     
     /****************************************/
