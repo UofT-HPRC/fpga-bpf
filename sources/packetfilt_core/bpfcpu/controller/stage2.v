@@ -29,10 +29,14 @@ understand it for myself.
 
 */
 
+
+//temporary: remove this
+`define FROM_CONTROLLER 1
+
 `ifdef FROM_CONTROLLER
 `include "../../bpf_defs.vh"
 `else /* For Vivado */
-`include "../../bpf_defs.vh"
+`include "bpf_defs.vh"
 `endif
 
 
@@ -67,11 +71,18 @@ module stage2 # (
     output wire A_en,
     output wire X_sel,
     output wire X_en,
+    output wire [3:0] regfile_sel_stage2,
     output wire [31:0] imm_stage2,
     output wire branch_mispredict,
     
     output wire acc,
     output wire rej,
+    
+    //Signals for stall logic
+    output wire stage2_reads_regfile, 
+    output wire stage2_writes_A,
+    output wire stage2_writes_X,
+    
     
     //count number of cycles instruction has been around for
     input wire [5:0] icount,
@@ -109,11 +120,17 @@ module stage2 # (
     `logic A_en_i;
     `logic X_sel_i;
     `logic X_en_i;
+    wire regfile_sel_stage2_i;
     wire [31:0] imm_stage2_i;
     `logic branch_mispredict_i;
     
     wire acc_i;
     wire rej_i;
+    
+    //Stall signals
+    wire stage2_reads_regfile_i;
+    wire stage2_writes_A_i;
+    wire stage2_writes_X_i;
     
     //count number of cycles instruction has been around for
     wire [5:0] icount_i;
@@ -294,6 +311,9 @@ module stage2 # (
         end
     end
     
+    //regfile_sel_stage2
+    assign regfile_sel_stage2_i = imm_i[3:0];
+    
     //imm_stage2_i;
     assign imm_stage2_i = imm_i;
     
@@ -309,6 +329,11 @@ end else begin
     assign acc_i = is_RETIMM_instruction && (imm_i != 0);
     assign rej_i = is_RETIMM_instruction && (imm_i == 0);
     
+    //Stall signals
+    assign stage2_reads_regfile_i = (opcode_class == `BPF_LD || opcode_class == `BPF_LDX) && (addr_type == `BPF_MEM);
+    assign stage2_writes_A_i = A_en_i;
+    assign stage2_writes_X_i = X_en_i;
+    
     /****************************************/
     /**Assign outputs from internal signals**/
     /****************************************/
@@ -318,18 +343,26 @@ end else begin
     assign enable_hot = prev_vld && rdy;
     
     //Outputs for this stage:
-    assign jt_out            = jt_out_i;
-    assign jf_out            = jf_out_i;
-    assign PC_sel            = PC_sel_i;
-    assign A_sel             = A_sel_i;
-    assign A_en              = A_en_i && enable_hot;
-    assign X_sel             = X_sel_i;
-    assign X_en              = X_en_i && enable_hot;
-    assign imm_stage2        = imm_stage2_i;
-    assign branch_mispredict = branch_mispredict_i && enable_hot;
+    assign jt_out             = jt_out_i;
+    assign jf_out             = jf_out_i;
+    assign PC_sel             = PC_sel_i;
+    assign A_sel              = A_sel_i;
+    assign A_en               = A_en_i && enable_hot;
+    assign X_sel              = X_sel_i;
+    assign X_en               = X_en_i && enable_hot;
+    assign regfile_sel_stage2 = regfile_sel_stage2_i;
+    assign imm_stage2         = imm_stage2_i;
+    assign branch_mispredict  = branch_mispredict_i && enable_hot;
     
     assign acc = acc_i && enable_hot;
     assign rej = rej_i && enable_hot;
+    
+    //Note that stall signals are gated with prev_vld. This is because they are
+    //computed combinationally from the output of the last stage.
+    //Stall signals
+    assign stage2_reads_regfile = stage2_reads_regfile_i && prev_vld;
+    assign stage2_writes_A = stage2_writes_A_i && prev_vld;
+    assign stage2_writes_X = stage2_writes_X_i && prev_vld;
     
 endmodule
 

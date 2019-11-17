@@ -23,11 +23,18 @@ ready signal on the bhand module.
 
 */
 
+//temporary: remove this
+`define FROM_CONTROLLER 1
+
 `ifdef FROM_CONTROLLER
 `include "../../bpf_defs.vh"
+`include "../../../generic/buffered_handshake/bhand.v"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif
+
+//I use logic where I intend combinational logic, but Verilog forces me to use reg
+`define logic reg
 
 module stage1 (
     input wire clk,
@@ -36,13 +43,18 @@ module stage1 (
     input wire [63:0] instr_in,
     input wire branch_mispredict,
     
+    //Signals for stall logic
+    input wire stage2_reads_regfile, //TODO: maybe make regfile dual port?
+    input wire stage2_writes_A,
+    input wire stage2_writes_X,
+    
     //Outputs from this stage:
     output wire B_sel,
     output wire [3:0] ALU_sel,
     output wire ALU_en,
     output wire addr_sel,
     output wire rd_en,
-    output wire regfile_sel,
+    output wire [3:0] regfile_sel_stage1,
     output wire regfile_wr_en,
     output wire imm_stage1,
     
@@ -65,6 +77,8 @@ module stage1 (
     /**Forward-declare internal signals**/
     /************************************/
     
+    wire stalled_i;
+    
     wire [63:0] instr_in_i;
     wire branch_mispredict_i;
     
@@ -72,7 +86,7 @@ module stage1 (
     wire [3:0] ALU_sel_i;
     wire ALU_en_i;
     wire addr_sel_i;
-    wire rd_en_i;
+    `logic rd_en_i;
     wire regfile_sel_i;
     wire regfile_wr_en_i;
     wire imm_stage1_i;
@@ -81,6 +95,11 @@ module stage1 (
     
     wire [5:0] icount_i;
     wire [5:0] ocount_i;
+    
+    wire prev_vld_i;
+    wire rdy_i;
+    wire next_rdy_i;
+    wire vld_i;
     
     
     /***************************************/
@@ -92,14 +111,16 @@ module stage1 (
     
     assign icount_i = icount_i;
     
-    //I thought about doing internal signals for the handshaking signals, but
-    //then decided against it. Somehow it didn't seem right?
+    assign prev_vld_i = prev_vld;
+    assign next_rdy_i = next_rdy;
     
     
     /************************************/
     /**Helpful names for neatening code**/
     /************************************/
     
+    //Named subfields of opcode
+    wire [7:0] opcode;
     assign opcode = instr_in_i[55:48];
     wire [2:0] opcode_class;
     assign opcode_class = opcode[2:0];
@@ -112,6 +133,26 @@ module stage1 (
     wire [1:0] retval;
     assign retval = opcode[4:3];
     
+    //Helper booleans 
+    wire miscop_is_zero;
+    assign miscop_is_zero = (miscop == 0);
+    wire is_TAX_instruction;
+    assign is_TAX_instruction = (opcode_class == `BPF_MISC) && (miscop_is_zero);
+    wire is_TXA_instruction;
+    assign is_TXA_instruction = (opcode_class == `BPF_MISC) && (!miscop_is_zero);
+    wire is_RETA_instruction;
+    assign is_RETA_instruction = (opcode_class == `BPF_RET) && (retval == `RET_A);
+    wire is_RETX_instruction;
+    assign is_RETX_instruction = (opcode_class == `BPF_RET) && (retval == `RET_X);
+    wire is_RETIMM_instruction;
+    assign is_RETIMM_instruction = (opcode_class == `BPF_RET && retval == `RET_IMM);
+    
+    //For determining when we are stalled
+    wire we_read_A; 
+    assign we_read_A = (opcode_class == `BPF_ALU) || (opcode_class == `BPF_JMP) || (opcode_class == `BPF_ST) || (is_RETA_instruction) || (is_TAX_instruction);
+    wire we_read_X;
+    assign we_read_X = ((opcode_class == `BPF_LD || opcode_class == `BPF_LDX) && addr_type == `BPF_IND) || (opcode_class == `BPF_STX) || (is_RETX_instruction) || (is_TXA_instruction);
+
     
     /****************/
     /**Do the logic**/
@@ -132,8 +173,8 @@ module stage1 (
         end
     end
     
-    assign regfile_sel_decoded_i = (opcode_class == `BPF_STX) ? `REGFILE_IN_X : `REGFILE_IN_A;
-    assign regfile_wr_en_decoded_i = (opcode_class == `BPF_ST || opcode_class == `BPF_STX);
+    assign regfile_sel_i = (opcode_class == `BPF_STX) ? `REGFILE_IN_X : `REGFILE_IN_A;
+    assign regfile_wr_en_i = (opcode_class == `BPF_ST || opcode_class == `BPF_STX);
     
     assign imm_stage1_i = instr_in_i[31:0];
     
@@ -141,12 +182,13 @@ module stage1 (
     
     assign ocount_i = icount_i;
     
+    //Stall signals
+    assign stalled_i = 
+                        (we_read_A && stage2_writes_A)
+                      ||(we_read_X && stage2_writes_X)
+                      ||(regfile_wr_en_i && stage2_reads_regfile);
     
-    /****************************************/
-    /**Assign outputs from internal signals**/
-    /****************************************/
-    
-    //This performs the buffered handshaking on the outputs (instr_out and ocount)
+    //This performs the buffered handshaking
     bhand # (
         .DATA_WIDTH(64),
         .ENABLE_COUNT(1),
@@ -155,22 +197,28 @@ module stage1 (
         .clk(clk),
         .rst(rst || branch_mispredict_i),
             
-        .idata(instr_out_i),
-        .idata_vld(prev_vld),
-        .idata_rdy(rdy),
+        .idata(instr_in_i),
+        .idata_vld(prev_vld_i),
+        .idata_rdy(rdy_i),
             
-        .odata(instr_out),
-        .odata_vld(vld),
-        .odata_rdy(next_rdy),
+        .odata(instr_out_i),
+        .odata_vld(vld_i),
+        .odata_rdy(next_rdy_i),
         
-        .icount(ocount_i),
-        .ocount(ocount)
+        .icount(icount_i),
+        .ocount(ocount_i)
     );
     
+    /****************************************/
+    /**Assign outputs from internal signals**/
+    /****************************************/
+    
+
+    
     //This stage's control bus outputs
-    //Note that "hot" control signals are gated with prev_vld and rdy
+    //Note that "hot" control signals are gated with prev_vld and rdy and not stalled
     wire enable_hot;
-    assign enable_hot = prev_vld && rdy;
+    assign enable_hot = prev_vld && rdy && !stalled_i;
     
     assign B_sel          = B_sel_i;
     assign ALU_sel        = ALU_sel_i;
@@ -180,5 +228,10 @@ module stage1 (
     assign regfile_sel    = regfile_sel_i;
     assign regfile_wr_en  = regfile_wr_en_i && enable_hot;
     assign imm_stage1     = imm_stage1_i;
+    
+    //Handshaking signals
+    //We are not ready if we are stalled
+    assign vld = vld_i;
+    assign rdy = rdy_i && !stalled_i;
 
 endmodule

@@ -66,7 +66,7 @@ module datapath # (
     output wire set,
     output wire ALU_vld,
     
-    input wire regfile_sel,
+    input wire [3:0] regfile_sel,
     input wire regfile_wr_en,
     
     input wire addr_sel,
