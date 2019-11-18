@@ -14,38 +14,47 @@ module muxes_tb;
     reg [`DATA_WIDTH-1:0] sn_data;
     reg [`INC_WIDTH-1:0] sn_bytes_inc;
     reg sn_wr_en;
+    reg sn_reset_len;
     
     reg [`ADDR_WIDTH-1:0] cpu_addr;
     wire [`DATA_WIDTH-1:0] cpu_data;
+    wire cpu_data_vld;
     reg cpu_rd_en;
     wire [`PLEN_WIDTH-1:0] cpu_len;
     
     reg [`ADDR_WIDTH-1:0] fwd_addr;
     wire [`DATA_WIDTH-1:0] fwd_data;
+    wire fwd_data_vld;
     reg fwd_rd_en;
     wire [`PLEN_WIDTH-1:0] fwd_len;
     
     wire [`ADDR_WIDTH-1:0] ping_addr;
     wire [`DATA_WIDTH-1:0] ping_wr_data;
     reg [`DATA_WIDTH-1:0] ping_rd_data;
+    reg ping_rd_data_vld;
     wire ping_rd_en;
     wire [`INC_WIDTH-1:0] ping_bytes_inc;
+    wire ping_reset_len;
     wire ping_wr_en;
     reg [`PLEN_WIDTH-1:0] ping_len;
     
     wire [`ADDR_WIDTH-1:0] pang_addr;
     wire [`DATA_WIDTH-1:0] pang_wr_data;
     reg [`DATA_WIDTH-1:0] pang_rd_data;
+    reg pang_rd_data_vld;
     wire pang_rd_en;
     wire [`INC_WIDTH-1:0] pang_bytes_inc;
+    wire pang_reset_len;
     wire pang_wr_en;
     reg [`PLEN_WIDTH-1:0] pang_len;
     
     wire [`ADDR_WIDTH-1:0] pong_addr;
     wire [`DATA_WIDTH-1:0] pong_wr_data;
     reg [`DATA_WIDTH-1:0] pong_rd_data;
+    reg pong_rd_data_vld;
     wire pong_rd_en;
     wire [`INC_WIDTH-1:0] pong_bytes_inc;
+    wire pong_reset_len;
     wire pong_wr_en;
     reg [`PLEN_WIDTH-1:0] pong_len;
     
@@ -120,11 +129,15 @@ module muxes_tb;
     
     always @(posedge clk) begin
         ping_rd_data <= {$random, $random};
+        ping_rd_data_vld <= $random;
         pang_rd_data <= {$random, $random};
+        pang_rd_data_vld <= $random;
         pong_rd_data <= {$random, $random};
+        pong_rd_data_vld <= $random;
         
         sn_addr <= $random;
         sn_data <= {$random, $random};
+        sn_reset_len <= $random;
         cpu_addr <= $random;
         fwd_addr <= $random;
     end
@@ -137,25 +150,25 @@ module muxes_tb;
         .PLEN_WIDTH(`PLEN_WIDTH)
     ) DUT (
         //Inputs
-        //Format is {addr, wr_data, wr_en, bytes_inc}
-        .from_sn({sn_addr, sn_data, sn_wr_en, sn_bytes_inc}),
+        //Format is {addr, wr_data, wr_en, bytes_inc, reset_sig}
+        .from_sn({sn_addr, sn_data, sn_wr_en, sn_bytes_inc, sn_reset_len}),
         //Format is {addr, rd_en}
         .from_cpu({cpu_addr, cpu_rd_en}),
         .from_fwd({fwd_addr, fwd_rd_en}),
-        //Format is {rd_data, packet_len}
-        .from_ping({ping_rd_data, ping_len}),
-        .from_pang({pang_rd_data, pang_len}),
-        .from_pong({pong_rd_data, pong_len}),
+        //Format is {rd_data, rd_data_vld, packet_len}
+        .from_ping({ping_rd_data, ping_rd_data_vld, ping_len}),
+        .from_pang({pang_rd_data, pang_rd_data_vld, pang_len}),
+        .from_pong({pong_rd_data, pong_rd_data_vld, pong_len}),
         
         //Outputs
         //Nothing to output to snooper
-        //Format is {rd_data, packet_len}
-        .to_cpu({cpu_data, cpu_len}),
-        .to_fwd({fwd_data, fwd_len}),
-        //Format here is {addr, wr_data, wr_en, bytes_inc, rd_en}
-        .to_ping({ping_addr, ping_wr_data, ping_wr_en, ping_bytes_inc, ping_rd_en}),
-        .to_pang({pang_addr, pang_wr_data, pang_wr_en, pang_bytes_inc, pang_rd_en}),
-        .to_pong({pong_addr, pong_wr_data, pong_wr_en, pong_bytes_inc, pong_rd_en}),
+        //Format is {rd_data, rd_data_vld, packet_len}
+        .to_cpu({cpu_data, cpu_data_vld, cpu_len}),
+        .to_fwd({fwd_data, fwd_data_vld, fwd_len}),
+        //Format here is {addr, wr_data, wr_en, bytes_inc, reset_sig, rd_en}
+        .to_ping({ping_addr, ping_wr_data, ping_wr_en, ping_bytes_inc, ping_reset_len, ping_rd_en}),
+        .to_pang({pang_addr, pang_wr_data, pang_wr_en, pang_bytes_inc, pang_reset_len, pang_rd_en}),
+        .to_pong({pong_addr, pong_wr_data, pong_wr_en, pong_bytes_inc, pong_reset_len, pong_rd_en}),
         
         //Selects
         .sn_sel(sn_sel),

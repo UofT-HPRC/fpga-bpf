@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Mon Nov  4 03:10:44 2019
+[*] Mon Nov 18 01:04:38 2019
 [*]
-[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/p3/muxes/muxes.vcd"
-[dumpfile_mtime] "Mon Nov  4 03:10:39 2019"
-[dumpfile_size] 64197
-[savefile] "/home/mahkoe/research/fpga-bpf/sources/p3/muxes/muxes.gtkw"
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/muxes/muxes.vcd"
+[dumpfile_mtime] "Mon Nov 18 01:02:07 2019"
+[dumpfile_size] 97646
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/muxes/muxes.gtkw"
 [timestart] 0
 [size] 1916 1060
 [pos] -1 -1
-*-14.733868 25000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.733868 15000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] muxes_tb.
 [treeopen] muxes_tb.DUT.
 [sst_width] 214
 [signals_width] 229
 [sst_expanded] 1
-[sst_vpaned_height] 314
+[sst_vpaned_height] 610
 @28
 muxes_tb.clk
 @200
@@ -25,11 +25,16 @@ muxes_tb.clk
 muxes_tb.sn_addr[8:0]
 [color] 2
 muxes_tb.sn_data[63:0]
+@28
+[color] 2
+muxes_tb.sn_reset_len
 @200
 -CPU
 @22
 muxes_tb.cpu_addr[8:0]
 muxes_tb.cpu_data[63:0]
+@28
+muxes_tb.cpu_data_vld
 @200
 -Forwarder
 @22
@@ -37,12 +42,20 @@ muxes_tb.cpu_data[63:0]
 muxes_tb.fwd_addr[8:0]
 [color] 6
 muxes_tb.fwd_data[63:0]
+@28
+[color] 6
+muxes_tb.fwd_data_vld
 @200
 -Ping
 @22
 muxes_tb.ping_addr[8:0]
 muxes_tb.ping_rd_data[63:0]
+@28
+muxes_tb.ping_rd_data_vld
+@22
 muxes_tb.ping_wr_data[63:0]
+@28
+muxes_tb.ping_reset_len
 @200
 -Pang
 @22
@@ -50,19 +63,31 @@ muxes_tb.ping_wr_data[63:0]
 muxes_tb.pang_addr[8:0]
 [color] 2
 muxes_tb.pang_rd_data[63:0]
+@28
+[color] 2
+muxes_tb.pang_rd_data_vld
+@22
 [color] 2
 muxes_tb.pang_wr_data[63:0]
+@28
+[color] 2
+muxes_tb.pang_reset_len
 @200
 -Pong
 @22
 [color] 6
-muxes_tb.pong_rd_data[63:0]
-@23
+muxes_tb.pong_addr[8:0]
 [color] 6
-muxes_tb.pong_wr_data[63:0]
+muxes_tb.pong_rd_data[63:0]
+@28
+[color] 6
+muxes_tb.pong_rd_data_vld
 @22
 [color] 6
-muxes_tb.pong_addr[8:0]
+muxes_tb.pong_wr_data[63:0]
+@29
+[color] 6
+muxes_tb.pong_reset_len
 @200
 -Selects
 @28
