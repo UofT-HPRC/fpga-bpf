@@ -30,6 +30,7 @@ module p3_tb;
     wire cache_hit;
     wire [31:0] cached_data;
     wire [31:0] resized_mem_data;
+    wire resized_mem_data_vld;
     wire [`PLEN_WIDTH-1:0] cpu_byte_len;
     reg cpu_acc;
     reg cpu_rej;
@@ -39,6 +40,7 @@ module p3_tb;
     reg [`SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
     reg fwd_rd_en;
     wire [`DATA_WIDTH-1:0] fwd_rd_data;
+    wire fwd_rd_data_vld;
     wire [`PLEN_WIDTH-1:0] fwd_byte_len;
     reg fwd_done;
     wire fwd_done_ack;
@@ -157,6 +159,7 @@ module p3_tb;
         .cache_hit(cache_hit),
         .cached_data(cached_data),
         .resized_mem_data(resized_mem_data),
+        .resized_mem_data_vld(resized_mem_data_vld),
         .cpu_byte_len(cpu_byte_len),
         .cpu_acc(cpu_acc),
         .cpu_rej(cpu_rej),
@@ -166,6 +169,7 @@ module p3_tb;
         .fwd_addr(fwd_addr),
         .fwd_rd_en(fwd_rd_en),
         .fwd_rd_data(fwd_rd_data),
+        .fwd_rd_data_vld(fwd_rd_data_vld),
         .fwd_byte_len(fwd_byte_len),
         .fwd_done(fwd_done),
         .fwd_done_ack(fwd_done_ack),

@@ -48,6 +48,7 @@ module p3 # (
     output wire cache_hit,
     output wire [31:0] cached_data,
     output wire [31:0] resized_mem_data,
+    output wire resized_mem_data_vld,
     output wire [PLEN_WIDTH-1:0] cpu_byte_len,
     
     input wire cpu_acc,
@@ -61,6 +62,7 @@ module p3 # (
     input wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr,
     input wire fwd_rd_en,
     output wire [DATA_WIDTH-1:0] fwd_rd_data,
+    output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     
     input wire fwd_done,
@@ -103,12 +105,14 @@ module p3 # (
     wire [ADDR_WIDTH-1:0] cpu_addr_i;
     wire cpu_rd_en_i;
     wire [DATA_WIDTH-1:0] cpu_bigword_i;
+    wire cpu_bigword_vld_i;
     wire [PLEN_WIDTH-1:0] cpu_byte_len_i;
     
     //Forwarder adapter ports    
     wire [ADDR_WIDTH-1:0] fwd_addr_i;
     wire fwd_rd_en_i;
     wire [DATA_WIDTH-1:0] fwd_rd_data_i;
+    wire fwd_rd_data_vld_i;
     wire [PLEN_WIDTH-1:0] fwd_byte_len_i;    
     
     //ping inputs
@@ -120,6 +124,7 @@ module p3 # (
     wire ping_reset_len;
     //ping outputs
     wire [DATA_WIDTH-1:0] ping_odata;
+    wire ping_odata_vld;
     wire [PLEN_WIDTH-1:0] ping_byte_length;
     
     //pang inputs
@@ -131,6 +136,7 @@ module p3 # (
     wire pang_reset_len;
     //pang outputs
     wire [DATA_WIDTH-1:0] pang_odata;
+    wire pang_odata_vld;
     wire [PLEN_WIDTH-1:0] pang_byte_length;
     
     //pong inputs
@@ -142,6 +148,7 @@ module p3 # (
     wire pong_reset_len;
     //pong outputs
     wire [DATA_WIDTH-1:0] pong_odata;
+    wire pong_odata_vld;
     wire [PLEN_WIDTH-1:0] pong_byte_length;
     
     
@@ -207,6 +214,7 @@ module p3 # (
         .cache_hit(cache_hit),
         .cached_data(cached_data),
         .resized_mem_data(resized_mem_data),
+        .resized_mem_data_vld(resized_mem_data_vld),
         .cpu_byte_len(cpu_byte_len),
         
         //Interface to P3 system
@@ -218,6 +226,7 @@ module p3 # (
         .done_ack(B_done_ack),
         .rdy(rdy_for_B),
         .bigword(cpu_bigword_i),
+        .bigword_vld(cpu_bigword_vld_i),
         .byte_len(cpu_byte_len_i)
     );
     
@@ -241,6 +250,7 @@ module p3 # (
         .fwd_done_ack(fwd_done_ack),
         .rdy_for_fwd(rdy_for_fwd),
         .fwd_rd_data(fwd_rd_data),
+        .fwd_rd_data_vld(fwd_rd_data_vld),
         .fwd_bytes(fwd_byte_len),
         
         //Interface to P3
@@ -251,6 +261,7 @@ module p3 # (
         .done_ack(C_done_ack),
         .rdy(rdy_for_C),
         .rd_data(fwd_rd_data_i),
+        .rd_data_vld(fwd_rd_data_vld_i),
         .bytes(fwd_byte_len_i)
     ); 
 
@@ -291,15 +302,15 @@ module p3 # (
         .from_cpu({cpu_addr_i, cpu_rd_en_i}),
         .from_fwd({fwd_addr_i, fwd_rd_en_i}),
         
-        //Format is {rd_data, packet_len}
-        .from_ping({ping_odata, ping_byte_length}),
-        .from_pang({pang_odata, pang_byte_length}),
-        .from_pong({pong_odata, pong_byte_length}),
+        //Format is {rd_data, rd_data_vld, packet_len}
+        .from_ping({ping_odata, ping_odata_vld, ping_byte_length}),
+        .from_pang({pang_odata, pang_odata_vld, pang_byte_length}),
+        .from_pong({pong_odata, pong_odata_vld, pong_byte_length}),
         
         //Nothing to output to snooper
-        //Format is {rd_data, packet_len}
-        .to_cpu({cpu_bigword_i, cpu_byte_len_i}),
-        .to_fwd({fwd_rd_data_i, fwd_byte_len_i}),
+        //Format is {rd_data, rd_data_vld, packet_len}
+        .to_cpu({cpu_bigword_i, cpu_bigword_vld_i, cpu_byte_len_i}),
+        .to_fwd({fwd_rd_data_i, fwd_rd_data_vld_i, fwd_byte_len_i}),
         
         //Format here is {addr, wr_data, wr_en, bytes_inc, reset_sig, rd_en}
         .to_ping({ping_addr, ping_idata, ping_wr_en, ping_byte_inc, ping_reset_len, ping_rd_en}),
@@ -331,6 +342,7 @@ module p3 # (
         .idata(ping_idata), //@0
         .byte_inc(ping_byte_inc), //@0
         .odata(ping_odata), //@1 + BUF_IN + BUF_OUT
+        .odata_vld(ping_odata_vld), //@1 + BUF_IN + BUF_OUT
         .byte_length(ping_byte_length)
     );
 
@@ -350,6 +362,7 @@ module p3 # (
         .idata(pang_idata), //@0
         .byte_inc(pang_byte_inc), //@0
         .odata(pang_odata), //@1 + BUF_IN + BUF_OUT
+        .odata_vld(pang_odata_vld), //@1 + BUF_IN + BUF_OUT
         .byte_length(pang_byte_length)
     );
 
@@ -369,6 +382,7 @@ module p3 # (
         .idata(pong_idata), //@0
         .byte_inc(pong_byte_inc), //@0
         .odata(pong_odata), //@1 + BUF_IN + BUF_OUT
+        .odata_vld(pong_odata_vld), //@1 + BUF_IN + BUF_OUT
         .byte_length(pong_byte_length)
     );
 
