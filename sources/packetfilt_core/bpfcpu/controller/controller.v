@@ -31,13 +31,16 @@ module controller # (
     input wire rst,
     
     //Inputs from datapath
-    input wire [63:0] instr_in,
-    input wire mem_vld,
     input wire eq,
     input wire gt,
     input wire ge,
     input wire set,
     input wire ALU_vld,
+    
+    //Inputs from packet memory
+    input wire [63:0] instr_in,
+    input wire mem_vld,
+    
     
     //Outputs to code memory
     output wire inst_rd_en,
@@ -216,6 +219,10 @@ end else begin
         .prev_vld(vld_stage1),
         .rdy(rdy_stage2)
     );
+
+    //Arbitrate PC_sel and regfile_sel
+    assign PC_sel = (branch_mispredict) ? PC_sel_stage2 : `PC_INC_PLUS_1;
+    assign regfile_sel = (stage2_reads_regfile) ? regfile_sel_stage2 : regfile_sel_stage1;
 
 endmodule
 

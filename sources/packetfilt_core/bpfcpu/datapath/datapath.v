@@ -42,7 +42,8 @@ Whatever other small jobs are left
 
 module datapath # (
     parameter BYTE_ADDR_WIDTH = 12,
-    parameter CODE_ADDR_WIDTH = 10
+    parameter CODE_ADDR_WIDTH = 10,
+    parameter PLEN_WIDTH = 32
 ) (
     input wire clk,
     input wire rst,
@@ -73,7 +74,7 @@ module datapath # (
     output wire [BYTE_ADDR_WIDTH-1:0] packet_rd_addr,
     input wire [31:0] packet_data,
     
-    input wire [31:0] packet_len,
+    input wire [PLEN_WIDTH-1:0] packet_len,
     
     input wire [31:0] imm_stage1,
     input wire [31:0] imm_stage2,
