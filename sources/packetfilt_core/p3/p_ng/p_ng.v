@@ -82,6 +82,7 @@ module p_ng # (
     input wire [SN_FWD_WIDTH-1:0] idata, //@0
     input wire [INC_WIDTH-1:0] byte_inc, //@0
     output wire [SN_FWD_WIDTH-1:0] odata, //@1 + BUF_IN + BUF_OUT
+    output wire odata_vld,
     output wire [PLEN_WIDTH-1:0] byte_length //@1 + BUF_IN + BUF_OUT
 );
 
@@ -113,6 +114,7 @@ module p_ng # (
     wire [ADDR_WIDTH-1:0] addr_i; 
     wire [SN_FWD_WIDTH-1:0] idata_i;
     wire [SN_FWD_WIDTH-1:0] odata_i;
+    reg odata_vld_i;
     
     /***************************************/
     /**Assign internal signals from inputs**/
@@ -180,6 +182,15 @@ endgenerate
         .dob(odata_i[PORT_WIDTH-1:0]) //@1
     );
     
+    //BRAM has a latency of one cycle
+    always @(posedge clk) begin
+        if (rst) begin
+            odata_vld_i <= 0;
+        end else begin
+            odata_vld_i <= rd_en_i;
+        end
+    end
+    
     /****************************************/
     /**Assign outputs from internal signals**/
     /****************************************/
@@ -188,19 +199,24 @@ endgenerate
 generate
     if (BUF_OUT) begin
         reg [SN_FWD_WIDTH-1:0] odata_r = 0;
+        reg odata_vld_r = 0;
         
         always @(posedge clk) begin
             if (!rst) begin
                 odata_r <= odata_i;
+                odata_vld_r <= odata_vld_i;
             end else begin
                 odata_r <= 0;
+                odata_vld_r <= 0;
             end
         end
         
         assign odata = odata_r;
+        assign odata_vld = odata_vld_r;
         
     end else begin
         assign odata = odata_i;
+        assign odata_vld = odata_vld_i;
     end
 endgenerate
 

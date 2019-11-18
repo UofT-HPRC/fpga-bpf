@@ -8,6 +8,8 @@ Testbench associated with p_ng.v
 
 `define ADDR_WIDTH 10
 `define SN_FWD_WIDTH 64
+`define INC_WIDTH 8
+`define PLEN_WIDTH 32
 
 module p_ng_tb;
 
@@ -17,17 +19,26 @@ module p_ng_tb;
     reg wr_en; //@0
     reg [`ADDR_WIDTH-1:0] addr; //@0
     reg [`SN_FWD_WIDTH-1:0] idata; //@0
-    reg [8:0] byte_inc; //@0
-    wire [`SN_FWD_WIDTH-1:0] odata_NOBUF; //@1
-    wire [`SN_FWD_WIDTH-1:0] odata_INBUF; //@2
-    wire [`SN_FWD_WIDTH-1:0] odata_OUTBUF; //@2
-    wire [`SN_FWD_WIDTH-1:0] odata_BOTHBUF; //@3
-    wire [32:0] byte_length_NOBUF; //@1
-    wire [32:0] byte_length_INBUF; //@2
-    wire [32:0] byte_length_OUTBUF; //@2
-    wire [32:0] byte_length_BOTHBUF; //@3
+    reg [`INC_WIDTH-1:0] byte_inc; //@0
     
-    integer fd;
+    wire [`SN_FWD_WIDTH-1:0] odata_NOBUF; //@1
+    wire odata_vld_NOBUF; //@1
+    
+    wire [`SN_FWD_WIDTH-1:0] odata_INBUF; //@2
+    wire odata_vld_INBUF; //@2
+    
+    wire [`SN_FWD_WIDTH-1:0] odata_OUTBUF; //@2
+    wire odata_vld_OUTBUF; //@2
+    
+    wire [`SN_FWD_WIDTH-1:0] odata_BOTHBUF; //@3
+    wire odata_vld_BOTHBUF; //@3
+    
+    wire [`PLEN_WIDTH-1:0] byte_length_NOBUF; //@1
+    wire [`PLEN_WIDTH-1:0] byte_length_INBUF; //@2
+    wire [`PLEN_WIDTH-1:0] byte_length_OUTBUF; //@2
+    wire [`PLEN_WIDTH-1:0] byte_length_BOTHBUF; //@3
+    
+    integer fd, dummy;
     
     initial begin
         $dumpfile("p_ng.vcd");
@@ -54,12 +65,14 @@ module p_ng_tb;
             $finish;
         end
         #0.01
-        $fscanf(fd, "%b%b%h%h%d%b", rd_en, wr_en, addr, idata, byte_inc, rst);
+        dummy = $fscanf(fd, "%b%b%h%h%d%b", rd_en, wr_en, addr, idata, byte_inc, rst);
     end
 
     p_ng # (
-        .ADDR_WIDTH(10),
-        .SN_FWD_WIDTH(64),
+        .ADDR_WIDTH(`ADDR_WIDTH),
+        .SN_FWD_WIDTH(`SN_FWD_WIDTH),
+        .INC_WIDTH(`INC_WIDTH),
+        .PLEN_WIDTH(`PLEN_WIDTH),
         //parameters controlling addition of pessmistic registers
         .BUF_IN(0),
         .BUF_OUT(0)
@@ -72,6 +85,7 @@ module p_ng_tb;
         .idata(idata), //@0
         .byte_inc(byte_inc), //@0
         .odata(odata_NOBUF), //@1
+        .odata_vld(odata_vld_NOBUF), //@1
         .byte_length(byte_length_NOBUF) //@1
     );
     
@@ -90,6 +104,7 @@ module p_ng_tb;
         .idata(idata), //@0
         .byte_inc(byte_inc), //@0
         .odata(odata_INBUF), //@2
+        .odata_vld(odata_vld_INBUF), //@2
         .byte_length(byte_length_INBUF) //@2
     );
 
@@ -108,6 +123,7 @@ module p_ng_tb;
         .idata(idata), //@0
         .byte_inc(byte_inc), //@0
         .odata(odata_OUTBUF), //@2
+        .odata_vld(odata_vld_OUTBUF), //@2
         .byte_length(byte_length_OUTBUF) //@2
     );
 
@@ -127,6 +143,7 @@ module p_ng_tb;
         .idata(idata), //@0
         .byte_inc(byte_inc), //@0
         .odata(odata_BOTHBUF), //@3
+        .odata_vld(odata_vld_BOTHBUF), //@3
         .byte_length(byte_length_BOTHBUF) //@3
     );
 endmodule

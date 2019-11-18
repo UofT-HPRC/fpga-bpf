@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Sun Nov  3 17:25:51 2019
+[*] Mon Nov 18 00:47:27 2019
 [*]
-[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/p3/p_ng/p_ng.vcd"
-[dumpfile_mtime] "Sun Nov  3 17:16:03 2019"
-[dumpfile_size] 17682
-[savefile] "/home/mahkoe/research/fpga-bpf/sources/p3/p_ng/view.gtkw"
-[timestart] 48344
-[size] 1920 1080
-[pos] -961 -19
-*-8.237200 52875 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/p_ng/p_ng.vcd"
+[dumpfile_mtime] "Mon Nov 18 00:45:23 2019"
+[dumpfile_size] 29071
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/p_ng/p_ng.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1281 -1
+*-15.525987 115000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] p_ng_tb.
 [treeopen] p_ng_tb.DUT_OUTBUF.
 [sst_width] 214
@@ -19,29 +19,41 @@
 @28
 p_ng_tb.clk
 p_ng_tb.rst
+@23
+p_ng_tb.idata[63:0]
+@28
 p_ng_tb.wr_en
 p_ng_tb.rd_en
 @22
 p_ng_tb.addr[9:0]
-p_ng_tb.byte_inc[8:0]
-@24
-p_ng_tb.byte_length_BOTHBUF[32:0]
-p_ng_tb.byte_length_INBUF[32:0]
-p_ng_tb.byte_length_NOBUF[32:0]
-p_ng_tb.byte_length_OUTBUF[32:0]
-@22
+p_ng_tb.byte_inc[7:0]
+p_ng_tb.byte_length_NOBUF[31:0]
+p_ng_tb.byte_length_INBUF[31:0]
+p_ng_tb.byte_length_OUTBUF[31:0]
+p_ng_tb.byte_length_BOTHBUF[31:0]
 p_ng_tb.idata[63:0]
-p_ng_tb.odata_BOTHBUF[63:0]
-p_ng_tb.odata_INBUF[63:0]
 p_ng_tb.odata_NOBUF[63:0]
+@28
+p_ng_tb.odata_vld_NOBUF
+@22
+p_ng_tb.odata_INBUF[63:0]
+@28
+p_ng_tb.odata_vld_INBUF
+@22
 p_ng_tb.odata_OUTBUF[63:0]
+@28
+p_ng_tb.odata_vld_OUTBUF
+@22
+p_ng_tb.odata_BOTHBUF[63:0]
+@28
+p_ng_tb.odata_vld_BOTHBUF
 @200
 -NOBUF
 @28
 p_ng_tb.DUT_NOBUF.clk
 p_ng_tb.DUT_NOBUF.wr_en_i
 @22
-p_ng_tb.DUT_NOBUF.byte_inc[8:0]
+p_ng_tb.DUT_NOBUF.byte_inc[7:0]
 @24
 p_ng_tb.DUT_NOBUF.byte_length_i[32:0]
 [pattern_trace] 1
