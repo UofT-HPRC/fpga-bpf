@@ -38,6 +38,7 @@ module fwd_adapter # (
     output wire fwd_done_ack,
     output wire rdy_for_fwd,
     output wire [DATA_WIDTH-1:0] fwd_rd_data,
+    output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_bytes,
     
     //Interface to P3 system
@@ -49,6 +50,7 @@ module fwd_adapter # (
     input wire done_ack,
     input wire rdy,
     input wire [DATA_WIDTH-1:0] rd_data,
+    input wire rd_data_vld,
     input wire [PLEN_WIDTH-1:0] bytes
 );    
     /************************************/
@@ -64,6 +66,7 @@ module fwd_adapter # (
     wire fwd_done_ack_i;
     wire rdy_for_fwd_i;
     wire [DATA_WIDTH-1:0] fwd_rd_data_i;
+    wire fwd_rd_data_vld_i;
     wire [PLEN_WIDTH-1:0] fwd_bytes_i;
     
     //Interface to P3 system
@@ -75,6 +78,7 @@ module fwd_adapter # (
     wire done_ack_i;
     wire rdy_i;
     wire [DATA_WIDTH-1:0] rd_data_i;
+    wire rd_data_vld_i;
     wire [PLEN_WIDTH-1:0] bytes_i;
     
     
@@ -91,6 +95,7 @@ module fwd_adapter # (
     assign done_ack_i        = done_ack;
     assign rdy_i             = rdy;
     assign rd_data_i         = rd_data;
+    assign rd_data_vld_i     = rd_data_vld;
     assign bytes_i           = bytes;
     
     /****************/
@@ -105,6 +110,7 @@ module fwd_adapter # (
     assign fwd_done_ack_i    = done_ack_i;
     assign rdy_for_fwd_i     = rdy_i;
     assign fwd_rd_data_i     = rd_data_i;
+    assign fwd_rd_data_vld_i = rd_data_vld_i;
     assign fwd_bytes_i       = bytes_i;
     
     /****************************************/
@@ -114,6 +120,7 @@ module fwd_adapter # (
     assign fwd_done_ack      = fwd_done_ack_i;
     assign rdy_for_fwd       = rdy_for_fwd_i;
     assign fwd_rd_data       = fwd_rd_data_i;
+    assign fwd_rd_data_vld   = fwd_rd_data_vld_i;
     assign fwd_bytes         = fwd_bytes_i;
     
     //Interface to P3 system

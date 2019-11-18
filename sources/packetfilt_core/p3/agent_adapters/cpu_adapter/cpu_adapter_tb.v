@@ -18,7 +18,9 @@ module cpu_adapter_tb;
     wire cache_hit;
     wire [31:0] cached_data;
     reg [`DATA_WIDTH-1:0] bigword;
+    reg bigword_vld;
     wire [31:0] resized_mem_data;
+    wire resized_mem_data_vld;
 
     integer fd;
     integer dummy;
@@ -54,7 +56,7 @@ module cpu_adapter_tb;
             $finish;
         end
         #0.01
-        dummy = $fscanf(fd, "%h%b%b%h", byte_rd_addr, cpu_rd_en, transfer_sz, bigword);
+        dummy = $fscanf(fd, "%h%b%b%h%b", byte_rd_addr, cpu_rd_en, transfer_sz, bigword, bigword_vld);
     end
     
     cpu_adapter # (
@@ -78,7 +80,9 @@ module cpu_adapter_tb;
         .cached_data(cached_data), 
         
         .bigword(bigword),
-        .resized_mem_data(resized_mem_data)
+        .bigword_vld(bigword_vld),
+        .resized_mem_data(resized_mem_data),
+        .resized_mem_data_vld(resized_mem_data_vld)
     );
 
 endmodule

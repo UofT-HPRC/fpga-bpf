@@ -66,6 +66,7 @@ module cpu_adapter # (
     output wire [31:0] cached_data, //@1
     //zero-padded on the left (when necessary)
     output wire [31:0] resized_mem_data, //@1+BUF_IN+BUF_OUT+PESS
+    output wire resized_mem_data_vld,
     output wire [PLEN_WIDTH-1:0] cpu_byte_len,
     
     //Interface to memory
@@ -78,6 +79,7 @@ module cpu_adapter # (
     input wire done_ack, //@0
     input wire rdy, //@0
     input wire [DATA_WIDTH-1:0] bigword, //@1+BUF_IN+BUF_OUT
+    input wire bigword_vld, //@1+BUF_IN+BUF_OUT
     input wire [PLEN_WIDTH-1:0] byte_len
 );
     
@@ -107,6 +109,7 @@ module cpu_adapter # (
     wire [31:0] cached_data_i;
     
     wire [31:0] resized_mem_data_i;
+    wire resized_mem_data_vld_i;
     wire [PLEN_WIDTH-1:0] cpu_byte_len_i;
     
     
@@ -121,6 +124,7 @@ module cpu_adapter # (
     wire rdy_i;  
     
     wire [DATA_WIDTH-1:0] bigword_i;
+    wire bigword_vld_i;
     wire [PLEN_WIDTH-1:0] byte_len_i;
     
     
@@ -142,6 +146,7 @@ module cpu_adapter # (
     assign cpu_rd_en_i = cpu_rd_en;
     
     assign bigword_i = bigword;
+    assign bigword_vld_i = bigword_vld;
     assign byte_len_i = byte_len;
     
     //Buffer transfer_sz for MEM_LAT cycles
@@ -190,6 +195,8 @@ module cpu_adapter # (
 
     assign resized_mem_data_i[31:16] = (transfer_sz_i == `BPF_W) ? selected[31:16]: 0;
     
+    assign resized_mem_data_vld_i = bigword_vld_i;
+    
     assign cpu_byte_len_i = byte_len_i;
     
     //All that handshaking business
@@ -210,14 +217,22 @@ module cpu_adapter # (
 generate
     if(PESS) begin
         reg [31:0] resized_mem_data_r = 0;
+        reg resized_mem_data_vld_r = 0;
         always @(posedge clk) begin
-            if (!rst) resized_mem_data_r <= resized_mem_data_i;
-            else resized_mem_data_r <= 0;
+            if (!rst) begin
+                resized_mem_data_r <= resized_mem_data_i;
+                resized_mem_data_vld_r <= resized_mem_data_vld_i;
+            end else begin 
+                resized_mem_data_r <= 0;
+                resized_mem_data_vld_r <= 0;
+            end
         end
         
         assign resized_mem_data = resized_mem_data_r;
+        assign resized_mem_data_vld = resized_mem_data_vld_r;
     end else begin
         assign resized_mem_data = resized_mem_data_i;
+        assign resized_mem_data_vld = resized_mem_data_vld_i;
     end
 endgenerate
     assign cpu_byte_len = cpu_byte_len_i;
