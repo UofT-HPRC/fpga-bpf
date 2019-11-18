@@ -35,6 +35,11 @@ Whatever other small jobs are left
 `ifdef FROM_DATAPATH
 `include "bpf_defs.vh"
 `include "alu/alu.v"
+`include "regfile.v"
+`elsif FROM_BPFCPU
+`include "../bpf_defs.vh"
+`include "datapath/alu/alu.v"
+`include "datapath/regfile.v"
 `else /*For Vivado's sake*/
 `include "bpf_defs.vh"
 `endif
@@ -66,6 +71,7 @@ module datapath # (
     output wire ge,
     output wire set,
     output wire ALU_vld,
+    input wire ALU_ack,
     
     input wire [3:0] regfile_sel,
     input wire regfile_wr_en,
@@ -146,7 +152,8 @@ module datapath # (
     end
     
     //Program Counter (PC) register's new value
-    //TODO: figure out JA strategy
+    //jt, jf, and imm (as per the BPF standard) are interpreted as offsets from
+    //the NEXT instruction (hence the + 1 in the branching cases)
     always @(posedge clk) begin
         if (rst) PC <= 0;
         else if (PC_en == 1'b1) begin
@@ -154,11 +161,11 @@ module datapath # (
                 `PC_SEL_PLUS_1:
                     PC <= PC + 1;
                 `PC_SEL_PLUS_JT:
-                    PC <= PC + jt - jmp_correction; 
+                    PC <= PC + 1 + jt - jmp_correction; 
                 `PC_SEL_PLUS_JF:
-                    PC <= PC + jf - jmp_correction;
+                    PC <= PC + 1 + jf - jmp_correction;
                 `PC_SEL_PLUS_IMM:
-                    PC <= PC + imm_stage2 - jmp_correction; 
+                    PC <= PC + 1 + imm_stage2 - jmp_correction; 
             endcase
         end
     end
@@ -181,7 +188,8 @@ module datapath # (
         .eq(eq),
         .gt(gt),
         .ge(ge),
-        .ALU_vld(ALU_vld)
+        .ALU_vld(ALU_vld),
+        .ALU_ack(ALU_ack)
     );
     
     //Register file

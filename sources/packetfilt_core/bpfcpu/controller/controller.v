@@ -6,15 +6,18 @@ controller.v
 Hooks up all the controller stages into one module
 */
 
-//temporary: remove this
-`define FROM_CONTROLLER 1
-
 `ifdef FROM_CONTROLLER
 `include "../../bpf_defs.vh"
 `include "stage0.v"
 `include "stage0_point_5.v"
 `include "stage1.v"
 `include "stage2.v"
+`elsif FROM_BPFCPU
+`include "../bpf_defs.vh"
+`include "controller/stage0.v"
+`include "controller/stage0_point_5.v"
+`include "controller/stage1.v"
+`include "controller/stage2.v"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif
@@ -58,18 +61,20 @@ module controller # (
     output wire [3:0] ALU_sel,
     output wire ALU_en,
     output wire addr_sel,
+    output wire [1:0] transfer_sz,
     output wire regfile_wr_en,
-    output wire imm_stage1,
+    output wire [31:0] imm_stage1,
     //stage2
-    output wire [CODE_ADDR_WIDTH-1:0] jt,
-    output wire [CODE_ADDR_WIDTH-1:0] jf,
+    output wire [7:0] jt,
+    output wire [7:0] jf,
     output wire [1:0] PC_sel, 
-    output wire A_sel,
+    output wire [2:0] A_sel,
     output wire A_en,
-    output wire X_sel,
+    output wire [2:0] X_sel,
     output wire X_en,
     output wire [3:0] regfile_sel,
     output wire [31:0] imm_stage2,
+    output wire ALU_ack,
     output wire [CODE_ADDR_WIDTH-1:0] jmp_correction
     
 );
@@ -100,7 +105,7 @@ module controller # (
     wire rdy_stage2;
 
 
-`genif (PESS) begin
+`genif (PESS) begin : with_idle_stage
     stage0 fetch  (
         .clk(clk),
         .rst(rst),
@@ -116,6 +121,7 @@ module controller # (
         .rst(rst),
         .instr_in(instr_in),
         .instr_out(instr_out_stage0_5),
+        .PC_en(PC_en),
         .icount(6'b0),
         .ocount(ocount_stage0_5),
         .branch_mispredict(branch_mispredict),
@@ -137,11 +143,13 @@ module controller # (
         .ALU_sel(ALU_sel),
         .ALU_en(ALU_en),
         .addr_sel(addr_sel),
+        .transfer_sz(transfer_sz),
         .rd_en(rd_en),
         .regfile_sel_stage1(regfile_sel_stage1),
         .regfile_wr_en(regfile_wr_en),
         .imm_stage1(imm_stage1),
         .instr_out(instr_out_stage1),
+        .PC_en(PC_en),
         .icount(ocount_stage0_5),
         .ocount(ocount_stage1),
         .prev_vld(vld_stage0_5),
@@ -149,7 +157,7 @@ module controller # (
         .next_rdy(rdy_stage2),
         .vld(vld_stage1)
     );
-end else begin    
+end else begin : no_idle_stage   
     stage0 fetch  (
         .clk(clk),
         .rst(rst),
@@ -172,11 +180,13 @@ end else begin
         .ALU_sel(ALU_sel),
         .ALU_en(ALU_en),
         .addr_sel(addr_sel),
+        .transfer_sz(transfer_sz),
         .rd_en(rd_en),
         .regfile_sel_stage1(regfile_sel_stage1),
         .regfile_wr_en(regfile_wr_en),
         .imm_stage1(imm_stage1),
         .instr_out(instr_out_stage1),
+        .PC_en(PC_en),
         .icount(6'b0),
         .ocount(ocount_stage1),
         .prev_vld(vld_stage0),
@@ -208,12 +218,14 @@ end else begin
         .X_en(X_en),
         .regfile_sel_stage2(regfile_sel_stage2),
         .imm_stage2(imm_stage2),
+        .ALU_ack(ALU_ack),
         .branch_mispredict(branch_mispredict),
         .acc(acc),
         .rej(rej),
         .stage2_reads_regfile(stage2_reads_regfile), 
         .stage2_writes_A(stage2_writes_A),
         .stage2_writes_X(stage2_writes_X),
+        .PC_en(PC_en),
         .icount(ocount_stage1),
         .jmp_correction(jmp_correction),
         .prev_vld(vld_stage1),
@@ -221,7 +233,7 @@ end else begin
     );
 
     //Arbitrate PC_sel and regfile_sel
-    assign PC_sel = (branch_mispredict) ? PC_sel_stage2 : `PC_INC_PLUS_1;
+    assign PC_sel = (branch_mispredict) ? PC_sel_stage2 : `PC_SEL_PLUS_1;
     assign regfile_sel = (stage2_reads_regfile) ? regfile_sel_stage2 : regfile_sel_stage1;
 
 endmodule

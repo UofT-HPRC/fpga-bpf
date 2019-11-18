@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Sat Nov  9 16:13:58 2019
+[*] Mon Nov 18 19:01:03 2019
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/bpfcpu/datapath/alu/alu.vcd"
-[dumpfile_mtime] "Sat Nov  9 16:13:22 2019"
-[dumpfile_size] 2505
+[dumpfile_mtime] "Mon Nov 18 19:00:49 2019"
+[dumpfile_size] 2674
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/bpfcpu/datapath/alu/alu.gtkw"
 [timestart] 0
-[size] 1916 1060
-[pos] -1 -1
-*-13.910178 65000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 956 520
+[pos] 0 539
+*-15.820892 75000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] alu_tb.
 [sst_width] 233
 [signals_width] 170
 [sst_expanded] 1
-[sst_vpaned_height] 347
+[sst_vpaned_height] 137
 @28
 alu_tb.clk
 @200
@@ -22,10 +22,11 @@ alu_tb.clk
 @420
 alu_tb.A[31:0]
 alu_tb.B[31:0]
-@29
-alu_tb.ALU_sel[3:0]
 @28
+alu_tb.ALU_sel[3:0]
 alu_tb.ALU_en
+@29
+alu_tb.ALU_ack
 @200
 -Outputs
 @28

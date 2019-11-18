@@ -28,6 +28,7 @@ module bhand # (
     input wire odata_rdy,
     
     //Counting signals. Ignore these ports if ENABLE_COUNT == 0
+    input wire cnt_en,
     input wire [COUNT_WIDTH-1:0] icount,
     output wire [COUNT_WIDTH-1:0] ocount
 );
@@ -128,9 +129,9 @@ module bhand # (
             extra_cnt_reg <= 0;
         end else begin
             if (extra_mem_en) begin
-                extra_cnt_reg <= icount + 1;
+                extra_cnt_reg <= icount + cnt_en;
             end else begin
-                extra_cnt_reg <= extra_cnt_reg + 1;
+                extra_cnt_reg <= extra_cnt_reg + cnt_en;
             end
         end
     end
@@ -141,9 +142,9 @@ module bhand # (
             cnt_reg <= 0;
         end else begin
             if (mem_en) begin
-                cnt_reg <= extra_mem_vld ? extra_cnt_reg + 1 : icount + 1;
+                cnt_reg <= extra_mem_vld ? extra_cnt_reg + cnt_en : icount + cnt_en;
             end else begin
-                cnt_reg <= cnt_reg + 1;
+                cnt_reg <= cnt_reg + cnt_en;
             end
         end
     end

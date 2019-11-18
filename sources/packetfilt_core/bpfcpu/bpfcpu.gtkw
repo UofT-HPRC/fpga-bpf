@@ -1,0 +1,207 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Mon Nov 18 20:07:17 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/bpfcpu/bpfcpu.vcd"
+[dumpfile_mtime] "Mon Nov 18 20:05:09 2019"
+[dumpfile_size] 48804
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/bpfcpu/bpfcpu.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-16.238148 115000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] bpfcpu_tb.
+[treeopen] bpfcpu_tb.DUT.
+[treeopen] bpfcpu_tb.DUT.ctrl.
+[treeopen] bpfcpu_tb.DUT.ctrl.no_idle_stage.
+[treeopen] bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.
+[treeopen] bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.
+[treeopen] bpfcpu_tb.DUT.dpath.
+[sst_width] 214
+[signals_width] 214
+[sst_expanded] 1
+[sst_vpaned_height] 359
+@28
+bpfcpu_tb.clk
+@200
+-handshaking
+@28
+bpfcpu_tb.rdy_for_cpu
+bpfcpu_tb.rdy_for_cpu_ack
+bpfcpu_tb.cpu_acc
+bpfcpu_tb.cpu_rej
+bpfcpu_tb.cpu_done_ack
+@200
+-inst mem
+@24
+bpfcpu_tb.inst_rd_addr[9:0]
+@28
+bpfcpu_tb.inst_rd_en
+@22
+bpfcpu_tb.instr_in[63:0]
+@200
+-p3
+@22
+bpfcpu_tb.byte_rd_addr[11:0]
+@28
+bpfcpu_tb.transfer_sz[1:0]
+bpfcpu_tb.cpu_rd_en
+@22
+bpfcpu_tb.resized_mem_data[31:0]
+@28
+bpfcpu_tb.resized_mem_data_vld
+@22
+bpfcpu_tb.cpu_byte_len[31:0]
+@200
+-cpu internals
+@22
+bpfcpu_tb.DUT.jmp_correction[9:0]
+@28
+bpfcpu_tb.DUT.PC_sel[1:0]
+bpfcpu_tb.DUT.PC_en
+@200
+-controller internals
+@28
+bpfcpu_tb.DUT.ctrl.rst
+bpfcpu_tb.DUT.ctrl.branch_mispredict
+@22
+bpfcpu_tb.instr_in[63:0]
+@28
+bpfcpu_tb.DUT.ctrl.no_idle_stage.fetch.vld
+bpfcpu_tb.DUT.ctrl.no_idle_stage.fetch.next_rdy
+bpfcpu_tb.DUT.ctrl.no_idle_stage.fetch.inst_rd_en
+bpfcpu_tb.DUT.ctrl.no_idle_stage.fetch.PC_en
+@200
+-stage0 internals
+@28
+bpfcpu_tb.DUT.ctrl.no_idle_stage.fetch.vld
+bpfcpu_tb.DUT.ctrl.no_idle_stage.fetch.PC_en
+@200
+-stage1 internals
+@28
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.opcode_class[2:0]
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.ALU_en_i
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.ALU_en
+@22
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.instr_in_i[63:0]
+@28
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.prev_vld
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.rdy
+@22
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.instr_out_i[63:0]
+@28
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.vld
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.next_rdy
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.enable_hot
+@200
+-bhand internals
+@22
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.idata[63:0]
+@28
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.idata_rdy
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.shift_in
+@22
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.extra_mem[63:0]
+@28
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.extra_mem_vld
+@22
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.mem[63:0]
+@28
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.mem_vld
+bpfcpu_tb.DUT.ctrl.no_idle_stage.decode.handshaker.shift_out
+@200
+-stage2 internals
+@28
+bpfcpu_tb.DUT.ctrl.writeback.eq
+bpfcpu_tb.DUT.ctrl.writeback.ge
+bpfcpu_tb.DUT.ctrl.writeback.gt
+bpfcpu_tb.DUT.ctrl.writeback.set
+@24
+bpfcpu_tb.DUT.ctrl.writeback.jmp_correction[9:0]
+@22
+bpfcpu_tb.DUT.ctrl.writeback.instr_in[63:0]
+@28
+bpfcpu_tb.DUT.ctrl.writeback.prev_vld
+bpfcpu_tb.DUT.ctrl.writeback.rdy
+bpfcpu_tb.DUT.ctrl.writeback.awaiting_ALU
+bpfcpu_tb.DUT.ctrl.writeback.ALU_vld
+bpfcpu_tb.DUT.ctrl.writeback.ALU_ack
+bpfcpu_tb.DUT.ctrl.writeback.awaiting_packmem
+bpfcpu_tb.DUT.ctrl.writeback.mem_vld
+bpfcpu_tb.DUT.ctrl.writeback.A_en
+@29
+bpfcpu_tb.DUT.ctrl.writeback.X_en
+@200
+-datapath internals
+@22
+bpfcpu_tb.DUT.dpath.A[31:0]
+@c00022
+bpfcpu_tb.DUT.dpath.X[31:0]
+@28
+(0)bpfcpu_tb.DUT.dpath.X[31:0]
+(1)bpfcpu_tb.DUT.dpath.X[31:0]
+(2)bpfcpu_tb.DUT.dpath.X[31:0]
+(3)bpfcpu_tb.DUT.dpath.X[31:0]
+(4)bpfcpu_tb.DUT.dpath.X[31:0]
+(5)bpfcpu_tb.DUT.dpath.X[31:0]
+(6)bpfcpu_tb.DUT.dpath.X[31:0]
+(7)bpfcpu_tb.DUT.dpath.X[31:0]
+(8)bpfcpu_tb.DUT.dpath.X[31:0]
+(9)bpfcpu_tb.DUT.dpath.X[31:0]
+(10)bpfcpu_tb.DUT.dpath.X[31:0]
+(11)bpfcpu_tb.DUT.dpath.X[31:0]
+(12)bpfcpu_tb.DUT.dpath.X[31:0]
+(13)bpfcpu_tb.DUT.dpath.X[31:0]
+(14)bpfcpu_tb.DUT.dpath.X[31:0]
+(15)bpfcpu_tb.DUT.dpath.X[31:0]
+(16)bpfcpu_tb.DUT.dpath.X[31:0]
+(17)bpfcpu_tb.DUT.dpath.X[31:0]
+(18)bpfcpu_tb.DUT.dpath.X[31:0]
+(19)bpfcpu_tb.DUT.dpath.X[31:0]
+(20)bpfcpu_tb.DUT.dpath.X[31:0]
+(21)bpfcpu_tb.DUT.dpath.X[31:0]
+(22)bpfcpu_tb.DUT.dpath.X[31:0]
+(23)bpfcpu_tb.DUT.dpath.X[31:0]
+(24)bpfcpu_tb.DUT.dpath.X[31:0]
+(25)bpfcpu_tb.DUT.dpath.X[31:0]
+(26)bpfcpu_tb.DUT.dpath.X[31:0]
+(27)bpfcpu_tb.DUT.dpath.X[31:0]
+(28)bpfcpu_tb.DUT.dpath.X[31:0]
+(29)bpfcpu_tb.DUT.dpath.X[31:0]
+(30)bpfcpu_tb.DUT.dpath.X[31:0]
+(31)bpfcpu_tb.DUT.dpath.X[31:0]
+@1401200
+-group_end
+@22
+bpfcpu_tb.DUT.dpath.jt[7:0]
+@24
+bpfcpu_tb.DUT.dpath.jf[7:0]
+bpfcpu_tb.DUT.dpath.jmp_correction[9:0]
+@28
+bpfcpu_tb.DUT.dpath.PC_sel[1:0]
+bpfcpu_tb.DUT.dpath.PC_en
+@420
+bpfcpu_tb.DUT.dpath.PC[9:0]
+@28
+bpfcpu_tb.DUT.dpath.B_sel
+@22
+bpfcpu_tb.DUT.dpath.imm_stage1[31:0]
+@28
+bpfcpu_tb.DUT.dpath.ALU_en
+@200
+-alu internals
+@28
+bpfcpu_tb.DUT.dpath.the_alu.ALU_en
+@22
+bpfcpu_tb.DUT.dpath.the_alu.ALU_sel[3:0]
+bpfcpu_tb.DUT.dpath.the_alu.A[31:0]
+bpfcpu_tb.DUT.dpath.the_alu.B[31:0]
+@28
+bpfcpu_tb.DUT.dpath.the_alu.eq
+bpfcpu_tb.DUT.dpath.the_alu.gt
+bpfcpu_tb.DUT.dpath.the_alu.ge
+bpfcpu_tb.DUT.dpath.the_alu.set
+bpfcpu_tb.DUT.dpath.the_alu.ALU_vld
+bpfcpu_tb.DUT.dpath.the_alu.ALU_ack
+[pattern_trace] 1
+[pattern_trace] 0

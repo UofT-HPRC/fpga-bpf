@@ -6,6 +6,8 @@ A simple ALU designed to match the needs of the BPF VM.
 
 `ifdef FROM_ALU
 `include "../../../bpf_defs.vh"
+`elsif FROM_BPFCPU
+`include "../bpf_defs.vh"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif
@@ -14,6 +16,7 @@ module alu # (
 	parameter PESS = 0
 )(
 	input wire clk,
+    input wire rst,
     input wire [31:0] A,
     input wire [31:0] B,
     input wire [3:0] ALU_sel,
@@ -23,7 +26,8 @@ module alu # (
     output wire eq,
     output wire gt,
     output wire ge,
-    output wire ALU_vld
+    output wire ALU_vld,
+    input wire ALU_ack
 );
 
     /************************************/
@@ -103,39 +107,36 @@ module alu # (
     /**Assign outputs from internal signals**/
     /****************************************/
     
+    reg [31:0] ALU_out_r = 0;
     reg eq_r = 0;
     reg gt_r = 0;
     reg ge_r = 0;
     reg set_r = 0;
+    reg ALU_vld_r = 0;
+    
     always @(posedge clk) begin
         if (ALU_en_i) begin
+            ALU_out_r <= ALU_out_i;
             eq_r <= eq_i;
             gt_r <= gt_i;
             ge_r <= ge_i;
             set_r <= set_i;
+            ALU_vld_r <= ALU_vld_i;
         end else begin
+            ALU_out_r <= ALU_out_r;
             eq_r <= eq_r;
             gt_r <= gt_r;
             ge_r <= ge_r;
             set_r <= set_r;
+            ALU_vld_r <= (ALU_ack) ? 0 : ALU_vld_r;
         end
     end
+    
+    assign ALU_out = ALU_out_r;
     assign eq = eq_r;
     assign gt = gt_r;
     assign ge = ge_r;
     assign set = set_r;
-    
-    reg [31:0] ALU_out_r = 0;
-    always @(posedge clk) begin
-        if (ALU_en_i) ALU_out_r <= ALU_out_i;
-        else ALU_out_r <= ALU_out_r;
-    end
-    assign ALU_out = ALU_out_r;
-    
-    reg ALU_vld_r = 0;
-    always @(posedge clk) begin
-        ALU_vld_r <= ALU_vld_i;
-    end
     assign ALU_vld = ALU_vld_r;
 
 endmodule

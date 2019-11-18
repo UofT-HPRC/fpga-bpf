@@ -16,6 +16,7 @@ module stage0_point_5 (
     output wire [63:0] instr_out,
     
     //counts how many cycles instruction has been in pipeline
+    input wire PC_en,
     input wire [5:0] icount,
     output wire [5:0] ocount,
     
@@ -42,6 +43,7 @@ module stage0_point_5 (
         .odata_vld(vld),
         .odata_rdy(next_rdy),
         
+        .cnt_en(PC_en),
         .icount(icount),
         .ocount(ocount)
     );

@@ -21,6 +21,7 @@ module alu_tb;
     wire gt;
     wire ge;
     wire ALU_vld;
+    reg ALU_ack;
     
     integer fd, dummy;
     
@@ -34,6 +35,7 @@ module alu_tb;
         B <= 0;
         ALU_sel <= 0;
         ALU_en <= 0;
+        ALU_ack <= 0;
         
         fd = $fopen("alu_drivers.mem", "r");
         if (fd == 0) begin
@@ -59,7 +61,7 @@ module alu_tb;
         end
         
         #0.01
-        dummy = $fscanf(fd, "%d%d%b%b", A, B, ALU_sel, ALU_en);
+        dummy = $fscanf(fd, "%d%d%b%b%b", A, B, ALU_sel, ALU_en, ALU_ack);
     end
 
     alu DUT (
@@ -73,7 +75,8 @@ module alu_tb;
         .eq(eq),
         .gt(gt),
         .ge(ge),
-        .ALU_vld(ALU_vld)
+        .ALU_vld(ALU_vld),
+        .ALU_ack(ALU_ack)
     );
 
 

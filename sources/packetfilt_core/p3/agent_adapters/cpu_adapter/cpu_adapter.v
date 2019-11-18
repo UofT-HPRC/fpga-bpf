@@ -62,10 +62,9 @@ module cpu_adapter # (
     
     output wire cpu_done_ack, //@0
     output wire rdy_for_cpu, //@0
-    output wire cache_hit, //@1
-    output wire [31:0] cached_data, //@1
-    //zero-padded on the left (when necessary)
-    output wire [31:0] resized_mem_data, //@1+BUF_IN+BUF_OUT+PESS
+    //output wire cache_hit, //@1           Now that we output mem_vld, we don't need these outputs anymore
+    //output wire [31:0] cached_data, //@1
+    output wire [31:0] resized_mem_data, //@1+BUF_IN+BUF_OUT+PESS, zero-padded on the left (when necessary)
     output wire resized_mem_data_vld,
     output wire [PLEN_WIDTH-1:0] cpu_byte_len,
     

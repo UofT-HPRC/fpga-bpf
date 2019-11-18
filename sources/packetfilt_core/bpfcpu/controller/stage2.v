@@ -29,12 +29,10 @@ understand it for myself.
 
 */
 
-
-//temporary: remove this
-`define FROM_CONTROLLER 1
-
 `ifdef FROM_CONTROLLER
 `include "../../bpf_defs.vh"
+`elsif FROM_BPFCPU
+`include "../bpf_defs.vh"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif
@@ -64,15 +62,16 @@ module stage2 # (
     input wire ALU_vld,
     
     //Outputs for this stage:
-    output wire [CODE_ADDR_WIDTH-1:0] jt_out,
-    output wire [CODE_ADDR_WIDTH-1:0] jf_out,
+    output wire [7:0] jt_out,
+    output wire [7:0] jf_out,
     output wire [1:0] PC_sel, //branch_mispredict signifies when to use stage2's PC_sel over stage0's
-    output wire A_sel,
+    output wire [2:0] A_sel,
     output wire A_en,
-    output wire X_sel,
+    output wire [2:0] X_sel,
     output wire X_en,
     output wire [3:0] regfile_sel_stage2,
     output wire [31:0] imm_stage2,
+    output wire ALU_ack,
     output wire branch_mispredict,
     
     output wire acc,
@@ -85,6 +84,7 @@ module stage2 # (
     
     
     //count number of cycles instruction has been around for
+    input wire PC_en,
     input wire [5:0] icount,
     output wire [CODE_ADDR_WIDTH-1:0] jmp_correction,
     
@@ -116,12 +116,13 @@ module stage2 # (
     wire [CODE_ADDR_WIDTH-1:0] jt_out_i;
     wire [CODE_ADDR_WIDTH-1:0] jf_out_i;
     `logic [1:0] PC_sel_i; //branch_mispredict signifies when to use stage2's PC_sel over stage0's
-    `logic A_sel_i;
+    `logic [2:0] A_sel_i;
     `logic A_en_i;
-    `logic X_sel_i;
+    `logic [2:0] X_sel_i;
     `logic X_en_i;
     wire regfile_sel_stage2_i;
     wire [31:0] imm_stage2_i;
+    wire ALU_ack_i;
     `logic branch_mispredict_i;
     
     wire acc_i;
@@ -133,6 +134,7 @@ module stage2 # (
     wire stage2_writes_X_i;
     
     //count number of cycles instruction has been around for
+    wire PC_en_i;
     wire [5:0] icount_i;
     wire [CODE_ADDR_WIDTH-1:0] jmp_correction_i;
     
@@ -157,6 +159,7 @@ module stage2 # (
     assign set_i      = set;
     assign ALU_vld_i  = ALU_vld;
     
+    assign PC_en_i = PC_en;
     assign icount_i = icount;
     
     
@@ -194,9 +197,9 @@ module stage2 # (
     wire packmem_selected;
     assign packmem_selected = (addr_type == `BPF_ABS || addr_type == `BPF_IND || addr_type == `BPF_MSH);
     wire awaiting_packmem;
-    assign awaiting_packmem = (opcode_class == `BPF_LD || opcode_class == `BPF_LDX) && packmem_selected;
+    assign awaiting_packmem = (opcode_class == `BPF_LD || opcode_class == `BPF_LDX) && packmem_selected && prev_vld;
     wire awaiting_ALU;
-    assign awaiting_ALU = (opcode_class == `BPF_ALU);
+    assign awaiting_ALU = (opcode_class == `BPF_ALU) || (opcode_class == `BPF_JMP && jmp_type != `BPF_JA) && prev_vld;
     
     
     /****************/
@@ -223,7 +226,7 @@ module stage2 # (
             if (prev_vld && rdy) begin
                 count_i <= icount_i;
             end else begin
-                count_i <= count_i + 1;
+                count_i <= count_i + PC_en_i;
             end
         end
     end
@@ -317,6 +320,9 @@ module stage2 # (
     //imm_stage2_i;
     assign imm_stage2_i = imm_i;
     
+    //ALU_ack_i
+    assign ALU_ack_i = (awaiting_ALU && ALU_vld_i);
+    
     //jmp_correction_i
 `genif (CODE_ADDR_WIDTH > 6) begin
     assign jmp_correction_i = $signed(count_i);
@@ -340,7 +346,7 @@ end else begin
     
     //Note that "hot" control signals are gated with prev_vld and rdy
     wire enable_hot;
-    assign enable_hot = prev_vld && rdy;
+    assign enable_hot = prev_vld && rdy && !rst;
     
     //Outputs for this stage:
     assign jt_out             = jt_out_i;
@@ -352,10 +358,13 @@ end else begin
     assign X_en               = X_en_i && enable_hot;
     assign regfile_sel_stage2 = regfile_sel_stage2_i;
     assign imm_stage2         = imm_stage2_i;
+    assign ALU_ack            = ALU_ack_i && enable_hot;
     assign branch_mispredict  = branch_mispredict_i && enable_hot;
     
     assign acc = acc_i && enable_hot;
     assign rej = rej_i && enable_hot;
+    
+    assign jmp_correction = jmp_correction_i;
     
     //Note that stall signals are gated with prev_vld. This is because they are
     //computed combinationally from the output of the last stage.

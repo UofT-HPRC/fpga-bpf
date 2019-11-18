@@ -27,8 +27,6 @@ module p3_tb;
     reg [`BYTE_ADDR_WIDTH-1:0] byte_rd_addr;
     reg cpu_rd_en;
     reg [1:0] transfer_sz;
-    wire cache_hit;
-    wire [31:0] cached_data;
     wire [31:0] resized_mem_data;
     wire resized_mem_data_vld;
     wire [`PLEN_WIDTH-1:0] cpu_byte_len;
@@ -156,8 +154,6 @@ module p3_tb;
         .byte_rd_addr(byte_rd_addr),
         .cpu_rd_en(cpu_rd_en),
         .transfer_sz(transfer_sz),
-        .cache_hit(cache_hit),
-        .cached_data(cached_data),
         .resized_mem_data(resized_mem_data),
         .resized_mem_data_vld(resized_mem_data_vld),
         .cpu_byte_len(cpu_byte_len),

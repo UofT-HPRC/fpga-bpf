@@ -23,12 +23,12 @@ ready signal on the bhand module.
 
 */
 
-//temporary: remove this
-`define FROM_CONTROLLER 1
-
 `ifdef FROM_CONTROLLER
 `include "../../bpf_defs.vh"
 `include "../../../generic/buffered_handshake/bhand.v"
+`elsif FROM_BPFCPU
+`include "../bpf_defs.vh"
+`include "../../generic/buffered_handshake/bhand.v"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif
@@ -53,16 +53,18 @@ module stage1 (
     output wire [3:0] ALU_sel,
     output wire ALU_en,
     output wire addr_sel,
+    output wire [1:0] transfer_sz,
     output wire rd_en,
     output wire [3:0] regfile_sel_stage1,
     output wire regfile_wr_en,
-    output wire imm_stage1,
+    output wire [31:0] imm_stage1,
     
     //Outputs for next stage (registered in this module):
     //Simplification: just output the instruction and let stage 2 do the thinking
     output wire [63:0] instr_out,
     
     //count number of cycles instruction has been around for
+    input wire PC_en,
     input wire [5:0] icount,
     output wire [5:0] ocount,
     
@@ -86,10 +88,11 @@ module stage1 (
     wire [3:0] ALU_sel_i;
     wire ALU_en_i;
     wire addr_sel_i;
+    wire [1:0] transfer_sz_i;
     `logic rd_en_i;
     wire regfile_sel_i;
     wire regfile_wr_en_i;
-    wire imm_stage1_i;
+    wire [31:0] imm_stage1_i;
     
     wire [63:0] instr_out_i;
     
@@ -109,7 +112,8 @@ module stage1 (
     assign instr_in_i = instr_in;
     assign branch_mispredict_i = branch_mispredict;
     
-    assign icount_i = icount_i;
+    assign PC_en_i = PC_en;
+    assign icount_i = icount;
     
     assign prev_vld_i = prev_vld;
     assign next_rdy_i = next_rdy;
@@ -161,7 +165,9 @@ module stage1 (
     assign B_sel_i = opcode[3];
     
     assign ALU_sel_i = opcode[7:4];
+    assign ALU_en_i = (opcode_class == `BPF_ALU) || (opcode_class == `BPF_JMP && jmp_type != `BPF_JA);
     assign addr_sel_i = (addr_type == `BPF_IND) ? `PACK_ADDR_IND : `PACK_ADDR_ABS;
+    assign transfer_sz_i = opcode[4:3];
     
     always @(*) begin
         if ((opcode_class == `BPF_LD) && (addr_type == `BPF_ABS || addr_type == `BPF_IND)) begin
@@ -178,36 +184,41 @@ module stage1 (
     
     assign imm_stage1_i = instr_in_i[31:0];
     
-    assign instr_out_i = instr_in_i;
-    
-    assign ocount_i = icount_i;
-    
     //Stall signals
     assign stalled_i = 
                         (we_read_A && stage2_writes_A)
                       ||(we_read_X && stage2_writes_X)
-                      ||(regfile_wr_en_i && stage2_reads_regfile);
+                      ||(regfile_wr_en_i && stage2_reads_regfile)
+                      || !rdy_i;
     
     //This performs the buffered handshaking
     bhand # (
         .DATA_WIDTH(64),
         .ENABLE_COUNT(1),
         .COUNT_WIDTH(6)
-    ) delay_stage (
+    ) handshaker (
         .clk(clk),
         .rst(rst || branch_mispredict_i),
             
         .idata(instr_in_i),
-        .idata_vld(prev_vld_i),
+        .idata_vld(prev_vld_i && !stalled_i), //ugly hack (see right below)
         .idata_rdy(rdy_i),
             
         .odata(instr_out_i),
         .odata_vld(vld_i),
         .odata_rdy(next_rdy_i),
         
+        .cnt_en(PC_en_i),
         .icount(icount_i),
         .ocount(ocount_i)
     );
+    
+    //When this stage is stalled, it does not read the next instructions. I 
+    //already gated the rdy output (see assigning outputs from internal signals)
+    //but I didn't realize I would also need to tell the handshaking module to
+    //also not read the input. The quick and dirty way to prevent the handshaker
+    //from reading the input is to gate its valid input. At some point I might
+    //just add a shift_in_enable and a shift_out_enable to the handshaker.
     
     /****************************************/
     /**Assign outputs from internal signals**/
@@ -218,16 +229,21 @@ module stage1 (
     //This stage's control bus outputs
     //Note that "hot" control signals are gated with prev_vld and rdy and not stalled
     wire enable_hot;
-    assign enable_hot = prev_vld && rdy && !stalled_i;
+    assign enable_hot = prev_vld && rdy && !stalled_i && !rst;
     
-    assign B_sel          = B_sel_i;
-    assign ALU_sel        = ALU_sel_i;
-    assign ALU_en         = ALU_en_i && enable_hot;
-    assign addr_sel       = addr_sel_i;
-    assign rd_en          = rd_en_i && enable_hot;
-    assign regfile_sel    = regfile_sel_i;
-    assign regfile_wr_en  = regfile_wr_en_i && enable_hot;
-    assign imm_stage1     = imm_stage1_i;
+    assign B_sel              = B_sel_i;
+    assign ALU_sel            = ALU_sel_i;
+    assign ALU_en             = ALU_en_i && enable_hot;
+    assign addr_sel           = addr_sel_i;
+    assign transfer_sz        = transfer_sz_i;
+    assign rd_en              = rd_en_i && enable_hot;
+    assign regfile_sel_stage1 = regfile_sel_i;
+    assign regfile_wr_en      = regfile_wr_en_i && enable_hot;
+    assign imm_stage1         = imm_stage1_i;
+    
+    assign instr_out = instr_out_i;
+    
+    assign ocount = ocount_i;
     
     //Handshaking signals
     //We are not ready if we are stalled

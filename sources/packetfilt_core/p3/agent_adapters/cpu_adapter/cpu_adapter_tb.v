@@ -15,8 +15,6 @@ module cpu_adapter_tb;
     reg [1:0] transfer_sz;
     wire rd_en;
     wire [`ADDR_WIDTH-1:0] word_rd_addra;
-    wire cache_hit;
-    wire [31:0] cached_data;
     reg [`DATA_WIDTH-1:0] bigword;
     reg bigword_vld;
     wire [31:0] resized_mem_data;
@@ -75,9 +73,6 @@ module cpu_adapter_tb;
         
         .rd_en(rd_en), 
         .word_rd_addra(word_rd_addra), 
-        
-        .cache_hit(cache_hit),
-        .cached_data(cached_data), 
         
         .bigword(bigword),
         .bigword_vld(bigword_vld),
