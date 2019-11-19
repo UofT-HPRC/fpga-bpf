@@ -1,0 +1,20 @@
+Need documentation for:
+    - sources/packetfilter_core/p3/muxes
+    - sources/packetfilter_core/p3/agent_adapters
+
+Need to update documentation for:
+    - sources/packetfilter_core/bpfcpu/controller
+
+Still need to implement:
+    - Arbiters (+explain new tag tree method)
+    - Snooper (probably will need to redo it)
+    - Forwarder (ditto)
+    - AXI Lite interface to load new memory (can mostly copy from old project)
+    - Tcl script to have Vivado generate an IP (can mostly copy from old project)
+
+Other:
+    - The job queues in p3ctrl really need an overhaul
+    - Need to find a clean way to gate hot signals in speculative execution
+    - Migrate old readme and wiki pages to new repo (making changes as needed)
+    
+    

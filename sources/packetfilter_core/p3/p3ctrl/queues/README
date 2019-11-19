@@ -1,0 +1,20 @@
+I've really been making an effort to keep kludges to a minimum, but this part 
+of the code is still really stinky. I copied this code from my old project and 
+made no changes to it. I mean, it _does_ work...
+
+Anwyay, each job queue is essentially a three-element FIFO. However, in order 
+to squeeze out a few extra clock cycles, I did this horrible business of making 
+it possible for two people to write the same FIFO in the same clock cycle. 
+Also, this was one of the first things I ever wrote in Verilog to begin with, 
+so it's definitely looking ugly.
+
+    -> By the way, there is a "bug" in this code. It has something to do with 
+    the FIFOs expecting a certain number of cycles between writes or something 
+    like that. When I first designed the thing, I knew about this, but figured 
+    out that it was a virtually impossible condition in the packet filter. 
+    
+    Of course, I don't like leaving loose ends, so at some point I'll go check 
+    my notes to remind myself what the exact problem is so I can fix it.
+
+In the future I'll have to come back and overhaul this code. I'm thinking about 
+converting to using the usual read/write pointer approach.

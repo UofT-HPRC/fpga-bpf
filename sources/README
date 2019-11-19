@@ -1,0 +1,86 @@
+The architecture of the packet filter IP is as follows:
+
+
+
+ (wires to                      (new instructions)
+ snoop on)                              +
+    ||                                  |
+    ||       +-------------------------------------------------------+
+    ||       |                          |                            |
+    ||       |                          v                            |
+    ||       | +---------+    +-------------------+    +-----------+ |
+    ||       | |         |    |                   |    |           | |
+    -========|=| Snooper |--->| packetfilter_core |--->| Forwarder |-|------> 
+    ||       | |         |    |                   |    |           | | (accepted       
+    ||       | +---------+    +-------------------+    +-----------+ |  packets)
+    ||       |                                                       |
+    ||       +-------------------------------------------------------+
+    ||                          Packet Filter IP
+    ||
+
+
+There are three sub-components:
+
+    - Snooper: this sub-component's job is to observe some wires elsewhere in 
+      your design, and copy everything into a buffer in the packetfilter_core.
+    
+    - packetfilter_core: this sub-component accepts BPF instructions from an 
+      external source, and runs them on packets that were copied in by the 
+      snooper. It will signal whether or not each packet was accepted by the 
+      program.
+    
+    - Forwarder: when the packetfilter_core signals an accepted packet, the 
+      forwarder will take care of copying it out of the buffer. For example, 
+      this could be done in order to send accepted packets out over a network 
+      connection.
+
+
+There are several reasons to structure the design in this way. First of all, 
+it's important to be able to plug in different variations of snoopers and 
+forwarders depending on external protocols. The wires you're snooping can have 
+many different (possibly custom) communication protocols. Likewise, the place 
+where forwarded packets are going could also have many different protocols.
+
+Another important reason is for more flexible configuration. We really would 
+like the packet filter to run at line rate, but if the BPF program is very 
+complicated (i.e. takes many cycles), this might not be possible. So the packet 
+filter has a parameter to control the number of parallel packetfilter_cores:
+
+                            +-------------------+
+                 +-----+    |                   |    +-----+
+                 |     |--->| packetfilter_core |--->|     |
+                 |     |    |                   |    |     |
+                 |     |    +-------------------+    |     |
+                 |     |                             |     |
+                 |  A  |    +-------------------+    |  A  |
+                 |  r  |    |                   |    |  r  |
+                 |  b  |--->| packetfilter_core |--->|  b  |
+  +---------+    |  i  |    |                   |    |  i  |    +-----------+
+  |         |    |  t  |    +-------------------+    |  t  |    |           |
+  | Snooper |--->|  r  |                             |  r  |--->| Forwarder |
+  |         |    |  a  |    +-------------------+    |  a  |    |           |
+  +---------+    |  t  |    |                   |    |  t  |    +-----------+
+                 |  i  |--->| packetfilter_core |--->|  i  |
+                 |  o  |    |                   |    |  o  |
+                 |  n  |    +-------------------+    |  n  |
+                 |     |                             |     |
+                 |     |    +-------------------+    |     |
+                 |     |    |                   |    |     |
+                 |     |--->| packetfilter_core |--->|     |
+                 +-----+    |                   |    +-----+
+                            +-------------------+
+
+In true FPGA fashion, we parallelize what can be parallelized! Note that 
+parallelizing snoopers/forwarders has zero benefit if they can already run at 
+line rate.
+
+
+
+There is one sub-directory for each of the components in the above diagram, 
+plus one sub-directory called "generic". The "generic" directory contains 
+designs that I think have a chance of being usable in other projects.
+
+Anyway, each directory has its own design documentation, so it should be 
+reasonably straightforward to understand how everything works. My number one 
+goal is for this code to make sense to someone reading it, so I'm definitely 
+open to suggestions for improvement. E-mail me at marco.merlini@utoronto.ca

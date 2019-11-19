@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Mon Nov 18 20:07:17 2019
+[*] Mon Nov 18 20:09:33 2019
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/bpfcpu/bpfcpu.vcd"
-[dumpfile_mtime] "Mon Nov 18 20:05:09 2019"
-[dumpfile_size] 48804
+[dumpfile_mtime] "Mon Nov 18 20:09:27 2019"
+[dumpfile_size] 48920
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/bpfcpu/bpfcpu.gtkw"
 [timestart] 0
 [size] 1916 1060
 [pos] -1 -1
-*-16.238148 115000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-16.289221 145000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bpfcpu_tb.
 [treeopen] bpfcpu_tb.DUT.
 [treeopen] bpfcpu_tb.DUT.ctrl.

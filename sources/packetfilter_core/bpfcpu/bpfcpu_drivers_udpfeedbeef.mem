@@ -4,7 +4,10 @@ resized_mem_data    resized_mem_data_vld    cpu_byte_len  || Each group is one m
 00000800            0                       20
 00000801            1                       20
 
-00000011            0                       20
+00000007            0                       20
+00000008            0                       20
+00000009            0                       20
+00000010            0                       20
 00000011            1                       20
 
 

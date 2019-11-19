@@ -1,3 +1,7 @@
+THIS FILE IS OUT OF DATE. Most of it is still correct, but I made some small 
+decisions while writing the code that need to be explained in here.
+
+
 The controller in my original implementation got a bit out of hand. So, I have 
 redesigned it from the ground up. There are a couple things to explain in this 
 doc:

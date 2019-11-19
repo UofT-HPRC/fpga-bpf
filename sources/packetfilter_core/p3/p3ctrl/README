@@ -1,4 +1,4 @@
-This is a "ping-pang-pung" controller. The idea is as follows:
+This is a "ping-pang-pong" controller. The idea is as follows:
 We have three agents that all need to share memory. To make it possible
 for all three to run concurrently, we need three buffers. 
 

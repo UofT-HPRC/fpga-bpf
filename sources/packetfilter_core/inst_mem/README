@@ -1,0 +1,6 @@
+This is nothing more than a simple (dual-port) BRAM for storing CPU 
+instructions.
+
+At least on Xilinx FPGAs, using dual-port BRAMs is essentiaslly free. In my 
+case, it simplifies the design. Otherwise, I would have to multiplex between 
+the wires for writing new code and wires for the CPU reading its instructions.

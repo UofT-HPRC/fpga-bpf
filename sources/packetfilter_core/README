@@ -31,5 +31,5 @@ The exposed interface is:
 First of all, the "BRAM" interfaces are a little non-standard; I add some extra 
 sidechannels for keeping track of the lengths in memory.
 
-When you ask for a bunch of parallel processors, it is this packetfilt_core 
+When you ask for a bunch of parallel processors, it is this packetfilter_core 
 module that gets replicated. 

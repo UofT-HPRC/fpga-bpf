@@ -62,8 +62,6 @@ module cpu_adapter # (
     
     output wire cpu_done_ack, //@0
     output wire rdy_for_cpu, //@0
-    //output wire cache_hit, //@1           Now that we output mem_vld, we don't need these outputs anymore
-    //output wire [31:0] cached_data, //@1
     output wire [31:0] resized_mem_data, //@1+BUF_IN+BUF_OUT+PESS, zero-padded on the left (when necessary)
     output wire resized_mem_data_vld,
     output wire [PLEN_WIDTH-1:0] cpu_byte_len,
@@ -103,9 +101,6 @@ module cpu_adapter # (
     
     wire cpu_done_ack_i; 
     wire rdy_for_cpu_i;  
-    
-    wire cache_hit_i;
-    wire [31:0] cached_data_i;
     
     wire [31:0] resized_mem_data_i;
     wire resized_mem_data_vld_i;
@@ -177,10 +172,6 @@ module cpu_adapter # (
     assign word_rd_addra_i = byte_rd_addr_i[BYTE_ADDR_WIDTH-1:`N];
     assign rd_en_i = cpu_rd_en_i; //TODO: check if cache got a hit
     
-    //For now, simplify the code and don't do the crazy caching
-    assign cache_hit_i = 0;
-    assign cached_data_i = 32'h7066607;
-    
     //This "selected" vector is the desired part of the bigword, based on the offset
     wire [31:0] selected;
     assign selected = bigword_i[(DATA_WIDTH - {offset_i, 3'b0} )-1 -: 32];
@@ -211,8 +202,6 @@ module cpu_adapter # (
     /****************************************/
     assign word_rd_addra = word_rd_addra_i;
     assign rd_en = rd_en_i;
-    assign cache_hit = cache_hit_i;
-    assign cached_data = cached_data_i;
 generate
     if(PESS) begin
         reg [31:0] resized_mem_data_r = 0;

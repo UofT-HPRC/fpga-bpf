@@ -1,7 +1,7 @@
 This Verilog file should synthesize to a dual-port BRAM. 
 
 Suppose I want my snooper/forwarder to have a data width of 128. Internally, I 
-will actually make a dual-port BRAM with width 128/2. When the snooper and 
+will actually make a dual-port BRAM with width 128/2 = 64. When the snooper and 
 forwarder request an address, I append a zero to it.
 
 Example: Snooper requests adress 0x3. This means the snooper wants the 4th 128 
