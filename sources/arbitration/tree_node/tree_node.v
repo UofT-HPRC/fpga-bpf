@@ -83,7 +83,7 @@ module tree_node # (
     /****************/
     
     assign rdy_i = left_rdy_i || right_rdy_i;
-    assign tag_i = (lr_sel) ? left_tag_i : right_tag_i;
+    assign tag_i = (lr_sel) ? right_tag_i : left_tag_i;
     assign left_ack_i = ack_i && (lr_sel == 0);
     assign right_ack_i = ack_i && (lr_sel == 1);
     

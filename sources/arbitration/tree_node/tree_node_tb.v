@@ -10,14 +10,14 @@ The first test is the combinational one:
          [node_root_combo]
              /       \
 [node_left_combo] [node_right_combo]
-TAGS = 0,1         TAGS = 2,3
+TAGS = 1,2         TAGS = 3,4
 
 
 The second test is the buffered one:
          [node_root_delay]
              /       \
 [node_left_delay] [node_right_delay]
-TAGS = 4,5         TAGS = 6,7  
+TAGS = 1,2         TAGS = 3,4
 
 
 And the last test is a mixed one. The left and right nodes are combinational, 
@@ -25,7 +25,7 @@ but the root has a delay.
          [node_root_mixed]
              /       \
 [node_left_mixed] [node_right_mixed]
-TAGS = 8,9         TAGS = 10,11   
+TAGS = 1,2         TAGS = 3,4
 */
 
 `include "tree_node.v"
@@ -124,10 +124,10 @@ module tree_node_tb;
     ) node_left_combo (
         .clk(clk),
         .rst(rst),
-        .left_tag(5'd0),
+        .left_tag(5'd1),
         .left_rdy(combo_rdys[0]),
         .left_ack(combo_acks[0]),
-        .right_tag(5'd1),
+        .right_tag(5'd2),
         .right_rdy(combo_rdys[1]),
         .right_ack(combo_acks[1]),
         .tag(node_left_combo_tag),
@@ -140,10 +140,10 @@ module tree_node_tb;
     ) node_right_combo (
         .clk(clk),
         .rst(rst),
-        .left_tag(5'd2),
+        .left_tag(5'd3),
         .left_rdy(combo_rdys[2]),
         .left_ack(combo_acks[2]),
-        .right_tag(5'd3),
+        .right_tag(5'd4),
         .right_rdy(combo_rdys[3]),
         .right_ack(combo_acks[3]),
         .tag(node_right_combo_tag),
@@ -183,10 +183,10 @@ module tree_node_tb;
     ) node_left_delay (
         .clk(clk),
         .rst(rst),
-        .left_tag(5'd0),
+        .left_tag(5'd1),
         .left_rdy(delay_rdys[0]),
         .left_ack(delay_acks[0]),
-        .right_tag(5'd1),
+        .right_tag(5'd2),
         .right_rdy(delay_rdys[1]),
         .right_ack(delay_acks[1]),
         .tag(node_left_delay_tag),
@@ -199,10 +199,10 @@ module tree_node_tb;
     ) node_right_delay (
         .clk(clk),
         .rst(rst),
-        .left_tag(5'd2),
+        .left_tag(5'd3),
         .left_rdy(delay_rdys[2]),
         .left_ack(delay_acks[2]),
-        .right_tag(5'd3),
+        .right_tag(5'd4),
         .right_rdy(delay_rdys[3]),
         .right_ack(delay_acks[3]),
         .tag(node_right_delay_tag),
@@ -241,10 +241,10 @@ module tree_node_tb;
     ) node_left_mixed (
         .clk(clk),
         .rst(rst),
-        .left_tag(5'd0),
+        .left_tag(5'd1),
         .left_rdy(mixed_rdys[0]),
         .left_ack(mixed_acks[0]),
-        .right_tag(5'd1),
+        .right_tag(5'd2),
         .right_rdy(mixed_rdys[1]),
         .right_ack(mixed_acks[1]),
         .tag(node_left_mixed_tag),
@@ -257,10 +257,10 @@ module tree_node_tb;
     ) node_right_mixed (
         .clk(clk),
         .rst(rst),
-        .left_tag(5'd2),
+        .left_tag(5'd3),
         .left_rdy(mixed_rdys[2]),
         .left_ack(mixed_acks[2]),
-        .right_tag(5'd3),
+        .right_tag(5'd4),
         .right_rdy(mixed_rdys[3]),
         .right_ack(mixed_acks[3]),
         .tag(node_right_mixed_tag),
