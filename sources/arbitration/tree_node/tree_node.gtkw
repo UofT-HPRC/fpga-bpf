@@ -1,0 +1,143 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Wed Nov 20 00:49:42 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/arbitration/tree_node/tree_node.vcd"
+[dumpfile_mtime] "Wed Nov 20 00:39:11 2019"
+[dumpfile_size] 18063
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/arbitration/tree_node/tree_node.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-14.635118 15000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tree_node_tb.
+[sst_width] 214
+[signals_width] 230
+[sst_expanded] 1
+[sst_vpaned_height] 314
+@29
+tree_node_tb.clk
+@200
+-COMBO
+@c00200
+-combo_leaves
+@28
+tree_node_tb.combo_rdys[3:0]
+tree_node_tb.combo_acks[3:0]
+@1401200
+-combo_leaves
+@c00200
+-combo_left
+@22
+tree_node_tb.node_left_combo_tag[4:0]
+@28
+tree_node_tb.node_left_combo_rdy
+tree_node_tb.node_left_combo_ack
+@1401200
+-combo_left
+@c00200
+-combo_right
+@22
+tree_node_tb.node_right_combo_tag[4:0]
+@28
+tree_node_tb.node_right_combo_rdy
+tree_node_tb.node_right_combo_ack
+@1401200
+-combo_right
+@c00200
+-combo_root
+@22
+tree_node_tb.combo_tag[4:0]
+@28
+tree_node_tb.combo_rdy
+tree_node_tb.combo_ack
+@1401200
+-combo_root
+@200
+-DELAY
+@800200
+-delay_leaves
+@28
+tree_node_tb.delay_rdys[3:0]
+tree_node_tb.delay_acks[3:0]
+@1000200
+-delay_leaves
+@800200
+-delay_left
+@22
+tree_node_tb.node_left_delay_tag[4:0]
+@28
+tree_node_tb.node_left_delay_rdy
+tree_node_tb.node_left_delay_ack
+@1000200
+-delay_left
+@800200
+-delay_right
+@22
+tree_node_tb.node_right_delay_tag[4:0]
+@28
+tree_node_tb.node_right_delay_rdy
+tree_node_tb.node_right_delay_ack
+@1000200
+-delay_right
+@800200
+-delay_root
+@22
+tree_node_tb.delay_tag[4:0]
+@28
+tree_node_tb.delay_rdy
+tree_node_tb.delay_ack
+@1000200
+-delay_root
+@200
+-MIXED
+@c00200
+-mixed_leaves
+@c00028
+tree_node_tb.mixed_rdys[3:0]
+@28
+(0)tree_node_tb.mixed_rdys[3:0]
+(1)tree_node_tb.mixed_rdys[3:0]
+(2)tree_node_tb.mixed_rdys[3:0]
+(3)tree_node_tb.mixed_rdys[3:0]
+@1401200
+-group_end
+@c00028
+tree_node_tb.mixed_acks[3:0]
+@28
+(0)tree_node_tb.mixed_acks[3:0]
+(1)tree_node_tb.mixed_acks[3:0]
+(2)tree_node_tb.mixed_acks[3:0]
+(3)tree_node_tb.mixed_acks[3:0]
+@1401200
+-group_end
+-mixed_leaves
+@c00200
+-mixed_left
+@22
+tree_node_tb.node_left_mixed_tag[4:0]
+@28
+tree_node_tb.node_left_mixed_rdy
+tree_node_tb.node_left_mixed_ack
+@1401200
+-mixed_left
+@c00200
+-mixed_right
+@22
+tree_node_tb.node_right_mixed_tag[4:0]
+@28
+tree_node_tb.node_right_mixed_ack
+tree_node_tb.node_right_mixed_rdy
+@1401200
+-mixed_right
+@c00200
+-mixed_root
+@22
+tree_node_tb.mixed_tag[4:0]
+@28
+tree_node_tb.mixed_rdy
+tree_node_tb.mixed_ack
+@1401200
+-mixed_root
+[pattern_trace] 1
+[pattern_trace] 0

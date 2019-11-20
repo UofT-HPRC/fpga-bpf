@@ -3,10 +3,273 @@ signals so that they all play nicely with the snooper(s) and forwarder(s). The
 old method I used was very fragile and did not scale to higher frequencies, and 
 it also did not allow the possibility for more than one snooper/forwarder.
 
-So I'm gonna come up with some better ways to do it at some point.
+This file explains the new design I'm going with. First I'll explain the 
+requirements I'm working towards, and then I'll explain my idea for meeting 
+them.
 
 =====
 SETUP
 =====
 
-We'll start with something simple. We have one snooper and one forwarder,
+Although in the future I may want to use more than one snooper or forwarder, 
+for now I really only need one of each. So our system looks a little like this:
+
+                            +-------------------+
+                 +-----+    |                   |    +-----+
+                 |     |--->| packetfilter_core |--->|     |
+                 |     |    |                   |    |     |
+                 |     |    +-------------------+    |     |
+                 |     |                             |     |
+                 |  A  |    +-------------------+    |  A  |
+                 |  r  |    |                   |    |  r  |
+                 |  b  |--->| packetfilter_core |--->|  b  |
+  +---------+    |  i  |    |                   |    |  i  |    +-----------+
+  |         |    |  t  |    +-------------------+    |  t  |    |           |
+  | Snooper |--->|  r  |                             |  r  |--->| Forwarder |
+  |         |    |  a  |    +-------------------+    |  a  |    |           |
+  +---------+    |  t  |    |                   |    |  t  |    +-----------+
+                 |  i  |--->| packetfilter_core |--->|  i  |
+                 |  o  |    |                   |    |  o  |
+                 |  n  |    +-------------------+    |  n  |
+                 |     |                             |     |
+                 |     |    +-------------------+    |     |
+                 |     |    |                   |    |     |
+                 |     |--->| packetfilter_core |--->|     |
+                 +-----+    |                   |    +-----+
+                            +-------------------+
+
+where the number of packetfilter_cores are parameterizable. I also want the 
+following properties:
+
+    - No packet duplication (i.e. data is never copied into more than one 
+      packetfilter_core)
+    
+    - Back-to-back selection (i.e. snooper should have no idle cycles if none 
+      are needed)
+    
+    - All combinational paths have O(1) length, but I don't care about high 
+      fanout.
+    
+    - If a filter is available, the arbitration will always "find" it.
+    
+    - OK to have latency between [time when the first filter is ready] and 
+      [time when snooper starts writing], just so long as we meet requirement 
+      number 2.
+    
+    - OK to drop a packet hlafway through transmission if no filters are 
+      avaialable.
+    
+These requirements are mostly driven by the goal to enable any number of 
+parallel CPUs at high frequencies.
+
+
+============
+THE TAG TREE
+============
+
+My idea for meeting these requirements is a "tag tree". I will describe the 
+method from the snooper's point of view first; the forwarder is actually more 
+difficult and I'll figure that out later. 
+
+The idea is that each filter is given a unique (constant) tag. The snooper will 
+broadcast to all filters along with a parallel tag; this tag will tell the 
+filters which one should "listen":
+
+
+                            +-------------------+
+                            |                   |
+                  +-------->| packetfilter_core |
+                  | +------>|        00         |
+                  | |       +-------------------+
+                  | |
+                  | |       +-------------------+
+                  | |       |                   |
+                  +-|------>| packetfilter_core |
+  +---------+     | +------>|        01         |
+  |         | data| |       +-------------------+
+  | Snooper |+----+ |
+  |         |+------+       +-------------------+
+  +---------+ tag | |       |                   |
+                  +-|------>| packetfilter_core |
+                  | +------>|        10         |
+                  | |       +-------------------+
+                  | |
+                  | |       +-------------------+
+                  | |       |                   |
+                  +-|------>| packetfilter_core |
+                    +------>|        11         |
+                            +-------------------+
+
+So wait, where does the snooper get the tag from, and what's this about a tree?
+
+Well, each filter has handshaking signals to say when it is ready. Instead of 
+having the snooper handshake directly with the filter, we'll have a sort of 
+tree structure. It's much easier to explain with a picture, so here it is: 
+    NOTE: This logic is IN ADDITION to the data and tag lines drawn above.
+
+                                     +---------+
+                                     |         |
+                                     | Snooper |+--------------> data
+                                     | rdy ack |  +------------> tag
+                                     +---------+  |
+                                        |   \-+   |
+                                        +-+   |   |
+                                      /---|---|---+
+                              +-----------------------+
+                              |      tag rdy ack      |
+                              |       tree_node       |
+                              |tag rdy ack tag rdy ack|
+                              +-----------------------+
+                 +--------------/   |   |   |   |   \----------------+
+                 |   +--------------+   |   |   +----------------+   |
+                 |   |   /--------------+   +----------------\   |   |
+         +-----------------------+                   +-----------------------+
+         |      tag rdy ack      |                   |      tag rdy ack      |
+         |       tree_node       |                   |       tree_node       |
+         |tag rdy ack tag rdy ack|                   |tag rdy ack tag rdy ack|
+         +-----------------------+                   +-----------------------+
+     ------/   /   |   |   \   \------           ------/   /   |   |   \   \------
+     |    ----/    |   |    \----    |           |    ----/    |   |    \----    |
+     |    |    /----   ----\    |    |           |    |    /----   ----\    |    |
++-------------------+ +-------------------+ +-------------------+ +-------------------+
+|   tag  rdy  ack   | |   tag  rdy  ack   | |   tag  rdy  ack   | |   tag  rdy  ack   |
+| packetfilter_core | | packetfilter_core | | packetfilter_core | | packetfilter_core |
+|        00         | |        01         | |        10         | |        11         |
++-------------------+ +-------------------+ +-------------------+ +-------------------+
+ 
+ So basically the key component here is the tree_node. For the sake of timing, 
+ it's important that the tree_node have the option for delaying outputs by a 
+ cycle. Otherwise, its only job in life is to select one of its two children 
+ (if available) and pass the tag along to the top of the tree.
+ 
+ Note: this looks like a job for the buffered handshake! See the Verilog and 
+ the README in sources/generic/buffered_hanshake
+ 
+ 
+ =================================
+ DOING THIS GENERICALLY IN VERILOG
+ =================================
+ 
+ In order to have a paraterizable number of packetfilter_cores, we need to 
+ generate this tree generically. The method is surprisingly easy, and some 
+ almost-Verilog code is below:
+ 
+    parameter N;
+    parameter TAG_SZ = $clog2(N); // = ceil(log_base_2(N))
+    `define RDY_BIT 1
+    `define ACK_BIT 1
+    parameter NODE_WIDTH = TAG_SZ + `RDY_BIT + `ACK_BIT;
+    
+    //Each element of this array represents one set of outputs from a tree node
+    //(or a leaf), just like in a binary heap
+    wire [NODE_WIDTH-1:0] tagtree [0:(2*N-1)-1];
+    
+    //Wire up all the filter handshaking signals
+    for (i <= 0; i < N; i <= i + 1) begin
+        assign tagtree[i].tag = filter[i].tag; //Not correct Verilog, but you get the point
+        assign tagtree[i].rdy = filter[i].rdy;
+        assign filter[i].ack = tagtree[i].ack;
+    end
+    
+    //Wire up all the tree nodes
+    for (i <= 0; i < N; i <= i + 1) begin
+        assign tree_node[i].left.tag = tagtree[2*i].tag;
+        assign tree_node[i].left.rdy = tagtree[2*i].rdy;
+        assign tagtree[2*i].ack = tree_node[i].left.ack;
+        
+        assign tree_node[i].right.tag = tagtree[2*i + 1].tag;
+        assign tree_node[i].right.rdy = tagtree[2*i + 1].rdy;
+        assign tagtree[2*i + 1].ack = tree_node[i].right.ack;
+        
+        assign tagtree[N+i].tag = tree_node[i].tag;
+        assign tagtree[N+i].rdy = tree_node[i].rdy;
+        assign tree_node[i].ack = tagtree[N+i].ack;
+    end
+
+The technique here is to use the "canonical" array representation of a tree. 
+Digramatically, we have:
+
+                               tagtree
+ +-------------------+         +-----+                     N = 4
+ |                   |         |     |                     *****
+ | packetfilter_core |-------->|  0  |--+   +-----------+
+ |                   |         |     |  +-->|           |
+ +-------------------+         +-----+      | Tree node |------+
+ +-------------------+         +-----+  +-->|           |      |
+ |                   |         |     |  |   +-----------+      |
+ | packetfilter_core |-------->|  1  |--+                      |
+ |                   |         |     |                         |
+ +-------------------+         +-----+                         |
+ +-------------------+         +-----+                         |
+ |                   |         |     |                         |
+ | packetfilter_core |-------->|  2  |--+                      |
+ |                   |         |     |  |   +-----------+      |
+ +-------------------+         +-----+  +-->|           |      |
+ +-------------------+         +-----+      | Tree node |----------+
+ |                   |         |     |  +-->|           |      |   |
+ | packetfilter_core |-------->| N-1 |--+   +-----------+      |   |
+ |                   |         |     |                         |   |
+ +-------------------+         +-----+                         |   |
+                               +-----+                         |   |
+                               |     |                         |   |
+         +-----------+    +---+| N+0 |<------------------------+   |
+         |           |<---+    |     |                             |
+    +---+| Tree node |         +-----+                             |
+    |    |           |<---+    +-----+                             |
+    |    +-----------+    |    |     |                             |
+    |                     +---+| N+1 |<----------------------------+
+    |                          |     |
+    |                          +-----+
+    |                          +-----+
+    |                          |     |
+    +------------------------->|N+N-1|
+                               |     |
+                               +-----+
+
+Anyway, I hope that makes sense, cause I can't think of a better way to explain 
+it.
+
+
+======================
+WHAT ABOUT FORWARDING?
+======================
+
+Forwarding is more difficult, since we also need to send back read data from 
+the filters. I need to think about this is more detail, but I'm pretty sure 
+that a similar method to the tag tree should work. As in, have a tree of delay 
+nodes (just like the tag tree) but instead of tags, just send up memory read 
+data. No handshaking required.
+
+
+==================================
+NOTES ABOUT MULTIPLE CLOCK DOMAINS
+==================================
+
+By allowing parts of the design to run in faster clock domains, I could get 
+better throughput. Right now, the most difficult timing is the P3 system, with 
+the CPU in a close second. But the P3 system and CPU are inside the 
+packetfilter_core, which I parallelize anyway. So if I could get the snooper to 
+run at a higher frequency, I could easily have this work at pretty much any 
+speed.
+
+There are two ways to do this:
+
+    1. The way we're already doing it, where each filter has an additional 
+       async FIFO
+    
+    2. Allow the BRAMs in the P3 system to have two clock domains.
+
+The problem with 1 is that now we have all this extra on-chip buffering which 
+(in theory) is not necessary. However, it is much simpler (and as mentioned 
+earlier, already done).
+
+Although 2 is the most efficient solution (in terms of chip utilization), it 
+would require significant design effort to change everything. I would also have 
+to learn how to have multiple clock domains in a Verilog design, and how to do 
+all the false path stuff too...
+
+    -> My temptation is to try 2 if only to teach myself important skills. 
+    But... even though 1 uses more area, it's not too too much more are 
+    (because my packet filter is already fairly fast). If it ain't broke, don't 
+    fix it.
+
