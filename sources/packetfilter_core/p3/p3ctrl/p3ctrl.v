@@ -148,7 +148,8 @@ module p3ctrl(
     wire C_connected;
     assign C_connected = (| fwd_sel);
     
-    //Do handshaking; for this I use a Mealy machine. See ???.txt for details
+    //Do handshaking; for this I use a Mealy machine. See 
+    //handshaking_mealy_machine.txt for details
     
     //State variables
     parameter not_started = 1'b0;

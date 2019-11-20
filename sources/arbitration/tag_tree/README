@@ -1,0 +1,27 @@
+I wanted to draw a diagram for myself (just to help me visualize while I wrote 
+Verilog) and decided that if I was going to do it, I should put in the README.
+
+                     tag rd ak
+                      |  |  |         tag_tree.v
+ +------------------------------------------------+
+ |                    |  |  |                     |
+ |                  +---------+                   |
+ |                  |tree_node|                   |
+ |                  +---------+                   |
+ |       +---------+           +---------+        |
+ |       |tree_node|           |tree_node|        |
+ |       +---------+           +---------+        |
+ |  +---------++---------++---------++---------+  |
+ |  |tree_node||tree_node||tree_node||tree_node|  |
+ |  +---------++---------++---------++---------+  |
+ |   0 || 1 ||  2 || 3 ||  4 || 5 ||  6 || 7 ||   | <----(preset tags)
+ +------------------------------------------------+
+       ||   ||    ||   ||    ||   ||    ||   ||
+       |+---|+====|+===|+====|+===|+====|+===|+========== ack_out[N-1:0]
+       +----+=====+====+=====+====+=====+====+=========== rdy_in[N-1:0]
+
+In my original project, all the generic stuff was in the same file and it was 
+extremely ugly. This is my attempt to clean things up a bit.
+
+Also, potentially, by making this file it will get me thinking about how to do 
+the forwarder tree as well.

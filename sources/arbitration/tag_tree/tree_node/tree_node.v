@@ -9,7 +9,7 @@ Can be parameterized to perform buffered handshaking, or to be combinational.
 */
 
 `ifdef FROM_TREE_NODE
-`include "../../generic/buffered_handshake/bhand.v"
+`include "../../../generic/buffered_handshake/bhand.v"
 `else /*For Vivado*/
 `endif
 
@@ -52,6 +52,8 @@ module tree_node # (
     wire rdy_i;
     wire ack_i;
     
+    wire lr_sel; //Which of left or right is selected (0 = left)
+    
     
     /***************************************/
     /**Assign internal signals from inputs**/
@@ -68,19 +70,13 @@ module tree_node # (
 `genif (!ENABLE_DELAY) begin
     assign ack_i = ack;
 `endgen
-    
-    
-    /************************************/
-    /**Helpful names for neatening code**/
-    /************************************/
-    
-    wire lr_sel; //Which of left or right is selected (0 = left)
-    assign lr_sel = (right_rdy_i && !left_rdy_i); //Defaults to using left
-    
-    
+
+
     /****************/
     /**Do the logic**/
     /****************/
+    
+    assign lr_sel = (right_rdy_i && !left_rdy_i); //Defaults to using left
     
     assign rdy_i = left_rdy_i || right_rdy_i;
     assign tag_i = (lr_sel) ? right_tag_i : left_tag_i;

@@ -1,0 +1,35 @@
+This is a quick sketch of the state machine used for handshaking in p3ctrl.
+
+The relevant inputs here are:
+    c: "connected". High whenever the agent is connected to a valid buffer
+    
+    r: "ready". Output by p3ctrl to signal a ready buffer
+    
+    a: "acknowledge". The acknowledge signal for r (input to p3ctrl)
+    
+    d: "done". Input to p3ctrl for agent to say it is done with the buffer
+    
+    k: "done acknowledge". Output by p3ctrl to acknowledge done signal
+
+This state machine has only two states: not_started and started. If an input 
+does not appear on a transistion, it is because it is a "don't care".
+
+                                                                  +------------+
+                                                                  | Legend     |
+                                                                  |------------|
+      ca=00      ca=01      ca=10                     d=0         |            |
+    +-------+  +-------+  +-------+                +-------+      |  inputs=x  |
+    | rk=00 |  | rk=00 |  | rk=10 |                | rk=01 |      | ---------> |
+    |       |  |       |  |       |                |       |      |  output=y  |
+    |       v  |       v  |       v                |       v      |            |
+ +------------------------------------+         +-------------+   |            |
+ |                                    |  ca=11  |             |   |            |
+ |                                    |-------->|             |   +------------+
+ |                                    |  rk=10  |             |
+ |            not_started             |         |   started   |
+ |                                    |   d=1   |             |
+ |                                    |<--------|             |
+ |                                    |  rk=01  |             |
+ +------------------------------------+         +-------------+
+
+
