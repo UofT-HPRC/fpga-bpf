@@ -1,0 +1,48 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Fri Nov 22 17:19:52 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/arbitration/snoop_arb/snoop_arb.vcd"
+[dumpfile_mtime] "Fri Nov 22 17:19:28 2019"
+[dumpfile_size] 18959
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/arbitration/snoop_arb/snoop_arb.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-15.352170 15000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] snoop_arb_tb.
+[treeopen] snoop_arb_tb.DUT.
+[sst_width] 229
+[signals_width] 214
+[sst_expanded] 1
+[sst_vpaned_height] 575
+@28
+snoop_arb_tb.clk
+@200
+-Snooper
+@22
+snoop_arb_tb.addr[7:0]
+snoop_arb_tb.wr_data[63:0]
+@28
+snoop_arb_tb.wr_en
+@22
+snoop_arb_tb.byte_inc[7:0]
+@28
+snoop_arb_tb.done
+snoop_arb_tb.rdy
+snoop_arb_tb.ack
+@200
+-CPUs
+@22
+snoop_arb_tb.DUT.genblk1.selection[4:0]
+@28
+snoop_arb_tb.rdy_for_sn_ack[3:0]
+snoop_arb_tb.rdy_for_sn[3:0]
+snoop_arb_tb.sn_done[3:0]
+@22
+snoop_arb_tb.sn_addr[7:0]
+snoop_arb_tb.sn_wr_data[63:0]
+@29
+snoop_arb_tb.sn_wr_en[3:0]
+[pattern_trace] 1
+[pattern_trace] 0

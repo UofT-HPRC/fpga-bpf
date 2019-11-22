@@ -8,26 +8,28 @@ Wires up tree_nodes to make a tree. Is smart about not making a tree when N = 1.
 
 `ifdef FROM_TAG_TREE
 `include "tree_node/tree_node.v"
+`elsif FROM_SNOOP_ARB
+`include "tag_tree/tree_node/tree_node.v"
 `endif
 
-`define CLOG2(x) \
-   (x <= 2) ? 1 : \
-   (x <= 4) ? 2 : \
-   (x <= 8) ? 3 : \
-   (x <= 16) ? 4 : \
-   (x <= 32) ? 5 : \
-   (x <= 64) ? 6 : \
-   (x <= 128) ? 7 : \
-   (x <= 256) ? 8 : \
-   (x <= 512) ? 9 : \
-   (x <= 1024) ? 10 : \
-   (x <= 2048) ? 11 : \
-   (x <= 4096) ? 12 : \
-   (x <= 8192) ? 13 : \
-   (x <= 16384) ? 14 : \
-   (x <= 32768) ? 15 : \
-   (x <= 65536) ? 16 : \
-   -1
+`define CLOG2(x) (\
+   (((x) <= 2) ? 1 : \
+   (((x) <= 4) ? 2 : \
+   (((x) <= 8) ? 3 : \
+   (((x) <= 16) ? 4 : \
+   (((x) <= 32) ? 5 : \
+   (((x) <= 64) ? 6 : \
+   (((x) <= 128) ? 7 : \
+   (((x) <= 256) ? 8 : \
+   (((x) <= 512) ? 9 : \
+   (((x) <= 1024) ? 10 : \
+   (((x) <= 2048) ? 11 : \
+   (((x) <= 4096) ? 12 : \
+   (((x) <= 8192) ? 13 : \
+   (((x) <= 16384) ? 14 : \
+   (((x) <= 32768) ? 15 : \
+   (((x) <= 65536) ? 16 : \
+   -1)))))))))))))))))
 
 module tag_tree # (
     parameter N = 4,
@@ -36,7 +38,7 @@ module tag_tree # (
     //0 = all combinational
     //1 = delay stage on every second level
     //2 = delay stage on all levels
-    parameter DELAY_CONF = 0 
+    parameter DELAY_CONF = 1
 ) (
     input wire clk,
     input wire rst,
@@ -46,7 +48,9 @@ module tag_tree # (
     input wire ack,
     
     input wire [N-1:0] rdy_in,
-    output wire [N-1:0] ack_out
+    output wire [N-1:0] ack_out,
+    
+    output wire [N-1-1:0] param_debug
 );
 
     wire [TAG_SZ-1:0] tags_i[0:(2*N-1)-1];
@@ -65,10 +69,16 @@ module tag_tree # (
     
     //Build up internal nodes
     for (k = 0; k < N-1; k = k + 1) begin : internal_nodes
-        
+        wire [4:0] clog;
+        assign clog = `CLOG2(N-1-k);
+        wire [4:0] bitanded;
+        assign bitanded = (`CLOG2(N-1-k) & 1);
+        wire delay;
+        assign delay = (DELAY_CONF == 1) && (`CLOG2(N-1-k) & 1'b1);
+        assign param_debug[k] = delay;
         tree_node # (
             .TAG_SZ(TAG_SZ),
-            .ENABLE_DELAY(((DELAY_CONF == 1) && (`CLOG2(N-k)%2 == 1)) || (DELAY_CONF == 2))
+            .ENABLE_DELAY(((DELAY_CONF == 1) && (`CLOG2(N-1-k) & 1'b1)) || (DELAY_CONF == 2))
         ) node (
             .clk(clk),
             .rst(rst),

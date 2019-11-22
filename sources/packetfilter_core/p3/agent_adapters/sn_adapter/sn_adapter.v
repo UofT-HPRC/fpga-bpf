@@ -9,11 +9,7 @@ This is the simplest adapter, I guess
 module sn_adapter # (
     parameter SN_ADDR_WIDTH = 8,
     parameter DATA_WIDTH = 64,
-    parameter INC_WIDTH = 8,
-    //These control pessimistic registers in the p_ng buffers
-    parameter BUF_IN = 0,
-    parameter BUF_OUT = 0,
-    parameter PESS = 0 //If 1, our output will be buffered
+    parameter INC_WIDTH = 8
 )(
     input wire clk,
     input wire rst,
