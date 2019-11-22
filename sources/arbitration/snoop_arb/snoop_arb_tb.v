@@ -127,8 +127,7 @@ module snoop_arb_tb;
         .sn_wr_en(sn_wr_en),
         .sn_byte_inc(sn_byte_inc),
         .sn_done(sn_done),
-        .rdy_for_sn_ack(rdy_for_sn_ack),
-        .param_debug(param_debug)
+        .rdy_for_sn_ack(rdy_for_sn_ack)
     );
 
 endmodule

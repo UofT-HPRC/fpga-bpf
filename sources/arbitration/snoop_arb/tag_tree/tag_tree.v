@@ -48,9 +48,7 @@ module tag_tree # (
     input wire ack,
     
     input wire [N-1:0] rdy_in,
-    output wire [N-1:0] ack_out,
-    
-    output wire [N-1-1:0] param_debug
+    output wire [N-1:0] ack_out
 );
 
     wire [TAG_SZ-1:0] tags_i[0:(2*N-1)-1];
@@ -69,13 +67,6 @@ module tag_tree # (
     
     //Build up internal nodes
     for (k = 0; k < N-1; k = k + 1) begin : internal_nodes
-        wire [4:0] clog;
-        assign clog = `CLOG2(N-1-k);
-        wire [4:0] bitanded;
-        assign bitanded = (`CLOG2(N-1-k) & 1);
-        wire delay;
-        assign delay = (DELAY_CONF == 1) && (`CLOG2(N-1-k) & 1'b1);
-        assign param_debug[k] = delay;
         tree_node # (
             .TAG_SZ(TAG_SZ),
             .ENABLE_DELAY(((DELAY_CONF == 1) && (`CLOG2(N-1-k) & 1'b1)) || (DELAY_CONF == 2))
