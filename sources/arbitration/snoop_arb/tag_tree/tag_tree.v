@@ -69,7 +69,7 @@ module tag_tree # (
     for (k = 0; k < N-1; k = k + 1) begin : internal_nodes
         tree_node # (
             .TAG_SZ(TAG_SZ),
-            .ENABLE_DELAY(((DELAY_CONF == 1) && (`CLOG2(N-1-k) & 1'b1)) || (DELAY_CONF == 2))
+            .ENABLE_DELAY(((DELAY_CONF == 1) && (`CLOG2(N-k) & 1'b1)) || (DELAY_CONF == 2))
         ) node (
             .clk(clk),
             .rst(rst),

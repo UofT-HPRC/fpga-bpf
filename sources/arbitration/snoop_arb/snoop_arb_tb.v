@@ -103,7 +103,8 @@ module snoop_arb_tb;
         .INC_WIDTH     (`INC_WIDTH    ),
         .N             (`N            ),
         .TAG_SZ        (`TAG_SZ       ),
-        .DELAY_CONF    (`DELAY_CONF   )
+        .DELAY_CONF    (`DELAY_CONF   ),
+        .PESS(0)
     ) DUT (
         .clk(clk),
         .rst(rst),

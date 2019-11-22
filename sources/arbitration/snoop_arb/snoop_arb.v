@@ -37,8 +37,8 @@ module snoop_arb # (
     //0 = all combinational
     //1 = delay stage on every second level
     //2 = delay stage on all levels
-    parameter DELAY_CONF = 1,
-    parameter PESS = 0 //Enables pessimistic mode
+    parameter DELAY_CONF = (N>16)? 1 : 0,
+    parameter PESS = (N>16) //Enables pessimistic mode
 ) (
     input wire clk,
     input wire rst,
