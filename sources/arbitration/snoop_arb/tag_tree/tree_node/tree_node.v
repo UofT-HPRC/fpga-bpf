@@ -56,7 +56,7 @@ module tree_node # (
     wire rdy_i;
     wire ack_i;
     
-    wire lr_sel; //Which of left or right is selected (0 = left)
+    wire lr_sel_i; //Which of left or right is selected (0 = left)
     
     
     /***************************************/
@@ -79,13 +79,13 @@ module tree_node # (
     /****************/
     /**Do the logic**/
     /****************/
-    
-    assign lr_sel = (right_rdy_i && !left_rdy_i); //Defaults to using left
+
+    assign lr_sel_i = (right_rdy_i && !left_rdy_i); //Defaults to using left
     
     assign rdy_i = left_rdy_i || right_rdy_i;
-    assign tag_i = (lr_sel) ? right_tag_i : left_tag_i;
-    assign left_ack_i = ack_i && (lr_sel == 0);
-    assign right_ack_i = ack_i && (lr_sel == 1);
+    assign tag_i = (lr_sel_i) ? right_tag_i : left_tag_i;
+    assign left_ack_i = ack_i && (lr_sel_i == 0);
+    assign right_ack_i = ack_i && (lr_sel_i == 1);
     
     
     /****************************************/

@@ -5,8 +5,8 @@
 `endif
 
 `define BYTE_ADDR_WIDTH 12
-`define ADDR_WIDTH 9
-`define DATA_WIDTH (2**(`BYTE_ADDR_WIDTH - `ADDR_WIDTH)*8)
+`define ADDR_WIDTH 10
+`define DATA_WIDTH (2**(`BYTE_ADDR_WIDTH - `ADDR_WIDTH + 1)*8)
 
 
 module cpu_adapter_tb;

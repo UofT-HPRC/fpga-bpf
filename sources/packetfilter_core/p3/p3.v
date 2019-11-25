@@ -13,13 +13,17 @@
 p3.v: implements top-level module of the P3 system. Basically just wires all 
 the stuff together.
 
+TODO: This file got out of hand. It's extremely confusing to read and work with,
+and the whole reason I'm rewriting this code is to make things easier to deal
+with! So I gotta clean this up
+
 */
 
 module p3 # (
     parameter SN_FWD_ADDR_WIDTH = 9,
     parameter ADDR_WIDTH = 10,
     parameter BYTE_ADDR_WIDTH = 12,
-	parameter DATA_WIDTH = 64,
+	parameter SN_FWD_DATA_WIDTH = 64,
     parameter INC_WIDTH = 8,
 	parameter PLEN_WIDTH = 32,
     parameter BUF_IN = 0,
@@ -31,7 +35,7 @@ module p3 # (
     
     //Interface to snooper
     input wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr,
-    input wire [DATA_WIDTH-1:0] sn_wr_data,
+    input wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data,
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     
@@ -59,7 +63,7 @@ module p3 # (
     //Interface to forwarder
     input wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr,
     input wire fwd_rd_en,
-    output wire [DATA_WIDTH-1:0] fwd_rd_data,
+    output wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data,
     output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     
@@ -69,6 +73,14 @@ module p3 # (
     output wire rdy_for_fwd,
     input wire rdy_for_fwd_ack
 );      
+    //p3ctrl inputs
+    wire A_done;
+    wire rdy_for_A_ack;
+    wire B_acc;
+    wire B_rej;
+    wire rdy_for_B_ack;
+    wire C_done;
+    wire rdy_for_C_ack; 
     
     //p3ctrl outputs
     wire A_done_ack;
@@ -96,32 +108,32 @@ module p3 # (
     //snooper adapter ports
     wire [ADDR_WIDTH-1:0] sn_addr_i;
     wire sn_wr_en_i;
-    wire [DATA_WIDTH-1:0] sn_wr_data_i;
+    wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data_i;
     wire [7:0] sn_byte_inc_i;
     
     //CPU adapter ports    
     wire [ADDR_WIDTH-1:0] cpu_addr_i;
     wire cpu_rd_en_i;
-    wire [DATA_WIDTH-1:0] cpu_bigword_i;
+    wire [SN_FWD_DATA_WIDTH-1:0] cpu_bigword_i;
     wire cpu_bigword_vld_i;
     wire [PLEN_WIDTH-1:0] cpu_byte_len_i;
     
     //Forwarder adapter ports    
     wire [ADDR_WIDTH-1:0] fwd_addr_i;
     wire fwd_rd_en_i;
-    wire [DATA_WIDTH-1:0] fwd_rd_data_i;
+    wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data_i;
     wire fwd_rd_data_vld_i;
-    wire [PLEN_WIDTH-1:0] fwd_byte_len_i;    
+    wire [PLEN_WIDTH-1:0] fwd_byte_len_i;   
     
     //ping inputs
     wire ping_rd_en; 
     wire ping_wr_en; 
     wire [ADDR_WIDTH-1:0] ping_addr; 
-    wire [DATA_WIDTH-1:0] ping_idata;
+    wire [SN_FWD_DATA_WIDTH-1:0] ping_idata;
     wire [INC_WIDTH-1:0] ping_byte_inc;
     wire ping_reset_len;
     //ping outputs
-    wire [DATA_WIDTH-1:0] ping_odata;
+    wire [SN_FWD_DATA_WIDTH-1:0] ping_odata;
     wire ping_odata_vld;
     wire [PLEN_WIDTH-1:0] ping_byte_length;
     
@@ -129,11 +141,11 @@ module p3 # (
     wire pang_rd_en; 
     wire pang_wr_en; 
     wire [ADDR_WIDTH-1:0] pang_addr; 
-    wire [DATA_WIDTH-1:0] pang_idata;
+    wire [SN_FWD_DATA_WIDTH-1:0] pang_idata;
     wire [INC_WIDTH-1:0] pang_byte_inc;
     wire pang_reset_len;
     //pang outputs
-    wire [DATA_WIDTH-1:0] pang_odata;
+    wire [SN_FWD_DATA_WIDTH-1:0] pang_odata;
     wire pang_odata_vld;
     wire [PLEN_WIDTH-1:0] pang_byte_length;
     
@@ -141,11 +153,11 @@ module p3 # (
     wire pong_rd_en; 
     wire pong_wr_en; 
     wire [ADDR_WIDTH-1:0] pong_addr; 
-    wire [DATA_WIDTH-1:0] pong_idata;
+    wire [SN_FWD_DATA_WIDTH-1:0] pong_idata;
     wire [INC_WIDTH-1:0] pong_byte_inc;
     wire pong_reset_len;
     //pong outputs
-    wire [DATA_WIDTH-1:0] pong_odata;
+    wire [SN_FWD_DATA_WIDTH-1:0] pong_odata;
     wire pong_odata_vld;
     wire [PLEN_WIDTH-1:0] pong_byte_length;
     
@@ -158,7 +170,7 @@ module p3 # (
     
     sn_adapter # (
         .SN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
-        .DATA_WIDTH(DATA_WIDTH),
+        .DATA_WIDTH(SN_FWD_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH)
     ) to_snoop (
         .clk(clk),
@@ -188,7 +200,7 @@ module p3 # (
     cpu_adapter # (
         .BYTE_ADDR_WIDTH(BYTE_ADDR_WIDTH),
         .ADDR_WIDTH(ADDR_WIDTH),
-        .DATA_WIDTH(DATA_WIDTH),
+        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT),
@@ -225,7 +237,7 @@ module p3 # (
     
     fwd_adapter # (
         .FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
-        .DATA_WIDTH(DATA_WIDTH),
+        .DATA_WIDTH(SN_FWD_DATA_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         //These control pessimistic registers in the p_ng buffers
         .BUF_IN(BUF_IN),
@@ -284,7 +296,7 @@ module p3 # (
 
     muxes # (
         .ADDR_WIDTH(ADDR_WIDTH),
-        .DATA_WIDTH(DATA_WIDTH),
+        .DATA_WIDTH(SN_FWD_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH), //TODO: make this a parameter everywhere else?
         .PLEN_WIDTH(PLEN_WIDTH) //TODO: make this a parameter everywhere else?
     ) themux (
@@ -321,7 +333,7 @@ module p3 # (
 
     p_ng # (
         .ADDR_WIDTH(ADDR_WIDTH),
-        .SN_FWD_WIDTH(DATA_WIDTH),
+        .SN_FWD_WIDTH(SN_FWD_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
@@ -341,7 +353,7 @@ module p3 # (
 
     p_ng # (
         .ADDR_WIDTH(ADDR_WIDTH),
-        .SN_FWD_WIDTH(DATA_WIDTH),
+        .SN_FWD_WIDTH(SN_FWD_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
@@ -361,7 +373,7 @@ module p3 # (
 
     p_ng # (
         .ADDR_WIDTH(ADDR_WIDTH),
-        .SN_FWD_WIDTH(DATA_WIDTH),
+        .SN_FWD_WIDTH(SN_FWD_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),

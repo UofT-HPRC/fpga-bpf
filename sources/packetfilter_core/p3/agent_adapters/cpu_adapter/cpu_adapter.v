@@ -34,14 +34,15 @@ C1: (Input: bigword; Output: resized_mem_data)
 `endif
 
 //I kept needing this value in the code
-`define N (BYTE_ADDR_WIDTH - ADDR_WIDTH - 1)
+`define N (BYTE_ADDR_WIDTH - ADDR_WIDTH)
 
-//Assumes that 2**ADDR_WIDTH * PORT_DATA_WIDTH == 2**BYTE_ADDR_WIDTH
+//Assumes that 2**ADDR_WIDTH * (2*PORT_DATA_WIDTH) == 2**BYTE_ADDR_WIDTH
 //where PORT_DATA_WIDTH is in bytes
+//And please note, SN_FWD_DATA_WIDTH = 2*PORT_DATA_WIDTH
 module cpu_adapter # (
     parameter BYTE_ADDR_WIDTH = 12, // packetmem depth = 2^BYTE_ADDR_WIDTH bytes
-    parameter ADDR_WIDTH = 9,
-    parameter DATA_WIDTH = 2**(BYTE_ADDR_WIDTH - ADDR_WIDTH)*8,
+    parameter ADDR_WIDTH = 10,
+    parameter SN_FWD_DATA_WIDTH = 2**(BYTE_ADDR_WIDTH - ADDR_WIDTH + 1)*8,
     parameter PLEN_WIDTH = 32,
     //These control pessimistic registers in the p_ng buffers
     parameter BUF_IN = 0,
@@ -75,7 +76,7 @@ module cpu_adapter # (
     
     input wire done_ack, //@0
     input wire rdy, //@0
-    input wire [DATA_WIDTH-1:0] bigword, //@1+BUF_IN+BUF_OUT
+    input wire [SN_FWD_DATA_WIDTH-1:0] bigword, //@1+BUF_IN+BUF_OUT
     input wire bigword_vld, //@1+BUF_IN+BUF_OUT
     input wire [PLEN_WIDTH-1:0] byte_len
 );
@@ -111,13 +112,16 @@ module cpu_adapter # (
     wire [ADDR_WIDTH-1:0] word_rd_addra_i;
     wire rd_en_i;
     
+    wire acc_i;
+    wire rej_i;
+    
     wire done_i; 
     wire rdy_ack_i; 
     
     wire done_ack_i; 
     wire rdy_i;  
     
-    wire [DATA_WIDTH-1:0] bigword_i;
+    wire [SN_FWD_DATA_WIDTH-1:0] bigword_i;
     wire bigword_vld_i;
     wire [PLEN_WIDTH-1:0] byte_len_i;
     
@@ -174,7 +178,7 @@ module cpu_adapter # (
     
     //This "selected" vector is the desired part of the bigword, based on the offset
     wire [31:0] selected;
-    assign selected = bigword_i[(DATA_WIDTH - {offset_i, 3'b0} )-1 -: 32];
+    assign selected = bigword_i[(SN_FWD_DATA_WIDTH - {offset_i, 3'b0} )-1 -: 32];
     
     //resized_mem_data is zero-padded if you ask for a smaller size
     assign resized_mem_data_i[7:0] = (transfer_sz_i == `BPF_W) ? selected[7:0]: 

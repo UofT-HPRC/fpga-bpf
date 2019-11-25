@@ -1,26 +1,25 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Mon Nov 18 01:16:43 2019
+[*] Mon Nov 25 19:19:20 2019
 [*]
-[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/agent_adapters/cpu_adapter/cpu_adapter.vcd"
-[dumpfile_mtime] "Mon Nov 18 01:16:35 2019"
-[dumpfile_size] 6662
-[savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/agent_adapters/cpu_adapter/cpu_adapter.gtkw"
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilter_core/p3/agent_adapters/cpu_adapter/cpu_adapter.vcd"
+[dumpfile_mtime] "Mon Nov 25 19:16:54 2019"
+[dumpfile_size] 6358
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilter_core/p3/agent_adapters/cpu_adapter/cpu_adapter.gtkw"
 [timestart] 0
 [size] 1916 1060
-[pos] -1 -1
-*-14.247675 36000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1281 -1
+*-14.247675 70610 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] cpu_adapter_tb.
-[treeopen] cpu_adapter_tb.DUT.
 [sst_width] 214
 [signals_width] 262
 [sst_expanded] 1
 [sst_vpaned_height] 454
 @28
 cpu_adapter_tb.clk
-@22
 cpu_adapter_tb.byte_rd_addr[11:0]
-cpu_adapter_tb.DUT.word_rd_addra_i[8:0]
+@29
+cpu_adapter_tb.word_rd_addra[9:0]
 @28
 cpu_adapter_tb.cpu_rd_en
 cpu_adapter_tb.transfer_sz[1:0]
@@ -31,7 +30,7 @@ cpu_adapter_tb.bigword[63:0]
 cpu_adapter_tb.bigword_vld
 @22
 cpu_adapter_tb.resized_mem_data[31:0]
-@29
+@28
 cpu_adapter_tb.resized_mem_data_vld
 @200
 -INTERNALS
@@ -51,7 +50,7 @@ cpu_adapter_tb.DUT.transfer_sz_i[1:0]
 @22
 cpu_adapter_tb.DUT.selected[31:0]
 cpu_adapter_tb.DUT.resized_mem_data_i[31:0]
-cpu_adapter_tb.DUT.word_rd_addra[8:0]
-cpu_adapter_tb.DUT.word_rd_addra_i[8:0]
+cpu_adapter_tb.DUT.word_rd_addra[9:0]
+cpu_adapter_tb.DUT.word_rd_addra_i[9:0]
 [pattern_trace] 1
 [pattern_trace] 0

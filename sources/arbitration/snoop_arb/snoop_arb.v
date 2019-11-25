@@ -119,7 +119,7 @@ module snoop_arb # (
     genvar i;
     for (i = 0; i < N; i = i + 1) begin : gate_hot
         assign sn_wr_en_i[i] = wr_en && (selection == i);
-        assign sn_done_i[i] = wr_en && (selection == i);
+        assign sn_done_i[i] = done && (selection == i);
     end
     
     
