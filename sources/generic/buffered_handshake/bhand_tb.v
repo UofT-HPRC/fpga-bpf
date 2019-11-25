@@ -6,7 +6,11 @@ bhand_tb.v
 A testbench for the buffered handshake
 */
 
+`ifdef FROM_BHAND
 `include "bhand.v"
+`else /* For Vivado */
+`include "bpf_defs.vh"
+`endif
 
 `define DATA_WIDTH 8
 `define COUNT_WIDTH 4

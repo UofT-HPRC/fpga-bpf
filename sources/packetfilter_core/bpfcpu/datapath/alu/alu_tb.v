@@ -6,8 +6,12 @@ alu_tb.v
 A testbench for alu.v
 */
 
+`ifdef FROM_ALU
 `include "../../../bpf_defs.vh"
 `include "alu.v"
+`else /* For Vivado */
+`include "bpf_defs.vh"
+`endif
 
 module alu_tb;
 	reg clk;

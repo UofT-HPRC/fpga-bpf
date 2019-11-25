@@ -1,5 +1,8 @@
 `timescale 1ns / 1ps
+
+`ifdef FROM_CPU_ADAPTER
 `include "cpu_adapter.v"
+`endif
 
 `define BYTE_ADDR_WIDTH 12
 `define ADDR_WIDTH 9

@@ -159,10 +159,7 @@ module p3 # (
     sn_adapter # (
         .SN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
         .DATA_WIDTH(DATA_WIDTH),
-        .INC_WIDTH(INC_WIDTH),
-        .BUF_IN(BUF_IN),
-        .BUF_OUT(BUF_OUT),
-        .PESS(PESS)
+        .INC_WIDTH(INC_WIDTH)
     ) to_snoop (
         .clk(clk),
         .rst(rst),

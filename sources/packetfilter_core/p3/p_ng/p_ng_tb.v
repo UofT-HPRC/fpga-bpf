@@ -1,5 +1,8 @@
 `timescale 1ns / 1ps
+
+`ifdef FROM_P_NG
 `include "p_ng.v"
+`endif
 
 /*
 Testbench associated with p_ng.v

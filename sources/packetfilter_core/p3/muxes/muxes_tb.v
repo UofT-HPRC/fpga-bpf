@@ -1,5 +1,8 @@
 `timescale 1ns / 1ps
+
+`ifdef FROM_MUXES
 `include "muxes.v"
+`endif
 
 `define ADDR_WIDTH 9
 `define DATA_WIDTH 64

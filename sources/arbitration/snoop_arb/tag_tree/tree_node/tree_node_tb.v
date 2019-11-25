@@ -28,7 +28,9 @@ but the root has a delay.
 TAGS = 1,2         TAGS = 3,4
 */
 
+`ifdef FROM_TREE_NODE
 `include "tree_node.v"
+`endif
 
 `define TAG_SZ 5
 

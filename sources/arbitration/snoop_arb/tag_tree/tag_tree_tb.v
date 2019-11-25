@@ -7,7 +7,9 @@ Mostly just to let me see if things are wired correctly. The testbench for
 tree_node already shows that a (correctly wired) tree works.
 */
 
+`ifdef FROM_TAG_TREE
 `include "tag_tree.v"
+`endif
 
 `define TAG_SZ 5
 `define N1  1
@@ -19,7 +21,7 @@ tree_node already shows that a (correctly wired) tree works.
 `define N7  16
 `define N8  256
 
-module testbench_template;
+module tag_tree_tb;
     reg clk;
     reg rst;
     
@@ -152,7 +154,7 @@ module testbench_template;
         .N(`N1),
         .TAG_SZ(`TAG_SZ),
         .DELAY_CONF(0) 
-    ) tree_`N1 (
+    ) tree_1 (
         .clk(clk),
         .rst(rst),
         
@@ -168,7 +170,7 @@ module testbench_template;
         .N(`N2),
         .TAG_SZ(`TAG_SZ),
         .DELAY_CONF(0) 
-    ) tree_`N2 (
+    ) tree_2 (
         .clk(clk),
         .rst(rst),
         
@@ -184,7 +186,7 @@ module testbench_template;
         .N(`N3),
         .TAG_SZ(`TAG_SZ),
         .DELAY_CONF(0) 
-    ) tree_`N3 (
+    ) tree_4 (
         .clk(clk),
         .rst(rst),
         
@@ -200,7 +202,7 @@ module testbench_template;
         .N(`N4),
         .TAG_SZ(`TAG_SZ),
         .DELAY_CONF(0) 
-    ) tree_`N4 (
+    ) tree_6 (
         .clk(clk),
         .rst(rst),
         
@@ -216,7 +218,7 @@ module testbench_template;
         .N(`N5),
         .TAG_SZ(`TAG_SZ),
         .DELAY_CONF(0) 
-    ) tree_`N5 (
+    ) tree_8 (
         .clk(clk),
         .rst(rst),
         
@@ -232,7 +234,7 @@ module testbench_template;
         .N(`N6),
         .TAG_SZ(`TAG_SZ),
         .DELAY_CONF(0) 
-    ) tree_`N6 (
+    ) tree_15 (
         .clk(clk),
         .rst(rst),
         
@@ -248,7 +250,7 @@ module testbench_template;
         .N(`N7),
         .TAG_SZ(`TAG_SZ),
         .DELAY_CONF(0) 
-    ) tree_`N7 (
+    ) tree_16 (
         .clk(clk),
         .rst(rst),
         
@@ -264,7 +266,7 @@ module testbench_template;
         .N(`N8),
         .TAG_SZ(`TAG_SZ),
         .DELAY_CONF(0) 
-    ) tree_`N8 (
+    ) tree_256 (
         .clk(clk),
         .rst(rst),
         

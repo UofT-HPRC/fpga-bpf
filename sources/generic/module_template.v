@@ -9,12 +9,12 @@ Replace innards with desired logic
 */
 
 module module_template # (
-    parameter X = Y
+    parameter X = 5
 ) (
     input wire clk,
-    input wire rst,
+    input wire rst
     
-    ...
+    //...
 );
     /************************************/
     /**Forward-declare internal signals**/

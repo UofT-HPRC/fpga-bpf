@@ -1,5 +1,5 @@
-MODULE := fwd_adapter
-MODULE_CAPS := FWD_ADPATER
+MODULE := mux_tree_node
+MODULE_CAPS := MUX_TREE_NODE
 
 default:	$(MODULE).vcd
 

@@ -1,7 +1,10 @@
 `timescale 1ns / 1ps
-`include "p3ctrl.v"
 
-module cpu_adapter_tb;
+`ifdef FROM_P3CTRL
+`include "p3ctrl.v"
+`endif
+
+module p3_ctrl_tb;
     //After the test in p3ctrl_drivers_mem, we'll fuzz all the inputs
     event start_fuzz;
     

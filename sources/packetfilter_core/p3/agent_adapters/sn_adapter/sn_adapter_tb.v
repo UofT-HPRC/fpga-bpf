@@ -1,5 +1,8 @@
 `timescale 1ns / 1ps
+
+`ifdef FROM_SN_ADAPTER
 `include "sn_adapter.v"
+`endif
 
 module sn_adapter_tb;
     reg clk;
@@ -34,7 +37,7 @@ module sn_adapter_tb;
             #20
             $finish;
         end
-        #0.01
+        //#0.01
         //dummy = $fscanf(fd, ...);
     end
 

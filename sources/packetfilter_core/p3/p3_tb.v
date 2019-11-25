@@ -1,6 +1,8 @@
 `timescale 1ns / 1ps
 
+`ifdef FROM_P3
 `include "p3.v"
+`endif
 
 `define SN_FWD_ADDR_WIDTH 8
 `define ADDR_WIDTH 9

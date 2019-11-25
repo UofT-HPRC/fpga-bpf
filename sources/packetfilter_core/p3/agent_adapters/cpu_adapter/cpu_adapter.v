@@ -25,7 +25,7 @@ C1: (Input: bigword; Output: resized_mem_data)
 
 //Assumes big-endianness
 
-`ifdef FROM_CPUADAPTER
+`ifdef FROM_CPU_ADAPTER
 `include "../../../bpf_defs.vh"
 `elsif FROM_P3
 `include "../bpf_defs.vh"

@@ -13,7 +13,9 @@ TODO: Figure out the best place to add logic if ready drops in the middle, if
       at all
 */
 
+`ifdef FROM_SNOOP_ARB
 `include "snoop_arb.v"
+`endif
 
 `define SN_ADDR_WIDTH   8
 `define DATA_WIDTH      64

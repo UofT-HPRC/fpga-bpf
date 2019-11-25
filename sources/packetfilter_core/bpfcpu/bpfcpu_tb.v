@@ -27,8 +27,12 @@ should always accept of course
 
 */
 
+`ifdef FROM_BPFCPU
 `include "bpfcpu.v"
 `include "../bpf_defs.vh"
+`else /* For Vivado */
+`include "bpf_defs.vh"
+`endif
 
 `define BYTE_ADDR_WIDTH     12
 `define PLEN_WIDTH          32
