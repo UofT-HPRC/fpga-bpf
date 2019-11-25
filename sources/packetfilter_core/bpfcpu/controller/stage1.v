@@ -29,6 +29,9 @@ ready signal on the bhand module.
 `elsif FROM_BPFCPU
 `include "../bpf_defs.vh"
 `include "../../generic/buffered_handshake/bhand.v"
+`elsif FROM_PACKETFILTER_CORE
+`include "bpf_defs.vh"
+`include "../generic/buffered_handshake/bhand.v"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif

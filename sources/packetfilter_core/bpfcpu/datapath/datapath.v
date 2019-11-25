@@ -40,6 +40,10 @@ Whatever other small jobs are left
 `include "../bpf_defs.vh"
 `include "datapath/alu/alu.v"
 `include "datapath/regfile.v"
+`elsif FROM_PACKETFILTER_CORE
+`include "bpf_defs.vh"
+`include "bpfcpu/datapath/alu/alu.v"
+`include "bpfcpu/datapath/regfile.v"
 `else /*For Vivado's sake*/
 `include "bpf_defs.vh"
 `endif

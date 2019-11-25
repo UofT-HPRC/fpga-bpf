@@ -18,6 +18,12 @@ Hooks up all the controller stages into one module
 `include "controller/stage0_point_5.v"
 `include "controller/stage1.v"
 `include "controller/stage2.v"
+`elsif FROM_PACKETFILTER_CORE
+`include "bpf_defs.vh"
+`include "bpfcpu/controller/stage0.v"
+`include "bpfcpu/controller/stage0_point_5.v"
+`include "bpfcpu/controller/stage1.v"
+`include "bpfcpu/controller/stage2.v"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif

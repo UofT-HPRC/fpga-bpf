@@ -1,0 +1,4 @@
+I just had a harrowing thought about something I did completely wrong 
+somewhere, and so now I'm keeping a global list of TODOs.
+
+TODO: cpu_adapter doesn't check for mem_vld; it always waits MEM_LAT cycles

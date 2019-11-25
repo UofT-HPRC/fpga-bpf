@@ -10,6 +10,9 @@ signals with P3 controller
 `ifdef FROM_BPFCPU
 `include "controller/controller.v"
 `include "datapath/datapath.v"
+`elsif FROM_PACKETFILTER_CORE
+`include "bpfcpu/controller/controller.v"
+`include "bpfcpu/datapath/datapath.v"
 `endif
 
 module bpfcpu # (

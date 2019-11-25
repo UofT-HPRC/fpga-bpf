@@ -11,13 +11,16 @@
 `include "queues/cpuqueue.v"
 `include "queues/fwdqueue.v"
 `include "muxselinvert/muxselinvert.v"
-`endif
-
-`ifdef FROM_P3
+`elsif FROM_P3
 `include "p3ctrl/queues/snqueue.v"
 `include "p3ctrl/queues/cpuqueue.v"
 `include "p3ctrl/queues/fwdqueue.v"
 `include "p3ctrl/muxselinvert/muxselinvert.v"
+`elsif FROM_PACKETFILTER_CORE
+`include "p3/p3ctrl/queues/snqueue.v"
+`include "p3/p3ctrl/queues/cpuqueue.v"
+`include "p3/p3ctrl/queues/fwdqueue.v"
+`include "p3/p3ctrl/muxselinvert/muxselinvert.v"
 `endif
 
 /*

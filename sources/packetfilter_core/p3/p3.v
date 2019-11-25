@@ -7,6 +7,13 @@
 `include "agent_adapters/sn_adapter/sn_adapter.v"
 `include "agent_adapters/cpu_adapter/cpu_adapter.v"
 `include "agent_adapters/fwd_adapter/fwd_adapter.v"
+`elsif FROM_PACKETFILTER_CORE
+`include "p3/p3ctrl/p3ctrl.v"
+`include "p3/muxes/muxes.v"
+`include "p3/p_ng/p_ng.v"
+`include "p3/agent_adapters/sn_adapter/sn_adapter.v"
+`include "p3/agent_adapters/cpu_adapter/cpu_adapter.v"
+`include "p3/agent_adapters/fwd_adapter/fwd_adapter.v"
 `endif
 /*
 
@@ -109,7 +116,7 @@ module p3 # (
     wire [ADDR_WIDTH-1:0] sn_addr_i;
     wire sn_wr_en_i;
     wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data_i;
-    wire [7:0] sn_byte_inc_i;
+    wire [INC_WIDTH-1:0] sn_byte_inc_i;
     
     //CPU adapter ports    
     wire [ADDR_WIDTH-1:0] cpu_addr_i;
