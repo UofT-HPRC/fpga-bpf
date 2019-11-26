@@ -1,28 +1,87 @@
 `timescale 1ns / 1ps
 
 /*
-testbench_template.v
+parallel_cores_tb.v
 
-Replace innards with desired logic
+Very similar to packetfilter_core_tb, since in theory, the parallel_core module
+should be indistinguishable from the packetfilter_core module
+
 */
 
-`include "mymodule.v"
+`include "parallel_cores.v"
+`define CLOG2(x) (\
+   (((x) <= 2) ? 1 : \
+   (((x) <= 4) ? 2 : \
+   (((x) <= 8) ? 3 : \
+   (((x) <= 16) ? 4 : \
+   (((x) <= 32) ? 5 : \
+   (((x) <= 64) ? 6 : \
+   (((x) <= 128) ? 7 : \
+   (((x) <= 256) ? 8 : \
+   (((x) <= 512) ? 9 : \
+   (((x) <= 1024) ? 10 : \
+   (((x) <= 2048) ? 11 : \
+   (((x) <= 4096) ? 12 : \
+   (((x) <= 8192) ? 13 : \
+   (((x) <= 16384) ? 14 : \
+   (((x) <= 32768) ? 15 : \
+   (((x) <= 65536) ? 16 : \
+   -1)))))))))))))))))
 
-module testbench_template;
-	reg clk;
-    //Other variables connected to your instance
+
+`define PACKET_MEM_BYTES    2048
+`define INST_MEM_DEPTH      512
+`define SN_FWD_DATA_WIDTH   64
+`define BUF_IN              0
+`define BUF_OUT             0
+`define PESS                0
+
+module packetfilter_core_tb;
+
+    parameter CODE_ADDR_WIDTH = `CLOG2(`INST_MEM_DEPTH);
+    parameter CODE_DATA_WIDTH = 64;
+    
+    parameter BYTE_ADDR_WIDTH = `CLOG2(`PACKET_MEM_BYTES);
+    parameter SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(`SN_FWD_DATA_WIDTH/8);
+    
+    parameter INC_WIDTH = `CLOG2(`SN_FWD_DATA_WIDTH/8)+1;
+    
+    parameter PLEN_WIDTH = 32;
+
+    reg clk;
+    reg rst;
+    reg [SN_FWD_ADDR_WIDTH-1:0] sn_addr;
+    reg [`SN_FWD_DATA_WIDTH-1:0] sn_wr_data;
+    reg sn_wr_en;
+    reg [INC_WIDTH-1:0] sn_byte_inc;
+    reg sn_done;
+    //wire sn_done_ack;
+    wire rdy_for_sn;
+    reg rdy_for_sn_ack; //Yeah, I'm ready for a snack
+    reg [SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
+    reg fwd_rd_en;
+    wire [`SN_FWD_DATA_WIDTH-1:0] fwd_rd_data;
+    wire fwd_rd_data_vld;
+    wire [PLEN_WIDTH-1:0] fwd_byte_len;
+    reg fwd_done;
+    //wire fwd_done_ack;
+    wire rdy_for_fwd;
+    reg rdy_for_fwd_ack;
+    reg [CODE_ADDR_WIDTH-1:0] inst_wr_addr;
+    reg [CODE_DATA_WIDTH-1:0] inst_wr_data;
+    reg inst_wr_en;
     
     integer fd, dummy;
     
     initial begin
-        $dumpfile("mymodule.vcd");
+        $dumpfile("parallel_cores.vcd");
         $dumpvars;
-        $dumplimit(512000);
+        $dumplimit(5120000);
         
         clk <= 0;
-        //Initial values for your other variables
+        rst <= 1;
         
-        fd = $fopen("mymodule_drivers.mem", "r");
+        fd = $fopen("parallel_cores_drivers.mem", "r");
         if (fd == 0) begin
             $display("Could not open file");
             $finish;
@@ -46,13 +105,58 @@ module testbench_template;
         end
         
         #0.01
-        dummy = $fscanf(fd, "%F%O%R%M%A%T", /* list of variables */);
+        dummy = $fscanf(fd, "%b%h%h%b%h%h%b%h%b%b%h%b%b%b", 
+            rst,
+            
+            inst_wr_addr,
+            inst_wr_data,
+            inst_wr_en,
+            
+            sn_addr,
+            sn_wr_data,
+            sn_wr_en,
+            sn_byte_inc,
+            sn_done,
+            rdy_for_sn_ack,
+            
+            fwd_addr,
+            fwd_rd_en,
+            fwd_done,
+            rdy_for_fwd_ack
+        );
     end
 
-    mymodule DUT (
+    
+    parallel_cores # (
+        .PACKET_MEM_BYTES  (`PACKET_MEM_BYTES ),
+        .INST_MEM_DEPTH    (`INST_MEM_DEPTH   ),
+        .SN_FWD_DATA_WIDTH (`SN_FWD_DATA_WIDTH),
+        .BUF_IN            (`BUF_IN           ),
+        .BUF_OUT           (`BUF_OUT          ),
+        .PESS              (`PESS             )
+    ) DUT (
         .clk(clk),
-        ...
+        .rst(rst),
+        .sn_addr(sn_addr),
+        .sn_wr_data(sn_wr_data),
+        .sn_wr_en(sn_wr_en),
+        .sn_byte_inc(sn_byte_inc),
+        .sn_done(sn_done),
+        //.sn_done_ack(sn_done_ack),
+        .rdy_for_sn(rdy_for_sn),
+        .rdy_for_sn_ack(rdy_for_sn_ack),
+        .fwd_addr(fwd_addr),
+        .fwd_rd_en(fwd_rd_en),
+        .fwd_rd_data(fwd_rd_data),
+        .fwd_rd_data_vld(fwd_rd_data_vld),
+        .fwd_byte_len(fwd_byte_len),
+        .fwd_done(fwd_done),
+        //.fwd_done_ack(fwd_done_ack),
+        .rdy_for_fwd(rdy_for_fwd),
+        .rdy_for_fwd_ack(rdy_for_fwd_ack),
+        .inst_wr_addr(inst_wr_addr),
+        .inst_wr_data(inst_wr_data),
+        .inst_wr_en(inst_wr_en)
     );
-
 
 endmodule

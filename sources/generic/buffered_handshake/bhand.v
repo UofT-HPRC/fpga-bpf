@@ -8,6 +8,9 @@ Implements a buffered handshake. Also has a parameter for turning on a
 
 */
 
+`ifndef BHAND_INCLUDE_GUARD
+`define BHAND_INCLUDE_GUARD 1
+
 `define genif generate if
 `define endgen end endgenerate
 
@@ -165,3 +168,5 @@ endmodule
 
 `undef genif
 `undef endgen
+
+`endif

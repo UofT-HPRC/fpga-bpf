@@ -71,7 +71,7 @@ module parallel_cores # (
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     input wire sn_done,
-    output wire sn_done_ack,
+    //output wire sn_done_ack,
     output wire rdy_for_sn,
     input wire rdy_for_sn_ack, //Yeah, I'm ready for a snack
     
@@ -82,7 +82,7 @@ module parallel_cores # (
     output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     input wire fwd_done,
-    output wire fwd_done_ack,
+    //output wire fwd_done_ack,
     output wire rdy_for_fwd,
     input wire rdy_for_fwd_ack,
     
@@ -90,7 +90,6 @@ module parallel_cores # (
     input wire [CODE_ADDR_WIDTH-1:0] inst_wr_addr,
     input wire [CODE_DATA_WIDTH-1:0] inst_wr_data,
     input wire inst_wr_en
-    
 );
     /*************************************/
     /***snoop_arb <=> packetfiler_cores***/
@@ -126,21 +125,21 @@ module parallel_cores # (
             .sn_wr_en(sn_wr_en_i[i]),
             .sn_byte_inc(sn_byte_inc_i),
             .sn_done(sn_done_i[i]),
-            //.sn_done_ack(????),
+            //.sn_done_ack(sn_done_ack),
             .rdy_for_sn(rdy_for_sn_i[i]),
             .rdy_for_sn_ack(rdy_for_sn_ack_i[i]), //Yeah, I'm ready for a snack
 
             //TODO forwarder arbiter stuff
             //Interface to forwarder
-            //.fwd_addr(fwd_addr),
-            //.fwd_rd_en(fwd_rd_en),
-            //.fwd_rd_data(fwd_rd_data),
-            //.fwd_rd_data_vld(fwd_rd_data_vld),
-            //.fwd_byte_len(fwd_byte_len),
-            //.fwd_done(fwd_done),
-            //.fwd_done_ack(fwd_done_ack),
-            //.rdy_for_fwd(rdy_for_fwd),
-            //.rdy_for_fwd_ack(rdy_for_fwd_ack),
+            .fwd_addr(fwd_addr),
+            .fwd_rd_en(fwd_rd_en),
+            .fwd_rd_data(fwd_rd_data),
+            .fwd_rd_data_vld(fwd_rd_data_vld),
+            .fwd_byte_len(fwd_byte_len),
+            .fwd_done(fwd_done),
+            .fwd_done_ack(fwd_done_ack),
+            .rdy_for_fwd(rdy_for_fwd),
+            .rdy_for_fwd_ack(rdy_for_fwd_ack),
 
             //Interface for new code input
             .inst_wr_addr(inst_wr_addr),

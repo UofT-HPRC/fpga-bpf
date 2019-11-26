@@ -8,6 +8,18 @@ combinational path from code memory output to datapath control signals.
 
 */
 
+`ifdef FROM_CONTROLLER
+`include "../../../../generic/buffered_handshake/bhand.v"
+`elsif FROM_BPFCPU
+`include "../../../generic/buffered_handshake/bhand.v"
+`elsif FROM_PACKETFILTER_CORE
+`include "../../generic/buffered_handshake/bhand.v"
+`elsif FROM_PARALLEL_CORES
+`include "../generic/buffered_handshake/bhand.v"
+`else /* For Vivado */
+`include "bpf_defs.vh"
+`endif
+
 module stage0_point_5 (
     input wire clk,
     input wire rst,

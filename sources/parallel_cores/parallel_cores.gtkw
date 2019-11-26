@@ -1,0 +1,105 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Tue Nov 26 16:57:30 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/parallel_cores/parallel_cores.vcd"
+[dumpfile_mtime] "Tue Nov 26 16:57:25 2019"
+[dumpfile_size] 1159095
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/parallel_cores/parallel_cores.gtkw"
+[timestart] 768000
+[size] 1916 1060
+[pos] -1 -1
+*-16.551590 889700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] packetfilter_core_tb.
+[treeopen] packetfilter_core_tb.DUT.
+[treeopen] packetfilter_core_tb.DUT.genblk1[0].filt.
+[treeopen] packetfilter_core_tb.DUT.genblk1[0].filt.the_p3_system.
+[treeopen] packetfilter_core_tb.DUT.genblk1[1].
+[treeopen] packetfilter_core_tb.DUT.genblk1[2].
+[treeopen] packetfilter_core_tb.DUT.genblk1[3].
+[treeopen] packetfilter_core_tb.DUT.snooper_arbiter.genblk1.
+[treeopen] packetfilter_core_tb.DUT.snooper_arbiter.genblk1.the_tag_tree.
+[treeopen] packetfilter_core_tb.DUT.snooper_arbiter.genblk1.the_tag_tree.internal_nodes[0].
+[treeopen] packetfilter_core_tb.DUT.snooper_arbiter.genblk1.the_tag_tree.internal_nodes[2].
+[sst_width] 214
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 314
+@28
+packetfilter_core_tb.clk
+@800200
+-new instructions
+@22
+packetfilter_core_tb.inst_wr_data[63:0]
+packetfilter_core_tb.inst_wr_addr[8:0]
+@28
+packetfilter_core_tb.inst_wr_en
+@1000200
+-new instructions
+@800200
+-snooper
+@22
+packetfilter_core_tb.sn_wr_data[63:0]
+packetfilter_core_tb.sn_addr[7:0]
+@28
+packetfilter_core_tb.sn_wr_en
+packetfilter_core_tb.rdy_for_sn
+packetfilter_core_tb.rdy_for_sn_ack
+@22
+packetfilter_core_tb.sn_byte_inc[3:0]
+@28
+packetfilter_core_tb.sn_done
+@1000200
+-snooper
+@200
+-Arbiter internals
+@c00028
+packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn[3:0]
+@28
+(0)packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn[3:0]
+(1)packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn[3:0]
+(2)packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn[3:0]
+(3)packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn[3:0]
+@1401200
+-group_end
+@c00028
+packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn_ack[3:0]
+@28
+(0)packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn_ack[3:0]
+(1)packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn_ack[3:0]
+(2)packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn_ack[3:0]
+(3)packetfilter_core_tb.DUT.snooper_arbiter.rdy_for_sn_ack[3:0]
+@1401200
+-group_end
+@28
+packetfilter_core_tb.DUT.snooper_arbiter.rdy
+packetfilter_core_tb.DUT.snooper_arbiter.ack
+@200
+-
+-CPU0
+@28
+[color] 1
+packetfilter_core_tb.DUT.genblk1[0].filt.cpu_rej
+packetfilter_core_tb.DUT.genblk1[0].filt.cpu_acc
+@200
+-CPU1
+@28
+[color] 1
+packetfilter_core_tb.DUT.genblk1[1].filt.cpu_rej
+[color] 4
+packetfilter_core_tb.DUT.genblk1[1].filt.cpu_acc
+@200
+-CPU2
+@28
+[color] 1
+packetfilter_core_tb.DUT.genblk1[2].filt.cpu_rej
+packetfilter_core_tb.DUT.genblk1[2].filt.cpu_acc
+@200
+-CPU3
+@29
+[color] 1
+packetfilter_core_tb.DUT.genblk1[3].filt.cpu_rej
+@28
+packetfilter_core_tb.DUT.genblk1[3].filt.cpu_acc
+[pattern_trace] 1
+[pattern_trace] 0
