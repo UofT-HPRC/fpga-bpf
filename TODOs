@@ -16,5 +16,8 @@ Other:
     - The job queues in p3ctrl really need an overhaul
     - Need to find a clean way to gate hot signals in speculative execution
     - Migrate old readme and wiki pages to new repo (making changes as needed)
+    - Add caching to cpu_adapter
+    - Add capability to return only subset of a packet
+      -> Have the return valu overwrite the packet byte length if it is smaller
     
     

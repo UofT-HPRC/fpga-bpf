@@ -183,6 +183,7 @@ module datapath # (
     assign B = (B_sel == `ALU_B_SEL_IMM) ? imm_stage1 : X; //Note use of stage1
     alu the_alu (
         .clk(clk),
+        .rst(rst),
         .A(A),
         .B(B),
         .ALU_sel(ALU_sel),

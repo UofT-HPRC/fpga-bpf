@@ -52,6 +52,7 @@ module packetfilter_core # (
     parameter CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH),
     parameter CODE_DATA_WIDTH = 64,
     
+    parameter BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES),
     parameter SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8),
     
     parameter INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1,
@@ -89,7 +90,6 @@ module packetfilter_core # (
     input wire inst_wr_en
     
 );
-    parameter BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES);
     parameter P_NG_ADDR_WIDTH = SN_FWD_ADDR_WIDTH + 1;
     
     
