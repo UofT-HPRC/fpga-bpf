@@ -13,7 +13,6 @@ signals with P3 controller
 `elsif FROM_PACKETFILTER_CORE
 `include "bpfcpu/controller/controller.v"
 `include "bpfcpu/datapath/datapath.v"
-`include "datapath/datapath.v"
 `elsif FROM_PARALLEL_CORES
 `include "packetfilter_core/bpfcpu/controller/controller.v"
 `include "packetfilter_core/bpfcpu/datapath/datapath.v"

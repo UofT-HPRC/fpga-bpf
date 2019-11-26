@@ -21,7 +21,6 @@
 `include "p3/p3ctrl/queues/cpuqueue.v"
 `include "p3/p3ctrl/queues/fwdqueue.v"
 `include "p3/p3ctrl/muxselinvert/muxselinvert.v"
-`include "p3ctrl/muxselinvert/muxselinvert.v"
 `elsif FROM_PARALLEL_CORES
 `include "packetfilter_core/p3/p3ctrl/queues/snqueue.v"
 `include "packetfilter_core/p3/p3ctrl/queues/cpuqueue.v"

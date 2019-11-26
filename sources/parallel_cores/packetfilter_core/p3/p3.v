@@ -14,7 +14,6 @@
 `include "p3/agent_adapters/sn_adapter/sn_adapter.v"
 `include "p3/agent_adapters/cpu_adapter/cpu_adapter.v"
 `include "p3/agent_adapters/fwd_adapter/fwd_adapter.v"
-`include "agent_adapters/fwd_adapter/fwd_adapter.v"
 `elsif FROM_PARALLEL_CORES
 `include "packetfilter_core/p3/p3ctrl/p3ctrl.v"
 `include "packetfilter_core/p3/muxes/muxes.v"

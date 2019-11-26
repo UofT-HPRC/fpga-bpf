@@ -24,7 +24,6 @@ Hooks up all the controller stages into one module
 `include "bpfcpu/controller/stage0_point_5.v"
 `include "bpfcpu/controller/stage1.v"
 `include "bpfcpu/controller/stage2.v"
-`include "controller/stage2.v"
 `elsif FROM_PARALLEL_CORES
 `include "packetfilter_core/bpf_defs.vh"
 `include "packetfilter_core/bpfcpu/controller/stage0.v"
