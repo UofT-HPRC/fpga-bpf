@@ -11,25 +11,37 @@ The relevant inputs here are:
     
     k: "done acknowledge". Output by p3ctrl to acknowledge done signal
 
-This state machine has only two states: not_started and started. If an input 
-does not appear on a transistion, it is because it is a "don't care".
+This state machine has only two states: "not_started" and "started". If an 
+input is not shown, it is a "don't care"
 
                                                                   +------------+
                                                                   | Legend     |
                                                                   |------------|
-      ca=00      ca=01      ca=10                     d=0         |            |
-    +-------+  +-------+  +-------+                +-------+      |  inputs=x  |
-    | rk=00 |  | rk=00 |  | rk=10 |                | rk=01 |      | ---------> |
-    |       |  |       |  |       |                |       |      |  output=y  |
-    |       v  |       v  |       v                |       v      |            |
- +------------------------------------+         +-------------+   |            |
- |                                    |  ca=11  |             |   |            |
- |                                    |-------->|             |   +------------+
- |                                    |  rk=10  |             |
- |            not_started             |         |   started   |
- |                                    |   d=1   |             |
- |                                    |<--------|             |
- |                                    |  rk=01  |             |
+                                                                  |            |
+      ca=00      ca=01      ca=10                 da=00,da=01     |  inputs=x  |
+    +-------+  +-------+  +-------+                +-------+      | ---------> |
+    | rk=00 |  | rk=00 |  | rk=10 |                | kr=10 |      |  output=y  |
+    |       |  |       |  |       |                |       |      |            |
+    |       v  |       v  |       v                |       v      +------------+
+ +------------------------------------+         +-------------+   
+ |                                    |  ca=11  |             |   
+ |                                    |-------->|             | dac=111
+ |                                    |  rk=10  |             |--------+
+ |            not_started             |         |   started   |  kr=11 |
+ |                                    |   d=1   |             |        |
+ |                                    |<--------|             |<-------+
+ |                                    |  kr=1c  |             |
  +------------------------------------+         +-------------+
 
 
+So, in the not_started state:
+    - r is c
+    - k is 0
+    - The next state is started when c and a are both 1
+
+and in the started state:
+    - r is c when d is 1, else 0
+    - k is 1
+    - The next state would simply be not_started when d is 1, but we add a 
+      special case for when dac=111. So, the next state is not_started when 
+      d is 1 but ac is not 11

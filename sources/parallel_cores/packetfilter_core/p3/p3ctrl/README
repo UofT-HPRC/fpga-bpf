@@ -126,3 +126,47 @@ And now suppose the CPU accepts the buffer in Pang:
             To muxes
 
 I think you get the point.
+
+
+UPDATE
+------
+I was starting to go crazy with this method, since I really need to ability to 
+have back-to-back snooping. (It's less important for the CPU and forwarder, 
+since in theory they are at a lower bandwidth). This needs two things:
+
+    - Update state machine controller to provide for back-to-back snooping
+    - Allow p3ctrl to push a filter's tag into the tree even before the snooper
+      finishes using a buffer.
+
+Updating the state machine is fairly simple; I just need to add a special case 
+for when the snooper asserts both its done and rdy_ack signals.
+
+As for the other item, it needs a little more explanation.
+
+Because the snooper (and the forwarder) use the tag tree method outlined in the 
+READMEs in the parallel_cores/arbitration/ folder, I want the ability to add 
+the same tags multiple times into the tree before the corresponding packet 
+filter gets used.
+
+    Example: filter 1 has three elements on the snooper's job queue, and 
+    currently, the snooper is writing into filter 0. While the snooper is busy, 
+    filter 1's tag can be added to the tree three times.
+
+Well, obviously this is a major change and I want to be careful about how I do 
+it.
+
+Here's what I'm thinking: we leave the whole job queues thing untouched. It 
+works, for the most part. Instead, we will calculate rdy_for_snooper and 
+rdy_for_fwd based on a counter:
+
+    - This counter is incremented whenever an item is added to the 
+      corresponding queue
+        - Snooper's initial count will be 3, forwarder's will be 0
+
+    - This counter is decremented whenever the filter's tag is added to the 
+      tree, NOT when a job is dequeued
+    
+    - rdy_for_snooper and rdy_for_forwarder simply check if the counter is 
+      non-zero
+
+So, I wrote a simple up-down counter in generic/ud_counter

@@ -1,0 +1,144 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Mon Nov  4 17:03:51 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/p3ctrl/p3ctrl.vcd"
+[dumpfile_mtime] "Mon Nov  4 16:55:24 2019"
+[dumpfile_size] 11337
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilt_core/p3/p3ctrl/p3ctrl.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-16.305771 275000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] cpu_adapter_tb.
+[treeopen] cpu_adapter_tb.DUT.
+[sst_width] 214
+[signals_width] 181
+[sst_expanded] 1
+[sst_vpaned_height] 314
+@28
+cpu_adapter_tb.clk
+@200
+-Readies
+@28
+[color] 6
+cpu_adapter_tb.rdy_for_A
+[color] 6
+cpu_adapter_tb.rdy_for_A_ack
+[color] 2
+cpu_adapter_tb.rdy_for_B
+[color] 2
+cpu_adapter_tb.rdy_for_B_ack
+[color] 1
+cpu_adapter_tb.rdy_for_C
+[color] 1
+cpu_adapter_tb.rdy_for_C_ack
+@200
+-Dones
+@28
+[color] 6
+cpu_adapter_tb.A_done
+[color] 6
+cpu_adapter_tb.A_done_ack
+[color] 2
+cpu_adapter_tb.B_acc
+[color] 2
+cpu_adapter_tb.B_rej
+[color] 2
+cpu_adapter_tb.B_done_ack
+[color] 1
+cpu_adapter_tb.C_done
+[color] 1
+cpu_adapter_tb.C_done_ack
+@200
+-p3ctrl ports
+@28
+[color] 6
+cpu_adapter_tb.DUT.A_state
+[color] 6
+cpu_adapter_tb.DUT.A_connected
+[color] 2
+cpu_adapter_tb.DUT.B_state
+[color] 2
+cpu_adapter_tb.DUT.B_connected
+[color] 1
+cpu_adapter_tb.DUT.C_state
+[color] 1
+cpu_adapter_tb.DUT.C_connected
+@200
+-rdy sigs
+@8028
+[color] 6
+cpu_adapter_tb.DUT.rdy_for_A_sig
+@28
+[color] 2
+cpu_adapter_tb.DUT.rdy_for_B_sig
+[color] 1
+cpu_adapter_tb.DUT.rdy_for_C_sig
+@201
+-done sigs
+@28
+[color] 6
+cpu_adapter_tb.DUT.A_done_sig
+[color] 2
+cpu_adapter_tb.DUT.B_acc_sig
+[color] 2
+cpu_adapter_tb.DUT.B_rej_sig
+[color] 1
+cpu_adapter_tb.DUT.C_done_sig
+@200
+-SNQ
+@28
+[color] 6
+cpu_adapter_tb.DUT.snq.first[1:0]
+[color] 6
+cpu_adapter_tb.DUT.snq.second[1:0]
+[color] 6
+cpu_adapter_tb.DUT.snq.third[1:0]
+@200
+-CPUQ
+@c00028
+[color] 2
+cpu_adapter_tb.DUT.cpuq.first[1:0]
+@28
+(0)cpu_adapter_tb.DUT.cpuq.first[1:0]
+(1)cpu_adapter_tb.DUT.cpuq.first[1:0]
+@1401200
+-group_end
+@28
+[color] 2
+cpu_adapter_tb.DUT.cpuq.second[1:0]
+[color] 2
+cpu_adapter_tb.DUT.cpuq.third[1:0]
+@200
+-FWDQ
+@28
+[color] 1
+cpu_adapter_tb.DUT.fwdq.first[1:0]
+[color] 1
+cpu_adapter_tb.DUT.fwdq.second[1:0]
+[color] 1
+cpu_adapter_tb.DUT.fwdq.third[1:0]
+@200
+-Selects
+@28
+[color] 6
+cpu_adapter_tb.sn_sel[1:0]
+[color] 2
+cpu_adapter_tb.cpu_sel[1:0]
+[color] 1
+cpu_adapter_tb.fwd_sel[1:0]
+@c00028
+cpu_adapter_tb.ping_sel[1:0]
+@28
+[color] 2
+(0)cpu_adapter_tb.ping_sel[1:0]
+[color] 2
+(1)cpu_adapter_tb.ping_sel[1:0]
+@1401200
+-group_end
+@28
+cpu_adapter_tb.pang_sel[1:0]
+cpu_adapter_tb.pong_sel[1:0]
+[pattern_trace] 1
+[pattern_trace] 0

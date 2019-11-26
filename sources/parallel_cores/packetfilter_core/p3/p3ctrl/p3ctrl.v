@@ -148,70 +148,41 @@ module p3ctrl(
     /**Do the logic**/
     /****************/
     
-    //A few more helper variables. These say whether the agent is currently
-    //connected or not
-    wire A_connected;
-    assign A_connected = (| sn_sel);
-    wire B_connected;
-    assign B_connected = (| cpu_sel);
-    wire C_connected;
-    assign C_connected = (| fwd_sel);
-    
-    //Do handshaking; for this I use a Mealy machine. See 
-    //handshaking_mealy_machine.txt for details
-    
-    //State variables
-    parameter not_started = 1'b0;
-    parameter started = 1'b1;
-    
-    reg A_state = not_started;
-    reg B_state = not_started;
-    reg C_state = not_started;
-    
-    //Next-state logic
+    reg [1:0] A_cnt = 2'b11;
     always @(posedge clk) begin
         if (rst) begin
-            A_state <= not_started;
-            B_state <= not_started;
-            C_state <= not_started;
+            A_cnt <= 2'b11;
         end else begin
-            case (A_state)
-                not_started:
-                    A_state <= (rdy_for_A_sig) ? started : not_started;
-                started:
-                    A_state <= (A_done_sig) ? not_started : started;
-            endcase 
-            
-            case (B_state)
-                not_started:
-                    B_state <= (rdy_for_B_sig) ? started : not_started;
-                started:
-                    B_state <= (B_acc_sig || B_rej_sig) ? not_started : started;
-            endcase 
-            
-            case (C_state)
-                not_started:
-                    C_state <= (rdy_for_C_sig) ? started : not_started;
-                started:
-                    C_state <= (C_done_sig) ? not_started : started;
-            endcase 
+            A_cnt <= A_cnt + B_rej_sig + C_done_sig - rdy_for_A_sig;
         end
     end
+    assign rdy_for_A_i = (| A_cnt);
     
-    //State machine output logic
-    assign A_done_ack_i = (A_state == started);
-    assign rdy_for_A_i = (A_state == not_started) && A_connected;
     
-    assign B_done_ack_i = (B_state == started);
-    assign rdy_for_B_i = (B_state == not_started) && B_connected;
+    reg [1:0] B_cnt = 0;
+    always @(posedge clk) begin
+        if (rst) begin
+            B_cnt <= 0;
+        end else begin
+            B_cnt <= B_cnt + A_done_sig - rdy_for_B_sig;
+        end
+    end
+    assign rdy_for_B_i = (| B_cnt);
     
-    assign C_done_ack_i = (C_state == started);
-    assign rdy_for_C_i = (C_state == not_started) && C_connected;
+    reg [1:0] C_cnt = 0;
+    always @(posedge clk) begin
+        if (rst) begin
+            C_cnt <= 0;
+        end else begin
+            C_cnt <= C_cnt + B_acc_sig - rdy_for_C_sig;
+        end
+    end
+    assign rdy_for_C_i = (| C_cnt);
     
-    //TODO: this state machine could be more optimized if we took into account
-    //whether there was more than one buffer in the agent's queue. If we knew a
-    //buffer could be ready on the next cycle, then we could assert both ready
-    //and done_ack, and there would not be an extra cycle.
+    //TODO: I still haven't decided to completely annihilate the done_ack signal
+    assign A_done_ack_i = 1;
+    assign B_done_ack_i = 1;
+    assign C_done_ack_i = 1;
     
     muxselinvert muxthing(
         .sn_sel(sn_sel_i),
