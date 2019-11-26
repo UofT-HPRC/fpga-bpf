@@ -4,25 +4,12 @@
 
 axistream_snooper.v
 
-At least for today I'll draft the module definition and the easy logic (if 
-there is any)
-
-How should this work?
-
-Well, let's not go crazy!
-
-A simple state machine should be fine. Some states I will need:
-
-    - need_to_wait (we're ready, but only became ready haflway through a packet)
-    - normal (but note that we can abort)
-
-That might be it actually. In normal mode, we simply keep incrementing our 
-output address and forward the data. Of course, we whould have an option for
-pessimistic timing.
-
-But I'm done for today. 
+This is basically an AXI to BRAM bridge, but with the extra byte_inc logic
 
 */
+
+`define genif generate if
+`define endgen end endgenerate
 
 module axistream_snooper # (
     parameter SN_FWD_DATA_WIDTH = 64,
@@ -51,7 +38,7 @@ module axistream_snooper # (
     output wire sn_wr_en,
     output wire [INC_WIDTH-1:0] sn_byte_inc,
     output wire sn_done,
-    input wire sn_done_ack,
+    //input wire sn_done_ack,
     input wire rdy_for_sn,
     output wire rdy_for_sn_ack //Yeah, I'm ready for a snack
 );
@@ -59,30 +46,134 @@ module axistream_snooper # (
     /**Forward-declare internal signals**/
     /************************************/
     
+    //AXI stream snoop interface
+    wire [SN_FWD_DATA_WIDTH-1:0] sn_TDATA_i;
+    wire [KEEP_WIDTH-1:0] sn_TKEEP_i;
+    wire sn_TREADY_i;
+    wire sn_TVALID_i;
+    wire sn_TLAST_i;
     
+    //Interface to parallel_cores
+    wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data_i;
+    wire sn_wr_en_i;
+    wire [INC_WIDTH-1:0] sn_byte_inc_i;
+    wire sn_done_i;
+    wire rdy_for_sn_i;
+    wire rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
+    
+    
+    //State machine signals
+    parameter NOT_STARTED = 2'b00;
+    parameter WAITING = 2'b01;
+    parameter STARTED = 2'b11;
+    reg [1:0] state = NOT_STARTED;
+    wire valid_i;
+    wire done_i;
+    reg [SN_FWD_ADDR_WIDTH-1:0] addr_i = 0;
     
     /***************************************/
     /**Assign internal signals from inputs**/
     /***************************************/
+
+    //AXI stream snoop interface
+`genif (PESS) begin
+    reg [SN_FWD_DATA_WIDTH-1:0] sn_TDATA_r = 0;
+    reg [KEEP_WIDTH-1:0] sn_TKEEP_r = 0;
+    reg sn_TREADY_r = 0;
+    reg sn_TVALID_r = 0;
+    reg sn_TLAST_r = 0;
     
+    always @(posedge clk) begin
+        if (rst) begin
+            sn_TDATA_r <= 0;
+            sn_TKEEP_r <= 0;
+            sn_TREADY_r <= 0;
+            sn_TVALID_r <= 0;
+            sn_TLAST_r <= 0;
+        end else begin
+            sn_TDATA_r <= sn_TDATA;
+            sn_TKEEP_r <= sn_TKEEP;
+            sn_TREADY_r <= sn_TREADY;
+            sn_TVALID_r <= sn_TVALID;
+            sn_TLAST_r <= sn_TLAST;
+        end
+    end
+
+    assign sn_TDATA_i = sn_TDATA_r;
+    assign sn_TKEEP_i = sn_TKEEP_r;
+    assign sn_TREADY_i = sn_TREADY_r;
+    assign sn_TVALID_i = sn_TVALID_r;
+    assign sn_TLAST_i = sn_TLAST_r;
     
+end else begin
+    assign sn_TDATA_i = sn_TDATA;
+    assign sn_TKEEP_i = sn_TKEEP;
+    assign sn_TREADY_i = sn_TREADY;
+    assign sn_TVALID_i = sn_TVALID;
+    assign sn_TLAST_i = sn_TLAST;
+`endgen
+
     
-    /************************************/
-    /**Helpful names for neatening code**/
-    /************************************/
-    
+    //Interface to parallel_cores
+    assign rdy_for_sn_i = rdy_for_sn;    
     
     
     /****************/
     /**Do the logic**/
     /****************/
     
+    //State machine logic. Please see state_machine.txt for more details along
+    //with a nice diagram
     
+    //next-state logic
+    always @(posedge clk) begin
+        if (rst) begin
+            state <= NOT_STARTED;
+        end else begin
+            case (state)
+                NOT_STARTED:
+                    //Normally we go to WAITING as soon as ready goes high, but
+                    //we also include a special case for when ready and last are
+                    //high at on the same cycle
+                    state <= rdy_for_sn_i ? (sn_TLAST_i ? STARTED : WAITING) : NOT_STARTED;
+                WAITING:
+                    //TODO: should I keep assuming ready never goes low once it 
+                    //goes high? The rest of the system is designed that way
+                    state <= sn_TLAST_i ? STARTED : WAITING;
+                STARTED:
+                    state <= ({sn_TLAST_i, rdy_for_sn_i} == 2'b10) ? NOT_STARTED : STARTED;
+            endcase
+        end
+    end
+    
+    //state machine outputs. Note this is a Mealy machine
+    assign rdy_for_sn_ack_i = (state == NOT_STARTED) || (state == STARTED && sn_TLAST_i);
+    assign valid_i = (state == STARTED) && sn_TVALID_i && sn_TREADY_i;
+    assign done_i = (state == STARTED) && sn_TLAST_i;
+    
+    //Actual AXI-to-BRAM conversion
+    assign sn_wr_data_i = sn_TDATA_i;
+    assign sn_wr_en_i = valid_i;
+    always @(posedge clk) begin
+        if (rst) begin
+            addr_i <= 0;
+        end else begin
+            addr_i <= (done_i) ? 0 : (addr_i + valid_i);
+        end
+    end
+    //TODO: do actual TKEEP logic
+    assign sn_byte_inc_i = SN_FWD_DATA_WIDTH/8;
+    assign sn_done_i = done_i;
     
     /****************************************/
     /**Assign outputs from internal signals**/
     /****************************************/
-
-
+    //Interface to parallel_cores
+    assign sn_addr = addr_i;
+    assign sn_wr_data = sn_wr_data_i;
+    assign sn_wr_en = sn_wr_en_i;
+    assign sn_byte_inc = sn_byte_inc_i;
+    assign sn_done = sn_done_i;
+    assign rdy_for_sn_ack = rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
 
 endmodule

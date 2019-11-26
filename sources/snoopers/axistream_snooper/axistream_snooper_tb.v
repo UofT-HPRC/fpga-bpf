@@ -1,28 +1,58 @@
 `timescale 1ns / 1ps
 
 /*
-testbench_template.v
+axistream_snooper.v
 
-Replace innards with desired logic
 */
 
-`include "mymodule.v"
+`ifdef FROM_AXISTREAM_SNOOPER
+`include "axistream_snooper.v"
+`endif
+
+`define SN_FWD_DATA_WIDTH   64
+`define SN_FWD_ADDR_WIDTH   9
+`define INC_WIDTH           8
+`define PESS                0
 
 module testbench_template;
-	reg clk;
-    //Other variables connected to your instance
+
+    parameter KEEP_WIDTH = `SN_FWD_DATA_WIDTH/8;
+    
+    reg clk;
+    reg rst;
+    reg [`SN_FWD_DATA_WIDTH-1:0] sn_TDATA;
+    reg [KEEP_WIDTH-1:0] sn_TKEEP;
+    reg sn_TREADY;
+    reg sn_TVALID;
+    reg sn_TLAST;
+    wire [`SN_FWD_ADDR_WIDTH-1:0] sn_addr;
+    wire [`SN_FWD_DATA_WIDTH-1:0] sn_wr_data;
+    wire sn_wr_en;
+    wire [`INC_WIDTH-1:0] sn_byte_inc;
+    wire sn_done;
+    //reg sn_done_ack;
+    reg rdy_for_sn;
+    wire rdy_for_sn_ack; //Yeah; I'm ready for a snack
     
     integer fd, dummy;
     
     initial begin
-        $dumpfile("mymodule.vcd");
+        $dumpfile("axistream_snooper.vcd");
         $dumpvars;
         $dumplimit(512000);
         
         clk <= 0;
-        //Initial values for your other variables
+        rst <= 0;
         
-        fd = $fopen("mymodule_drivers.mem", "r");
+        sn_TDATA <= 0;
+        sn_TKEEP <= 0;
+        sn_TREADY <= 0;
+        sn_TVALID <= 0;
+        sn_TLAST <= 0;
+        
+        rdy_for_sn <= 0;
+        
+        fd = $fopen("axistream_snooper_drivers.mem", "r");
         if (fd == 0) begin
             $display("Could not open file");
             $finish;
@@ -46,13 +76,39 @@ module testbench_template;
         end
         
         #0.01
-        dummy = $fscanf(fd, "%F%O%R%M%A%T", /* list of variables */);
+        dummy = $fscanf(fd, "%h%h%b%b%b%b", 
+            sn_TDATA,
+            sn_TKEEP,
+            sn_TREADY,
+            sn_TVALID,
+            sn_TLAST,
+            rdy_for_sn
+        );
     end
 
-    mymodule DUT (
+    axistream_snooper # (
+        .SN_FWD_DATA_WIDTH(`SN_FWD_DATA_WIDTH),
+        .SN_FWD_ADDR_WIDTH(`SN_FWD_ADDR_WIDTH),
+        .INC_WIDTH        (`INC_WIDTH        ),
+        .PESS             (`PESS             )
+    ) DUT (
         .clk(clk),
-        ...
+        .rst(rst),
+        .sn_TDATA(sn_TDATA),
+        .sn_TKEEP(sn_TKEEP),
+        .sn_TREADY(sn_TREADY),
+        .sn_TVALID(sn_TVALID),
+        .sn_TLAST(sn_TLAST),
+        .sn_addr(sn_addr),
+        .sn_wr_data(sn_wr_data),
+        .sn_wr_en(sn_wr_en),
+        .sn_byte_inc(sn_byte_inc),
+        .sn_done(sn_done),
+        //.sn_done_ack(sn_done_ack),
+        .rdy_for_sn(rdy_for_sn),
+        .rdy_for_sn_ack(rdy_for_sn_ack) //Yeah, I'm ready for a snack
     );
+
 
 
 endmodule

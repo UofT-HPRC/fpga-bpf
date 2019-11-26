@@ -1,0 +1,42 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Tue Nov 26 19:06:26 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/snoopers/axistream_snooper/axistream_snooper.vcd"
+[dumpfile_mtime] "Tue Nov 26 19:04:52 2019"
+[dumpfile_size] 7782
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/snoopers/axistream_snooper/axistream_snooper.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -541
+*-14.739454 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 214
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 314
+@28
+testbench_template.clk
+@800200
+-AXIStream signals
+@22
+testbench_template.sn_TDATA[63:0]
+testbench_template.sn_TKEEP[7:0]
+@28
+testbench_template.sn_TVALID
+testbench_template.sn_TREADY
+testbench_template.sn_TLAST
+@1000200
+-AXIStream signals
+@28
+testbench_template.rdy_for_sn
+@29
+testbench_template.rdy_for_sn_ack
+@22
+testbench_template.sn_byte_inc[7:0]
+testbench_template.sn_wr_data[63:0]
+testbench_template.sn_addr[8:0]
+@28
+testbench_template.sn_wr_en
+testbench_template.sn_done
+[pattern_trace] 1
+[pattern_trace] 0
