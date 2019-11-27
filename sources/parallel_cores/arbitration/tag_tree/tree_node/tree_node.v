@@ -9,9 +9,9 @@ Can be parameterized to perform buffered handshaking, or to be combinational.
 */
 
 `ifdef FROM_TREE_NODE
-`include "../../../../../generic/buffered_handshake/bhand.v"
-`elsif FROM_TAG_TREE
 `include "../../../../generic/buffered_handshake/bhand.v"
+`elsif FROM_TAG_TREE
+`include "../../../generic/buffered_handshake/bhand.v"
 `elsif FROM_SNOOP_ARB
 `include "../../../generic/buffered_handshake/bhand.v"
 `elsif FROM_PARALLEL_CORES

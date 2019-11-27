@@ -1,0 +1,10 @@
+This tricky bit of generic Verilog can generate a fully pipelined MUX up to 
+4096 nodes wide. It has an II of 1, and a latency of ceil(log_4(num_inputs)).
+
+The easiest way to understand it is to set the default in and run it through
+Vivado's schematic generator (in the elaborated design).
+
+
+Please refer to the discussion in sources/parallel_cores/arbitration/README 
+about generic trees in Verilog. The approach used here is the same, except for 
+a 4-ary tree instead of a binary tree.

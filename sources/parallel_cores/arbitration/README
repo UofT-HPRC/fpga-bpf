@@ -150,9 +150,9 @@ tree structure. It's much easier to explain with a picture, so here it is:
  DOING THIS GENERICALLY IN VERILOG
  =================================
  
- In order to have a paraterizable number of packetfilter_cores, we need to 
- generate this tree generically. The method is surprisingly easy, and some 
- almost-Verilog code is below:
+In order to have a paraterizable number of packetfilter_cores, we need to 
+generate this tree generically. The method is surprisingly easy, and some 
+almost-Verilog code is below:
  
     parameter N;
     parameter TAG_SZ = $clog2(N); // = ceil(log_base_2(N))

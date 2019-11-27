@@ -114,10 +114,6 @@ module mux_tree # (
 `genfor (i = 0; i < (PADDED-1)/3; i = i + 1) begin : construct_tree
 	`define DIST_TO_ROOT (`H(NUM_NODES-1-(PADDED+i)))
 	`define DIST_FROM_LEAF (MAX_H-1 - `DIST_TO_ROOT)
-	initial begin
-        $display("i = %d, DIST_TO_ROOT = %d", i, `DIST_TO_ROOT);
-        $display("uses delayed_sel[%d][%d -: 2]", MAX_H-1-`DIST_TO_ROOT, (2*(`DIST_TO_ROOT+1) -1));
-    end
 	
     //construct tree
     mux_tree_node # (

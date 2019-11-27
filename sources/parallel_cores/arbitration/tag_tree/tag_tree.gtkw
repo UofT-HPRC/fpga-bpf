@@ -1,0 +1,63 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Wed Nov 27 17:41:02 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/parallel_cores/arbitration/snoop_arb/tag_tree/tag_tree.vcd"
+[dumpfile_mtime] "Wed Nov 27 17:36:39 2019"
+[dumpfile_size] 467525
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/parallel_cores/arbitration/snoop_arb/tag_tree/tag_tree.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-15.303188 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tag_tree_tb.
+[sst_width] 214
+[signals_width] 166
+[sst_expanded] 1
+[sst_vpaned_height] 610
+@c00200
+-one_node_combo
+@28
+tag_tree_tb.rdy_1
+tag_tree_tb.ack_1
+tag_tree_tb.rdy_in_1
+tag_tree_tb.ack_out_1
+@22
+tag_tree_tb.tag_1[4:0]
+@1401200
+-one_node_combo
+@c00200
+-two_node_combo
+@28
+tag_tree_tb.ack_2
+tag_tree_tb.ack_out_2[1:0]
+tag_tree_tb.rdy_2
+tag_tree_tb.rdy_in_2[1:0]
+@24
+tag_tree_tb.tag_2[4:0]
+@1401200
+-two_node_combo
+@800200
+-four_node_combo
+@28
+tag_tree_tb.rdy_4
+tag_tree_tb.ack_4
+tag_tree_tb.rdy_in_4[5:0]
+tag_tree_tb.ack_out_4[5:0]
+@24
+tag_tree_tb.tag_4[4:0]
+@1000200
+-four_node_combo
+@800200
+-six_node_combo
+@28
+tag_tree_tb.rdy_6
+tag_tree_tb.ack_6
+tag_tree_tb.rdy_in_6[14:0]
+tag_tree_tb.ack_out_6[14:0]
+@25
+tag_tree_tb.tag_6[4:0]
+@1000200
+-six_node_combo
+[pattern_trace] 1
+[pattern_trace] 0

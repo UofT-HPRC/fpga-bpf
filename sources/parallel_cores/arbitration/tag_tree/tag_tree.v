@@ -9,9 +9,9 @@ Wires up tree_nodes to make a tree. Is smart about not making a tree when N = 1.
 `ifdef FROM_TAG_TREE
 `include "tree_node/tree_node.v"
 `elsif FROM_SNOOP_ARB
-`include "tag_tree/tree_node/tree_node.v"
+`include "../tag_tree/tree_node/tree_node.v"
 `elsif FROM_PARALLEL_CORES
-`include "arbitration/snoop_arb/tag_tree/tree_node/tree_node.v"
+`include "arbitration/tag_tree/tree_node/tree_node.v"
 `endif
 
 `define CLOG2(x) (\
@@ -35,12 +35,13 @@ Wires up tree_nodes to make a tree. Is smart about not making a tree when N = 1.
 
 module tag_tree # (
     parameter N = 4,
-    parameter TAG_SZ = 5,
     //DELAY_CONF:
     //0 = all combinational
     //1 = delay stage on every second level
     //2 = delay stage on all levels
-    parameter DELAY_CONF = 1
+    parameter DELAY_CONF = 1,
+    parameter CUSTOM_TAGS = 0,
+    parameter TAG_SZ = `CLOG2(N)
 ) (
     input wire clk,
     input wire rst,
@@ -50,7 +51,9 @@ module tag_tree # (
     input wire ack,
     
     input wire [N-1:0] rdy_in,
-    output wire [N-1:0] ack_out
+    output wire [N-1:0] ack_out,
+    
+    input wire [N*TAG_SZ-1:0] custom_tags //Unused when CUSTOM_TAGS = 0
 );
 
     wire [TAG_SZ-1:0] tags_i[0:(2*N-1)-1];
@@ -62,7 +65,11 @@ module tag_tree # (
     
     //Do assignments to leaves of tree
     for (k = 0; k < N; k = k + 1) begin : leaves
-        assign tags_i[k] = k;
+        if (CUSTOM_TAGS) begin
+            assign tags_i[k] = custom_tags[TAG_SZ*(k+1)-1 -: TAG_SZ];
+        end else begin
+            assign tags_i[k] = k;
+        end
         assign rdys_i[k] = rdy_in[k];
         assign ack_out[k] = acks_i[k];
     end

@@ -21,9 +21,9 @@ in case fanout is too high.
 */
 
 `ifdef FROM_SNOOP_ARB
-`include "tag_tree/tag_tree.v"
+`include "../tag_tree/tag_tree.v"
 `elsif FROM_PARALLEL_CORES
-`include "arbitration/snoop_arb/tag_tree/tag_tree.v"
+`include "arbitration/tag_tree/tag_tree.v"
 `endif
 
 `define genif generate if
