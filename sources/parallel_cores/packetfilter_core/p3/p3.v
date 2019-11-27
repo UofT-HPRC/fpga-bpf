@@ -169,13 +169,6 @@ module p3 # (
     wire pong_odata_vld;
     wire [PLEN_WIDTH-1:0] pong_byte_length;
     
-    
-    //I've been trying really hard to eliminate hacky code, but this is one 
-    //case where it's a lot easier to do
-    //When the snooper starts on a buffer, we should reset its length to 0
-    wire sn_start_sig;
-    assign sn_start_sig = rdy_for_A && rdy_for_A_ack;
-    
     sn_adapter # (
         .SN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
         .DATA_WIDTH(SN_FWD_DATA_WIDTH),
@@ -293,18 +286,24 @@ module p3 # (
         .pong_sel(pong_sel)
     );
 
+
+    //I've been trying really hard to eliminate hacky code, but this is one 
+    //case where it's a lot easier to do
+    //When the CPU rejects a buffer or the forwarder finishes, reset memory 
+    //length to zero
+
     muxes # (
         .ADDR_WIDTH(ADDR_WIDTH),
         .DATA_WIDTH(SN_FWD_DATA_WIDTH),
-        .INC_WIDTH(INC_WIDTH), //TODO: make this a parameter everywhere else?
-        .PLEN_WIDTH(PLEN_WIDTH) //TODO: make this a parameter everywhere else?
+        .INC_WIDTH(INC_WIDTH),
+        .PLEN_WIDTH(PLEN_WIDTH)
     ) themux (
 
-        //Format is {addr, wr_data, wr_en, bytes_inc, reset_sig}
-        .from_sn({sn_addr_i, sn_wr_data_i, sn_wr_en_i, sn_byte_inc_i, sn_start_sig}),
-        //Format is {addr, rd_en}
-        .from_cpu({cpu_addr_i, cpu_rd_en_i}),
-        .from_fwd({fwd_addr_i, fwd_rd_en_i}),
+        //Format is {addr, wr_data, wr_en, bytes_inc}
+        .from_sn({sn_addr_i, sn_wr_data_i, sn_wr_en_i, sn_byte_inc_i}),
+        //Format is {addr, reset_sig, rd_en}
+        .from_cpu({cpu_addr_i, B_rej, cpu_rd_en_i}),
+        .from_fwd({fwd_addr_i, C_done, fwd_rd_en_i}),
         
         //Format is {rd_data, rd_data_vld, packet_len}
         .from_ping({ping_odata, ping_odata_vld, ping_byte_length}),

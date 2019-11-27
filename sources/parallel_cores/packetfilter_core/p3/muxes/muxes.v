@@ -66,11 +66,11 @@ module muxes # (
 	parameter PLEN_WIDTH = 32 
 )(
 	//Inputs
-	//Format is {addr, wr_data, wr_en, bytes_inc, reset_sig}
-	input wire [ADDR_WIDTH + DATA_WIDTH + `ENABLE_BIT + INC_WIDTH + `RESET_SIG -1:0] from_sn,
-	//Format is {addr, rd_en}
-	input wire [ADDR_WIDTH + `ENABLE_BIT -1:0] from_cpu,
-	input wire [ADDR_WIDTH + `ENABLE_BIT -1:0] from_fwd,
+	//Format is {addr, wr_data, wr_en, bytes_inc}
+	input wire [ADDR_WIDTH + DATA_WIDTH + `ENABLE_BIT + INC_WIDTH -1:0] from_sn,
+	//Format is {addr, reset_sig, rd_en}
+	input wire [ADDR_WIDTH + `ENABLE_BIT + `RESET_SIG -1:0] from_cpu,
+	input wire [ADDR_WIDTH + `ENABLE_BIT + `RESET_SIG -1:0] from_fwd,
 	//Format is {rd_data, rd_data_vld, packet_len}
 	input wire [DATA_WIDTH + `VLD_BIT + PLEN_WIDTH -1:0] from_ping,
 	input wire [DATA_WIDTH + `VLD_BIT + PLEN_WIDTH -1:0] from_pang,
@@ -126,9 +126,9 @@ parameter [`ENABLE_BIT-1:0] no_enable_bit = 0;
 parameter [INC_WIDTH-1:0] no_byte_inc = 0;
 parameter [`RESET_SIG-1:0] no_reset_sig = 0;
 
-assign from_sn_padded = {from_sn, no_enable_bit};
-assign from_cpu_padded = {from_cpu[ADDR_WIDTH + `ENABLE_BIT -1:1], no_wr_data, no_byte_inc, no_enable_bit, no_reset_sig, from_cpu[0]};
-assign from_fwd_padded = {from_fwd[ADDR_WIDTH + `ENABLE_BIT -1:1], no_wr_data, no_byte_inc, no_enable_bit, no_reset_sig, from_fwd[0]};
+assign from_sn_padded = {from_sn, no_reset_sig, no_enable_bit};
+assign from_cpu_padded = {from_cpu[ADDR_WIDTH + `RESET_SIG + `ENABLE_BIT -1:2], no_wr_data, no_byte_inc, no_enable_bit, from_cpu[1:0]};
+assign from_fwd_padded = {from_fwd[ADDR_WIDTH + `RESET_SIG + `ENABLE_BIT -1:2], no_wr_data, no_byte_inc, no_enable_bit, from_fwd[1:0]};
 
 
 mux3 # (ADDR_WIDTH + DATA_WIDTH + `ENABLE_BIT + INC_WIDTH + `RESET_SIG + `ENABLE_BIT) ping_mux (
