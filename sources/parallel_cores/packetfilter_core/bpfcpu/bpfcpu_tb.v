@@ -61,7 +61,6 @@ should always accept of course
 module bpfcpu_tb;        
     reg clk;
     reg rst;
-    reg cpu_done_ack;
     reg rdy_for_cpu;
     reg cache_hit;
     reg [31:0] cached_data;
@@ -89,7 +88,6 @@ module bpfcpu_tb;
         
         clk <= 0;
         rst <= 0;
-        cpu_done_ack <= 1; //Leave these high for simulation
         rdy_for_cpu <= 1;
         
         resized_mem_data <= 0;  //No caching is implemented, but we can still test it!
@@ -168,7 +166,6 @@ module bpfcpu_tb;
     ) DUT (
         .clk(clk),
         .rst(rst),
-        .cpu_done_ack(cpu_done_ack),
         .rdy_for_cpu(rdy_for_cpu),
         .resized_mem_data(resized_mem_data), 
         .resized_mem_data_vld(resized_mem_data_vld),

@@ -17,19 +17,20 @@ module muxes_tb;
     reg [`DATA_WIDTH-1:0] sn_data;
     reg [`INC_WIDTH-1:0] sn_bytes_inc;
     reg sn_wr_en;
-    reg sn_reset_len;
     
     reg [`ADDR_WIDTH-1:0] cpu_addr;
     wire [`DATA_WIDTH-1:0] cpu_data;
     wire cpu_data_vld;
     reg cpu_rd_en;
     wire [`PLEN_WIDTH-1:0] cpu_len;
+    reg cpu_reset_len;
     
     reg [`ADDR_WIDTH-1:0] fwd_addr;
     wire [`DATA_WIDTH-1:0] fwd_data;
     wire fwd_data_vld;
     reg fwd_rd_en;
     wire [`PLEN_WIDTH-1:0] fwd_len;
+    reg fwd_reset_len;
     
     wire [`ADDR_WIDTH-1:0] ping_addr;
     wire [`DATA_WIDTH-1:0] ping_wr_data;
@@ -85,9 +86,11 @@ module muxes_tb;
         
         cpu_addr <= 0;
         cpu_rd_en <= 0;
+        cpu_reset_len <= 0;
         
         fwd_addr <= 0;
         fwd_rd_en <= 0;
+        fwd_reset_len <= 0;
         
         ping_rd_data <= 0;
         ping_len <= 0;
@@ -140,7 +143,8 @@ module muxes_tb;
         
         sn_addr <= $random;
         sn_data <= {$random, $random};
-        sn_reset_len <= $random;
+        cpu_reset_len <= $random;
+        fwd_reset_len <= $random;
         cpu_addr <= $random;
         fwd_addr <= $random;
     end
@@ -153,11 +157,11 @@ module muxes_tb;
         .PLEN_WIDTH(`PLEN_WIDTH)
     ) DUT (
         //Inputs
-        //Format is {addr, wr_data, wr_en, bytes_inc, reset_sig}
-        .from_sn({sn_addr, sn_data, sn_wr_en, sn_bytes_inc, sn_reset_len}),
-        //Format is {addr, rd_en}
-        .from_cpu({cpu_addr, cpu_rd_en}),
-        .from_fwd({fwd_addr, fwd_rd_en}),
+        //Format is {addr, wr_data, wr_en, bytes_inc}
+        .from_sn({sn_addr, sn_data, sn_wr_en, sn_bytes_inc}),
+        //Format is {addr, reset_sig, rd_en}
+        .from_cpu({cpu_addr, cpu_reset_len, cpu_rd_en}),
+        .from_fwd({fwd_addr, fwd_reset_len, fwd_rd_en}),
         //Format is {rd_data, rd_data_vld, packet_len}
         .from_ping({ping_rd_data, ping_rd_data_vld, ping_len}),
         .from_pang({pang_rd_data, pang_rd_data_vld, pang_len}),
