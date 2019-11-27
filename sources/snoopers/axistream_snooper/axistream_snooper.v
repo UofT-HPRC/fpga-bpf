@@ -38,7 +38,6 @@ module axistream_snooper # (
     output wire sn_wr_en,
     output wire [INC_WIDTH-1:0] sn_byte_inc,
     output wire sn_done,
-    //input wire sn_done_ack,
     input wire rdy_for_sn,
     output wire rdy_for_sn_ack //Yeah, I'm ready for a snack
 );

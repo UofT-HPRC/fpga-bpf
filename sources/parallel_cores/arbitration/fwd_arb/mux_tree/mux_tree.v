@@ -7,6 +7,8 @@ mux_tree.v
 
 `ifdef FROM_MUX_TREE
 `include "mux_tree_node/mux_tree_node.v"
+`elsif FROM_FWD_ARB
+`include "mux_tree/mux_tree_node/mux_tree_node.v"
 `endif
 
 `define CLOG2(x) (\

@@ -10,6 +10,8 @@ Wires up tree_nodes to make a tree. Is smart about not making a tree when N = 1.
 `include "tree_node/tree_node.v"
 `elsif FROM_SNOOP_ARB
 `include "../tag_tree/tree_node/tree_node.v"
+`elsif FROM_FWD_ARB
+`include "../tag_tree/tree_node/tree_node.v"
 `elsif FROM_PARALLEL_CORES
 `include "arbitration/tag_tree/tree_node/tree_node.v"
 `endif

@@ -53,11 +53,9 @@ module snoop_arb # (
     input wire done,
     input wire ack,
     
-    output wire done_ack, //IDEA: no handshaking for done signal? Significantly cleans up logic
     output wire rdy,
     
     //Interface to packetfilter_cores
-    //input wire [N-1:0] sn_done_ack, //IDEA: no handshaking for done signal? Significantly cleans up logic
     input wire [N-1:0] rdy_for_sn,
     
     //Only hot signals need to be gated, so we avoid the 2D array port problem 
@@ -162,8 +160,6 @@ module snoop_arb # (
         assign rdy_for_sn_ack = rdy_for_sn_ack_i;
         assign selection = selection_i;
     end
-    
-    assign done_ack = 1; //IDEA: no handshaking for done signal? Significantly cleans up logic
 
 end else begin
     //Special case: N = 1
@@ -178,8 +174,6 @@ end else begin
     assign sn_wr_en[0] = wr_en;
     assign sn_done[0] = done;
     assign rdy_for_sn_ack[0] = ack; 
-    
-    assign done_ack = 1; //IDEA: no handshaking for done signal? Significantly cleans up logic
 `endgen
 
 endmodule

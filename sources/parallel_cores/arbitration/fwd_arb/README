@@ -1,0 +1,58 @@
+Unfortunately, I can't use the same arbiter for both snooper and forwarder. So,
+this module is a top-level wrapper for this guy 
+                                             |
+                                             |
+                                             +----------+
+                                                        |
+                            +-------------------+       v
+                 +-----+    |                   |    +-----+
+                 |     |--->| packetfilter_core |--->|     |
+                 |     |    |                   |    |     |
+                 |     |    +-------------------+    |     |
+                 |     |                             |     |
+                 |  A  |    +-------------------+    |  A  |
+                 |  r  |    |                   |    |  r  |
+                 |  b  |--->| packetfilter_core |--->|  b  |
+  +---------+    |  i  |    |                   |    |  i  |    +-----------+
+  |         |    |  t  |    +-------------------+    |  t  |    |           |
+  | Snooper |--->|  r  |                             |  r  |--->| Forwarder |
+  |         |    |  a  |    +-------------------+    |  a  |    |           |
+  +---------+    |  t  |    |                   |    |  t  |    +-----------+
+                 |  i  |--->| packetfilter_core |--->|  i  |
+                 |  o  |    |                   |    |  o  |
+                 |  n  |    +-------------------+    |  n  |
+                 |     |                             |     |
+                 |     |    +-------------------+    |     |
+                 |     |    |                   |    |     |
+                 |     |--->| packetfilter_core |--->|     |
+                 +-----+    |                   |    +-----+
+                            +-------------------+
+
+
+At some point I should draw up a more detailed diagram, but for now I will use 
+words:
+
+    - The rdy_for_fwd and rdy_for_fwd_ack outputs from the packetfilters are 
+      hooked up to the tag tree.
+    
+    - The tag tree's output (the final selection) is broadcast to all filters
+      
+    - The rd_addr, rd_en, and fwd_done outputs from the forwarder are also 
+      broadcast to all filters
+    
+    - Each filter will decide based on the selected tag whether it will 
+      "listen" to the forwarder's signals
+      
+    - The selected tag is also the select input of the MUX tree.
+    
+    - The rd_data and rd_data_vld outputs from the filters trickle up to the 
+      forwarder through the MUX tree.
+
+Got that? There are two trees (tag and MUX) and one shared bus (the broadcasted 
+signals).
+
+The difficulty is all pushed to the forwarder, where the programmer must 
+correctly deal with backpressure from wherever we are forwarding to, but also 
+with the round-trip latency.
+
+PLEASE NOTE: Everything has an II of one!

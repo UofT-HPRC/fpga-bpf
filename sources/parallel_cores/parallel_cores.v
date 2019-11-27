@@ -71,7 +71,6 @@ module parallel_cores # (
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     input wire sn_done,
-    //output wire sn_done_ack,
     output wire rdy_for_sn,
     input wire rdy_for_sn_ack, //Yeah, I'm ready for a snack
     
@@ -82,7 +81,6 @@ module parallel_cores # (
     output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     input wire fwd_done,
-    //output wire fwd_done_ack,
     output wire rdy_for_fwd,
     input wire rdy_for_fwd_ack,
     
@@ -125,7 +123,6 @@ module parallel_cores # (
             .sn_wr_en(sn_wr_en_i[i]),
             .sn_byte_inc(sn_byte_inc_i),
             .sn_done(sn_done_i[i]),
-            //.sn_done_ack(sn_done_ack),
             .rdy_for_sn(rdy_for_sn_i[i]),
             .rdy_for_sn_ack(rdy_for_sn_ack_i[i]), //Yeah, I'm ready for a snack
 
@@ -137,7 +134,6 @@ module parallel_cores # (
             .fwd_rd_data_vld(fwd_rd_data_vld),
             .fwd_byte_len(fwd_byte_len),
             .fwd_done(fwd_done),
-            .fwd_done_ack(fwd_done_ack),
             .rdy_for_fwd(rdy_for_fwd),
             .rdy_for_fwd_ack(rdy_for_fwd_ack),
 
@@ -168,11 +164,9 @@ module parallel_cores # (
         .done(sn_done),
         .ack(rdy_for_sn_ack),
 
-        .done_ack(sn_done_ack), 
         .rdy(rdy_for_sn),
 
         //Interface to packetfilter_cores
-        //.sn_done_ack(sn_done_ack),
         .rdy_for_sn(rdy_for_sn_i),
 
         .sn_addr(sn_addr_i),
