@@ -1,0 +1,35 @@
+This wires up N packetfilter_cores in parallel, using a snoop_arb and fwd_arb 
+in order to hook up the correct filter to the snooper/forwarder:
+
+                            +-------------------+
+                 +-----+    |                   |    +-----+
+                 |     |--->| packetfilter_core |--->|     |
+                 |     |    |                   |    |     |
+                 |     |    +-------------------+    |     |
+                 |     |                             |     |
+                 |  A  |    +-------------------+    |  A  |
+                 |  r  |    |                   |    |  r  |
+                 |  b  |--->| packetfilter_core |--->|  b  |
+                 |  i  |    |                   |    |  i  |
+                 |  t  |    +-------------------+    |  t  |
+from snooper --->|  r  |                             |  r  |---> to forwarder
+                 |  a  |    +-------------------+    |  a  |
+                 |  t  |    |                   |    |  t  |
+                 |  i  |--->| packetfilter_core |--->|  i  |
+                 |  o  |    |                   |    |  o  |
+                 |  n  |    +-------------------+    |  n  |
+                 |     |                             |     |
+                 |     |    +-------------------+    |     |
+                 |     |    |                   |    |     |
+                 |     |--->| packetfilter_core |--->|     |
+                 +-----+    |                   |    +-----+
+                            +-------------------+
+
+We really would like the packet filter to run at line rate, but if the BPF 
+program is very complicated (i.e. takes many cycles), this might not be 
+possible. So the packet filter has a parameter to control the number of 
+parallel packetfilter_cores.
+
+In true FPGA fashion, we parallelize what can be parallelized! Note that 
+parallelizing snoopers/forwarders has zero benefit if they can already run at 
+line rate.
