@@ -17,7 +17,7 @@ module mux_tree_node_tb;
     integer fd, dummy;
     
     initial begin
-        $dumpfile("mymodule.vcd");
+        $dumpfile("mux_tree_node.vcd");
         $dumpvars;
         $dumplimit(512000);
         
