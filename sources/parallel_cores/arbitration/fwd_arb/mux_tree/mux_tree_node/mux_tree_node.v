@@ -20,7 +20,7 @@ Meant to be part of a pipelined multiplexer
 
 module mux_tree_node # (
     parameter WIDTH = 32,
-    parameter EN_DELAY = 0
+    parameter ENABLE_DELAY = 0
 ) (
     input wire [1:0] sel,
     input wire [WIDTH-1:0] A, 
@@ -49,7 +49,7 @@ module mux_tree_node # (
         endcase
     end
     
-`genif (EN_DELAY) begin
+`genif (ENABLE_DELAY) begin
     reg [WIDTH-1:0] result_r = 0;
     always @(posedge clk) begin
         if (rst) begin
