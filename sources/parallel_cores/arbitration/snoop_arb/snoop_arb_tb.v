@@ -36,11 +36,9 @@ module snoop_arb_tb;
     reg done;
     reg ack;
     
-    wire done_ack; //IDEA: no handshaking for done signal? Significantly cleans up logic
     wire rdy;
     
     //Interface to packetfilter_cores
-    //reg [N-1:0] sn_done_ack; //IDEA: no handshaking for done signal? Significantly cleans up logic
     reg [`N-1:0] rdy_for_sn;
     
     wire [`SN_ADDR_WIDTH-1:0] sn_addr;
@@ -118,8 +116,7 @@ module snoop_arb_tb;
         .byte_inc(byte_inc),
         .done(done),
         .ack(ack),
-            
-        .done_ack(done_ack), //IDEA: no handshaking for done signal? Significantly cleans up logic
+        
         .rdy(rdy),
             
         //Interface to packetfilter_cores

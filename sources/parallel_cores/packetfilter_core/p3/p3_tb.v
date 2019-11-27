@@ -23,7 +23,6 @@ module p3_tb;
     reg sn_wr_en;
     reg [`INC_WIDTH-1:0] sn_byte_inc;
     reg sn_done;
-    wire sn_done_ack;
     wire rdy_for_sn;
     reg rdy_for_sn_ack; //Yeah, I'm ready for a snack
     reg [`BYTE_ADDR_WIDTH-1:0] byte_rd_addr;
@@ -34,7 +33,6 @@ module p3_tb;
     wire [`PLEN_WIDTH-1:0] cpu_byte_len;
     reg cpu_acc;
     reg cpu_rej;
-    wire cpu_done_ack;
     wire rdy_for_cpu;
     reg rdy_for_cpu_ack;
     reg [`SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
@@ -43,7 +41,6 @@ module p3_tb;
     wire fwd_rd_data_vld;
     wire [`PLEN_WIDTH-1:0] fwd_byte_len;
     reg fwd_done;
-    wire fwd_done_ack;
     wire rdy_for_fwd;
     reg rdy_for_fwd_ack;
     
@@ -150,7 +147,6 @@ module p3_tb;
         .sn_wr_en(sn_wr_en),
         .sn_byte_inc(sn_byte_inc),
         .sn_done(sn_done),
-        .sn_done_ack(sn_done_ack),
         .rdy_for_sn(rdy_for_sn),
         .rdy_for_sn_ack(rdy_for_sn_ack),
         .byte_rd_addr(byte_rd_addr),
@@ -161,7 +157,6 @@ module p3_tb;
         .cpu_byte_len(cpu_byte_len),
         .cpu_acc(cpu_acc),
         .cpu_rej(cpu_rej),
-        .cpu_done_ack(cpu_done_ack),
         .rdy_for_cpu(rdy_for_cpu),
         .rdy_for_cpu_ack(rdy_for_cpu_ack),
         .fwd_addr(fwd_addr),
@@ -170,7 +165,6 @@ module p3_tb;
         .fwd_rd_data_vld(fwd_rd_data_vld),
         .fwd_byte_len(fwd_byte_len),
         .fwd_done(fwd_done),
-        .fwd_done_ack(fwd_done_ack),
         .rdy_for_fwd(rdy_for_fwd),
         .rdy_for_fwd_ack(rdy_for_fwd_ack)
     );

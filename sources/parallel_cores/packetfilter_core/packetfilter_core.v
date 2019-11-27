@@ -73,7 +73,6 @@ module packetfilter_core # (
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     input wire sn_done,
-    output wire sn_done_ack,
     output wire rdy_for_sn,
     input wire rdy_for_sn_ack, //Yeah, I'm ready for a snack
     
@@ -84,7 +83,6 @@ module packetfilter_core # (
     output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     input wire fwd_done,
-    output wire fwd_done_ack,
     output wire rdy_for_fwd,
     input wire rdy_for_fwd_ack,
     
@@ -111,7 +109,6 @@ module packetfilter_core # (
 
     wire cpu_acc;
     wire cpu_rej;
-    wire cpu_done_ack;
 
     wire rdy_for_cpu;
     wire rdy_for_cpu_ack;
@@ -141,7 +138,6 @@ module packetfilter_core # (
         .sn_wr_en(sn_wr_en),
         .sn_byte_inc(sn_byte_inc),
         .sn_done(sn_done),
-        .sn_done_ack(sn_done_ack),
         .rdy_for_sn(rdy_for_sn),
         .rdy_for_sn_ack(rdy_for_sn_ack), //Yeah, I'm ready for a snack
         .byte_rd_addr(byte_rd_addr),
@@ -152,7 +148,6 @@ module packetfilter_core # (
         .cpu_byte_len(cpu_byte_len),
         .cpu_acc(cpu_acc),
         .cpu_rej(cpu_rej),
-        .cpu_done_ack(cpu_done_ack),
         .rdy_for_cpu(rdy_for_cpu),
         .rdy_for_cpu_ack(rdy_for_cpu_ack),
         .fwd_addr(fwd_addr),
@@ -161,7 +156,6 @@ module packetfilter_core # (
         .fwd_rd_data_vld(fwd_rd_data_vld),
         .fwd_byte_len(fwd_byte_len),
         .fwd_done(fwd_done),
-        .fwd_done_ack(fwd_done_ack),
         .rdy_for_fwd(rdy_for_fwd),
         .rdy_for_fwd_ack(rdy_for_fwd_ack)
     );  
@@ -188,10 +182,9 @@ module packetfilter_core # (
         .PESS(PESS)
     ) the_cpu (
         .clk(clk),
-        .rst(rst),
+        .rst(rst || !rdy_for_cpu),
 
         //Interface to P3
-        .cpu_done_ack(cpu_done_ack),
         .rdy_for_cpu(rdy_for_cpu),
         .resized_mem_data(resized_mem_data), 
         .resized_mem_data_vld(resized_mem_data_vld),

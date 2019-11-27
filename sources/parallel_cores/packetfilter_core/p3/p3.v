@@ -54,7 +54,6 @@ module p3 # (
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     
     input wire sn_done,
-    output wire sn_done_ack,
     
     output wire rdy_for_sn,
     input wire rdy_for_sn_ack, //Yeah, I'm ready for a snack
@@ -69,7 +68,6 @@ module p3 # (
     
     input wire cpu_acc,
     input wire cpu_rej,
-    output wire cpu_done_ack,
     
     output wire rdy_for_cpu,
     input wire rdy_for_cpu_ack,
@@ -82,7 +80,6 @@ module p3 # (
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     
     input wire fwd_done,
-    output wire fwd_done_ack,
     
     output wire rdy_for_fwd,
     input wire rdy_for_fwd_ack
@@ -97,11 +94,8 @@ module p3 # (
     wire rdy_for_C_ack; 
     
     //p3ctrl outputs
-    wire A_done_ack;
     wire rdy_for_A;
-    wire B_done_ack;
     wire rdy_for_B;
-    wire C_done_ack;
     wire rdy_for_C;
     wire [1:0] sn_sel;
     wire [1:0] cpu_sel;
@@ -197,7 +191,6 @@ module p3 # (
         .sn_byte_inc(sn_byte_inc),
         .sn_done(sn_done),
         .rdy_for_sn_ack(rdy_for_sn_ack),
-        .sn_done_ack(sn_done_ack),
         .rdy_for_sn(rdy_for_sn),
         
         //Interface to P3 system
@@ -207,7 +200,6 @@ module p3 # (
         .byte_inc(sn_byte_inc_i),
         .done(A_done),
         .rdy_ack(rdy_for_A_ack),
-        .done_ack(A_done_ack),
         .rdy(rdy_for_A)
     );  
     
@@ -230,7 +222,6 @@ module p3 # (
         .cpu_acc(cpu_acc),
         .cpu_rej(cpu_rej),
         .rdy_for_cpu_ack(rdy_for_cpu_ack),
-        .cpu_done_ack(cpu_done_ack),
         .rdy_for_cpu(rdy_for_cpu),
         .resized_mem_data(resized_mem_data),
         .resized_mem_data_vld(resized_mem_data_vld),
@@ -242,7 +233,6 @@ module p3 # (
         .acc(B_acc),
         .rej(B_rej),
         .rdy_ack(rdy_for_B_ack),
-        .done_ack(B_done_ack),
         .rdy(rdy_for_B),
         .bigword(cpu_bigword_i),
         .bigword_vld(cpu_bigword_vld_i),
@@ -266,7 +256,6 @@ module p3 # (
         .fwd_rd_en(fwd_rd_en),
         .fwd_done(fwd_done),
         .rdy_for_fwd_ack(rdy_for_fwd_ack),
-        .fwd_done_ack(fwd_done_ack),
         .rdy_for_fwd(rdy_for_fwd),
         .fwd_rd_data(fwd_rd_data),
         .fwd_rd_data_vld(fwd_rd_data_vld),
@@ -277,7 +266,6 @@ module p3 # (
         .rd_en(fwd_rd_en_i),
         .done(C_done),
         .rdy_ack(rdy_for_C_ack),
-        .done_ack(C_done_ack),
         .rdy(rdy_for_C),
         .rd_data(fwd_rd_data_i),
         .rd_data_vld(fwd_rd_data_vld_i),
@@ -288,16 +276,13 @@ module p3 # (
         .clk(clk),
         .rst(rst),
         .A_done(A_done),
-        .A_done_ack(A_done_ack),
         .rdy_for_A(rdy_for_A),
         .rdy_for_A_ack(rdy_for_A_ack),
         .B_acc(B_acc),
         .B_rej(B_rej),
-        .B_done_ack(B_done_ack),
         .rdy_for_B(rdy_for_B),
         .rdy_for_B_ack(rdy_for_B_ack),
         .C_done(C_done),
-        .C_done_ack(C_done_ack),
         .rdy_for_C(rdy_for_C),
         .rdy_for_C_ack(rdy_for_C_ack),
         .sn_sel(sn_sel),

@@ -6,7 +6,9 @@ mux_tree_tb.v
 Replace innards with desired logic
 */
 
+`ifdef FROM_MUX_TREE
 `include "mux_tree.v"
+`endif
 
 module mux_tree_tb;
 	reg clk;

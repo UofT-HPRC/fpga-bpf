@@ -13,18 +13,15 @@ module p3_ctrl_tb;
     reg rst;
         
     reg A_done;
-    wire A_done_ack;
     wire rdy_for_A;
     reg rdy_for_A_ack;
     
     reg B_acc;
     reg B_rej;
-    wire B_done_ack;
     wire rdy_for_B;
     reg rdy_for_B_ack;
     
     reg C_done;
-    wire C_done_ack;
     wire rdy_for_C;
     reg rdy_for_C_ack;
     
@@ -115,18 +112,15 @@ module p3_ctrl_tb;
         .rst(rst),
             
         .A_done(A_done),
-        .A_done_ack(A_done_ack),
         .rdy_for_A(rdy_for_A),
         .rdy_for_A_ack(rdy_for_A_ack),
             
         .B_acc(B_acc),
         .B_rej(B_rej),
-        .B_done_ack(B_done_ack),
         .rdy_for_B(rdy_for_B),
         .rdy_for_B_ack(rdy_for_B_ack),
             
         .C_done(C_done),
-        .C_done_ack(C_done_ack),
         .rdy_for_C(rdy_for_C),
         .rdy_for_C_ack(rdy_for_C_ack),
             

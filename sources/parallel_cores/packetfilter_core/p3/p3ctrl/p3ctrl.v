@@ -46,18 +46,15 @@ module p3ctrl(
     input wire rst,
 
     input wire A_done,
-    output wire A_done_ack,
     output wire rdy_for_A, //@1
     input wire rdy_for_A_ack,
 
     input wire B_acc,
     input wire B_rej,
-    output wire B_done_ack,
     output wire rdy_for_B, //@1
     input wire rdy_for_B_ack,
 
     input wire C_done,
-    output wire C_done_ack,
     output wire rdy_for_C, //@1
     input wire rdy_for_C_ack,
 
@@ -84,18 +81,15 @@ module p3ctrl(
     //approach new stuff.    
     
     wire A_done_i;
-    wire A_done_ack_i; //Note: at init, we are ready for snooper
     wire rdy_for_A_i;
     wire rdy_for_A_ack_i;
     
 	wire B_acc_i;
 	wire B_rej_i;
-    wire B_done_ack_i;
     wire rdy_for_B_i;
     wire rdy_for_B_ack_i;
     
 	wire C_done_i;
-    wire C_done_ack_i;
     wire rdy_for_C_i;
     wire rdy_for_C_ack_i;
 	
@@ -113,19 +107,19 @@ module p3ctrl(
     // rdy_for_X_sig: asserted when we agree that X can start
 
     wire A_done_sig;
-    assign A_done_sig = A_done && A_done_ack;
+    assign A_done_sig = A_done;
     wire rdy_for_A_sig;
     assign rdy_for_A_sig = rdy_for_A && rdy_for_A_ack;
 
     wire B_acc_sig; //Special case: processor can accept or reject
-    assign B_acc_sig = B_acc && B_done_ack; 
+    assign B_acc_sig = B_acc; 
     wire B_rej_sig;
-    assign B_rej_sig = B_rej && B_done_ack;
+    assign B_rej_sig = B_rej;
     wire rdy_for_B_sig;
     assign rdy_for_B_sig = rdy_for_B && rdy_for_B_ack;
 
     wire C_done_sig;
-    assign C_done_sig = C_done && C_done_ack;
+    assign C_done_sig = C_done;
     wire rdy_for_C_sig;
     assign rdy_for_C_sig = rdy_for_C && rdy_for_C_ack;
 
@@ -178,11 +172,6 @@ module p3ctrl(
     end
     assign rdy_for_C_i = (| C_cnt);
     
-    //TODO: I still haven't decided to completely annihilate the done_ack signal
-    assign A_done_ack_i = 1;
-    assign B_done_ack_i = 1;
-    assign C_done_ack_i = 1;
-    
     muxselinvert muxthing(
         .sn_sel(sn_sel_i),
         .cpu_sel(cpu_sel_i),
@@ -225,13 +214,10 @@ module p3ctrl(
     /**Assign outputs from internal signals**/
     /****************************************/
     
-    assign A_done_ack       = A_done_ack_i;
     assign rdy_for_A        = rdy_for_A_i;
 
-    assign B_done_ack       = B_done_ack_i;
     assign rdy_for_B        = rdy_for_B_i;
 
-    assign C_done_ack       = C_done_ack_i;
     assign rdy_for_C        = rdy_for_C_i;
     
 	assign sn_sel           = sn_sel_i;

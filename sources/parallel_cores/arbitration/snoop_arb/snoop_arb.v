@@ -45,6 +45,8 @@ module snoop_arb # (
     input wire clk,
     input wire rst,
     
+    //TODO: fix this terrible naming convention!
+        
     //Interface to snooper
     input wire [SN_ADDR_WIDTH-1:0] addr,
     input wire [DATA_WIDTH-1:0] wr_data,

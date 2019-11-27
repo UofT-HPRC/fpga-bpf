@@ -35,7 +35,6 @@ module fwd_adapter # (
     input wire fwd_done,
     input wire rdy_for_fwd_ack,
     
-    output wire fwd_done_ack,
     output wire rdy_for_fwd,
     output wire [DATA_WIDTH-1:0] fwd_rd_data,
     output wire fwd_rd_data_vld,
@@ -47,7 +46,6 @@ module fwd_adapter # (
     output wire done,
     output wire rdy_ack,
     
-    input wire done_ack,
     input wire rdy,
     input wire [DATA_WIDTH-1:0] rd_data,
     input wire rd_data_vld,
@@ -63,7 +61,6 @@ module fwd_adapter # (
     wire fwd_done_i;
     wire rdy_for_fwd_ack_i;
     
-    wire fwd_done_ack_i;
     wire rdy_for_fwd_i;
     wire [DATA_WIDTH-1:0] fwd_rd_data_i;
     wire fwd_rd_data_vld_i;
@@ -75,7 +72,6 @@ module fwd_adapter # (
     wire done_i;
     wire rdy_ack_i;
     
-    wire done_ack_i;
     wire rdy_i;
     wire [DATA_WIDTH-1:0] rd_data_i;
     wire rd_data_vld_i;
@@ -92,7 +88,6 @@ module fwd_adapter # (
     assign rdy_for_fwd_ack_i = rdy_for_fwd_ack;
     
     //Interface to P3 system
-    assign done_ack_i        = done_ack;
     assign rdy_i             = rdy;
     assign rd_data_i         = rd_data;
     assign rd_data_vld_i     = rd_data_vld;
@@ -107,7 +102,6 @@ module fwd_adapter # (
     assign done_i            = fwd_done_i;
     assign rdy_ack_i         = rdy_for_fwd_ack_i;
     
-    assign fwd_done_ack_i    = done_ack_i;
     assign rdy_for_fwd_i     = rdy_i;
     assign fwd_rd_data_i     = rd_data_i;
     assign fwd_rd_data_vld_i = rd_data_vld_i;
@@ -117,7 +111,6 @@ module fwd_adapter # (
     /**Assign outputs from internal signals**/
     /****************************************/
     //Interface to forwarder    
-    assign fwd_done_ack      = fwd_done_ack_i;
     assign rdy_for_fwd       = rdy_for_fwd_i;
     assign fwd_rd_data       = fwd_rd_data_i;
     assign fwd_rd_data_vld   = fwd_rd_data_vld_i;

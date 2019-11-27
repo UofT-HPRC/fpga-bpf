@@ -63,7 +63,6 @@ module cpu_adapter # (
     input wire cpu_rej, //@0
     input wire rdy_for_cpu_ack, //@0
     
-    output wire cpu_done_ack, //@0
     output wire rdy_for_cpu, //@0
     output wire [31:0] resized_mem_data, //@1+BUF_IN+BUF_OUT+PESS, zero-padded on the left (when necessary)
     output wire resized_mem_data_vld,
@@ -76,7 +75,6 @@ module cpu_adapter # (
     output wire rej, //@0
     output wire rdy_ack, //@0
     
-    input wire done_ack, //@0
     input wire rdy, //@0
     input wire [SN_FWD_DATA_WIDTH-1:0] bigword, //@1+BUF_IN+BUF_OUT
     input wire bigword_vld, //@1+BUF_IN+BUF_OUT
@@ -102,7 +100,6 @@ module cpu_adapter # (
     wire cpu_rej_i;
     wire rdy_for_cpu_ack_i; 
     
-    wire cpu_done_ack_i; 
     wire rdy_for_cpu_i;  
     
     wire [31:0] resized_mem_data_i;
@@ -120,7 +117,6 @@ module cpu_adapter # (
     wire done_i; 
     wire rdy_ack_i; 
     
-    wire done_ack_i; 
     wire rdy_i;  
     
     wire [SN_FWD_DATA_WIDTH-1:0] bigword_i;
@@ -167,7 +163,6 @@ module cpu_adapter # (
     assign cpu_rej_i         = cpu_rej;
     assign rdy_for_cpu_ack_i = rdy_for_cpu_ack;
     
-    assign done_ack_i        = done_ack;
     assign rdy_i             = rdy;
     
     /****************/
@@ -199,8 +194,7 @@ module cpu_adapter # (
     assign acc_i       = cpu_acc_i;
     assign rej_i       = cpu_rej_i;
     assign rdy_ack_i   = rdy_for_cpu_ack_i; 
-    
-    assign cpu_done_ack_i    = done_ack_i; 
+     
     assign rdy_for_cpu_i     = rdy_i; 
     
     /****************************************/
@@ -235,6 +229,5 @@ endgenerate
     assign rej = rej_i;
     assign rdy_ack = rdy_ack_i; 
     
-    assign cpu_done_ack = cpu_done_ack_i;
     assign rdy_for_cpu = rdy_for_cpu_i;
 endmodule

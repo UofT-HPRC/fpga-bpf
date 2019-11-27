@@ -143,7 +143,8 @@ module parallel_cores # (
             .inst_wr_en(inst_wr_en)
         );
     end endgenerate
-
+    
+    //Yes I'm the arbiter, my word is laaaaaawwww-aaww-aw...
     snoop_arb # (
         .SN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
         .DATA_WIDTH(SN_FWD_DATA_WIDTH),

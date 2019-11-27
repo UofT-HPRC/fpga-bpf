@@ -57,7 +57,6 @@ module packetfilter_core_tb;
     reg sn_wr_en;
     reg [INC_WIDTH-1:0] sn_byte_inc;
     reg sn_done;
-    wire sn_done_ack;
     wire rdy_for_sn;
     reg rdy_for_sn_ack; //Yeah, I'm ready for a snack
     reg [SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
@@ -66,7 +65,6 @@ module packetfilter_core_tb;
     wire fwd_rd_data_vld;
     wire [PLEN_WIDTH-1:0] fwd_byte_len;
     reg fwd_done;
-    wire fwd_done_ack;
     wire rdy_for_fwd;
     reg rdy_for_fwd_ack;
     reg [CODE_ADDR_WIDTH-1:0] inst_wr_addr;
@@ -144,7 +142,6 @@ module packetfilter_core_tb;
         .sn_wr_en(sn_wr_en),
         .sn_byte_inc(sn_byte_inc),
         .sn_done(sn_done),
-        .sn_done_ack(sn_done_ack),
         .rdy_for_sn(rdy_for_sn),
         .rdy_for_sn_ack(rdy_for_sn_ack),
         .fwd_addr(fwd_addr),
@@ -153,7 +150,6 @@ module packetfilter_core_tb;
         .fwd_rd_data_vld(fwd_rd_data_vld),
         .fwd_byte_len(fwd_byte_len),
         .fwd_done(fwd_done),
-        .fwd_done_ack(fwd_done_ack),
         .rdy_for_fwd(rdy_for_fwd),
         .rdy_for_fwd_ack(rdy_for_fwd_ack),
         .inst_wr_addr(inst_wr_addr),

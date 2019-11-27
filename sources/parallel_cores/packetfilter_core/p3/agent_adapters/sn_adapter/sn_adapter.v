@@ -22,7 +22,6 @@ module sn_adapter # (
     input wire sn_done,
     input wire rdy_for_sn_ack,
     
-    output wire sn_done_ack,
     output wire rdy_for_sn,
     
     //Interface to P3 system
@@ -33,7 +32,6 @@ module sn_adapter # (
     output wire done,
     output wire rdy_ack,
     
-    input wire done_ack,
     input wire rdy
 );    
     /************************************/
@@ -48,7 +46,6 @@ module sn_adapter # (
     wire sn_done_i;
     wire rdy_for_sn_ack_i;
     
-    wire sn_done_ack_i;
     wire rdy_for_sn_i;
     
     //Interface to P3 system
@@ -59,7 +56,6 @@ module sn_adapter # (
     wire done_i;
     wire rdy_ack_i;
     
-    wire done_ack_i;
     wire rdy_i;
     
     /***************************************/
@@ -72,7 +68,6 @@ module sn_adapter # (
     assign sn_done_i         = sn_done;
     assign rdy_for_sn_ack_i  = rdy_for_sn_ack;
     
-    assign done_ack_i  = done_ack;
     assign rdy_i       = rdy;
     
     /****************/
@@ -86,7 +81,6 @@ module sn_adapter # (
     assign done_i       = sn_done_i;
     assign rdy_ack_i    = rdy_for_sn_ack_i;
 
-    assign sn_done_ack_i    = done_ack_i;
     assign rdy_for_sn_i     = rdy_i;
     
     /****************************************/
@@ -99,7 +93,6 @@ module sn_adapter # (
     assign done         = done_i;
     assign rdy_ack      = rdy_ack_i;
 
-    assign sn_done_ack = sn_done_ack_i;
     assign rdy_for_sn = rdy_for_sn_i;
     
 endmodule
