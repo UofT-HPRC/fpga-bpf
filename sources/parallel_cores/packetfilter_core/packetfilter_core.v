@@ -182,7 +182,7 @@ module packetfilter_core # (
         .PESS(PESS)
     ) the_cpu (
         .clk(clk),
-        .rst(rst || !rdy_for_cpu),
+        .rst(rst),
 
         //Interface to P3
         .rdy_for_cpu(rdy_for_cpu),

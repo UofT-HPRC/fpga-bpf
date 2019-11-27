@@ -13,6 +13,10 @@ tags for each packetfilter_core.
 `include "tag_gen/tag_gen.v"
 `include "mux_tree/mux_tree.v"
 `include "../tag_tree/tag_tree.v"
+`elsif FROM_PARALLEL_CORES
+`include "arbitration/fwd_arb/tag_gen/tag_gen.v"
+`include "arbitration/fwd_arb/mux_tree/mux_tree.v"
+`include "arbitration/tag_tree/tag_tree.v"
 `endif
 
 `define CLOG2(x) (\
@@ -43,8 +47,7 @@ module fwd_arb # (
     //0 = all combinational
     //1 = delay stage on every second level
     //2 = delay stage on all levels
-    parameter DELAY_CONF = (N>16)? 1 : 0,
-    parameter PESS = (N>16) //Enables pessimistic mode
+    parameter DELAY_CONF = (N>16)? 1 : 0
 ) (
     input wire clk,
     input wire rst,

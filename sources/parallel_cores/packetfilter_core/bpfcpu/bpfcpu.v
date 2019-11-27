@@ -29,7 +29,6 @@ module bpfcpu # (
     input wire rst,
 
     //Interface to P3
-    input wire cpu_done_ack,
     input wire rdy_for_cpu,
     input wire [31:0] resized_mem_data, 
     input wire resized_mem_data_vld,
@@ -54,7 +53,7 @@ module bpfcpu # (
     wire start_sig;
     assign start_sig = rdy_for_cpu && rdy_for_cpu_ack;
     wire done_sig;
-    assign done_sig = (cpu_acc || cpu_rej) && cpu_done_ack;
+    assign done_sig = (cpu_acc || cpu_rej);
     
     //Control FSM for P3 handshaking
     parameter STOPPED = 0;

@@ -12,6 +12,7 @@ a single packetfilter_core.
 `ifdef FROM_PARALLEL_CORES
 `include "packetfilter_core/packetfilter_core.v"
 `include "arbitration/snoop_arb/snoop_arb.v"
+`include "arbitration/fwd_arb/fwd_arb.v"
 `endif
 
 `define CLOG2(x) (\
@@ -102,7 +103,24 @@ module parallel_cores # (
     wire [INC_WIDTH-1:0] sn_byte_inc_i;
     wire [N-1:0] sn_done_i;
     wire [N-1:0] rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
-
+    
+    /************************************/
+    /***fwd_arb <=> packetfilter_cores***/
+    /************************************/
+    wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr_i;
+    wire [N-1:0] fwd_rd_en_i;
+    wire [N*SN_FWD_DATA_WIDTH-1:0] fwd_rd_data_i;
+    wire [N-1:0] fwd_rd_data_vld_i;
+    wire [N*PLEN_WIDTH-1:0] fwd_byte_len_i;
+    wire [N-1:0] fwd_done_i;
+    wire [N-1:0] rdy_for_fwd_i;
+    wire [N-1:0] rdy_for_fwd_ack_i; 
+    
+    
+    /********************/
+    /***Instantiations***/
+    /********************/
+    
     genvar i;
     generate for (i = 0; i < N; i = i + 1) begin
         packetfilter_core # (
@@ -128,14 +146,14 @@ module parallel_cores # (
 
             //TODO forwarder arbiter stuff
             //Interface to forwarder
-            .fwd_addr(fwd_addr),
-            .fwd_rd_en(fwd_rd_en),
-            .fwd_rd_data(fwd_rd_data),
-            .fwd_rd_data_vld(fwd_rd_data_vld),
-            .fwd_byte_len(fwd_byte_len),
-            .fwd_done(fwd_done),
-            .rdy_for_fwd(rdy_for_fwd),
-            .rdy_for_fwd_ack(rdy_for_fwd_ack),
+            .fwd_addr(fwd_addr_i),
+            .fwd_rd_en(fwd_rd_en_i[i]),
+            .fwd_rd_data(fwd_rd_data_i[SN_FWD_DATA_WIDTH*(i+1)-1 -: SN_FWD_DATA_WIDTH]),
+            .fwd_rd_data_vld(fwd_rd_data_vld_i[i]),
+            .fwd_byte_len(fwd_byte_len_i[PLEN_WIDTH*(i+1)-1 -: PLEN_WIDTH]),
+            .fwd_done(fwd_done_i[i]),
+            .rdy_for_fwd(rdy_for_fwd_i[i]),
+            .rdy_for_fwd_ack(rdy_for_fwd_ack_i[i]),
 
             //Interface for new code input
             .inst_wr_addr(inst_wr_addr),
@@ -177,9 +195,38 @@ module parallel_cores # (
         .sn_done(sn_done_i),
         .rdy_for_sn_ack(rdy_for_sn_ack_i) //Yeah, I'm ready for a snack   
     );
-
-    //TODO: forwarder arbiter.
-
+    
+    //...from step one I'll be watching all... 2^6....
+    fwd_arb # (
+        .N(N),
+        .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
+        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PLEN_WIDTH(PLEN_WIDTH),
+        .DELAY_CONF(DELAY_CONF)
+    ) forwarder_arbiter (
+        .clk(clk),
+        .rst(rst),
+        
+        //Interface to forwarder
+        .addr(fwd_addr),
+        .rd_en(fwd_rd_en),
+        .rd_data(fwd_rd_data),
+        .rd_data_vld(fwd_rd_data_vld),
+        .byte_len(fwd_byte_len),
+        .done(fwd_done),
+        .rdy(rdy_for_fwd),
+        .ack(rdy_for_fwd_ack),
+        
+        //Interface to packetfilter_cores
+        .fwd_addr(fwd_addr_i),
+        .fwd_rd_en(fwd_rd_en_i),
+        .fwd_rd_data(fwd_rd_data_i),
+        .fwd_rd_data_vld(fwd_rd_data_vld_i),
+        .fwd_byte_len(fwd_byte_len_i),
+        .fwd_done(fwd_done_i),
+        .rdy_for_fwd(rdy_for_fwd_i),
+        .rdy_for_fwd_ack(rdy_for_fwd_ack_i)
+    );
 endmodule
 
 `undef CLOG2

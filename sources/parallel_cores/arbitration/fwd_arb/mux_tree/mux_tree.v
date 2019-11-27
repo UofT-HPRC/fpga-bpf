@@ -9,6 +9,8 @@ mux_tree.v
 `include "mux_tree_node/mux_tree_node.v"
 `elsif FROM_FWD_ARB
 `include "mux_tree/mux_tree_node/mux_tree_node.v"
+`elsif FROM_PARALLEL_CORES
+`include "arbitration/fwd_arb/mux_tree/mux_tree_node/mux_tree_node.v"
 `endif
 
 `define CLOG2(x) (\
@@ -75,18 +77,21 @@ module mux_tree # (
     wire [WIDTH-1:0] nodes[0:NUM_NODES-1];
     
     //Pipeline registers for MUX select
-    reg [TAG_SZ-1:0] delayed_sel[0:MAX_H-1];
-    always @(*) delayed_sel[0] <= sel;
+    wire [TAG_SZ-1:0] delayed_sel[0:MAX_H-1];
+    assign delayed_sel[0] = sel;
     
     genvar i;
 `genfor (i = 1; i < MAX_H; i = i + 1) begin : sel_pipeline_regs
+    reg [TAG_SZ-1:0] delayed = 0;
     always @(posedge clk) begin
         if (rst) begin
-            delayed_sel[i] <= 0;
+            delayed <= 0;
         end else begin
-            delayed_sel[i] <= delayed_sel[i-1];
+            delayed <= delayed_sel[i-1];
         end
     end
+    
+    assign delayed_sel[i] = delayed;
 `endgen
   
 `genfor (i = 0; i < X_C; i = i + 1) begin : long_path_nodes
@@ -96,7 +101,7 @@ module mux_tree # (
 
 `genfor (i = X_C; i < N; i = i + 1) begin : short_path_nodes
     //short path nodes. For simplicity, just delay them by one cycle
-    reg [WIDTH-1:0] delayed;
+    reg [WIDTH-1:0] delayed = 0;
     always @(posedge clk) begin
         if (rst) begin
             delayed <= 0;
