@@ -121,7 +121,7 @@ end else begin
     /**Do the logic**/
     /****************/
     
-    //State machine logic. Please see state_machine.txt for more details along
+    //State machine logic. Please see READNE.txt for more details along
     //with a nice diagram
     
     //next-state logic
