@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Fri Nov 29 21:42:14 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/forwarders/axistream_forwarder/axistream_forwarder.vcd"
+[dumpfile_mtime] "Fri Nov 29 21:41:27 2019"
+[dumpfile_size] 8960
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/forwarders/axistream_forwarder/axistream_forwarder.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-15.220078 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 214
+[signals_width] 174
+[sst_expanded] 1
+[sst_vpaned_height] 314
+@28
+axistream_forwarder_tb.clk
+@800200
+-AXI Stream
+@22
+axistream_forwarder_tb.fwd_TDATA[63:0]
+axistream_forwarder_tb.fwd_TKEEP[7:0]
+@28
+axistream_forwarder_tb.fwd_TVALID
+axistream_forwarder_tb.fwd_TREADY
+axistream_forwarder_tb.fwd_TLAST
+@1000200
+-AXI Stream
+@800200
+-filter
+@22
+axistream_forwarder_tb.fwd_addr[7:0]
+@28
+axistream_forwarder_tb.fwd_rd_en
+@22
+axistream_forwarder_tb.fwd_rd_data[63:0]
+@25
+axistream_forwarder_tb.fwd_byte_len[31:0]
+@28
+axistream_forwarder_tb.fwd_rd_data_vld
+axistream_forwarder_tb.rdy_for_fwd
+axistream_forwarder_tb.rdy_for_fwd_ack
+@1000200
+-filter
+[pattern_trace] 1
+[pattern_trace] 0

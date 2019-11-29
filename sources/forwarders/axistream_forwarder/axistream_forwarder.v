@@ -82,6 +82,26 @@ module axistream_forwarder # (
     reg [SN_FWD_DATA_WIDTH/8-1:0] TKEEP_fifo[0:FIFO_DEPTH-1];
     reg TLAST_fifo[0:FIFO_DEPTH-1];
     
+    //Cant initialize regs inline, so use a for loop.
+    //While we're at it, also put in the reset logic. Cross my fingers that I
+    //don't run into trouble for having two always blocks setting the same 
+    //variable...
+    genvar i;
+    for (i = 0; i < FIFO_DEPTH; i = i + 1) begin
+        initial TDATA_fifo[i] = 0;
+        initial TVALID_fifo[i] = 0;
+        initial TKEEP_fifo[i] = 0;
+        initial TLAST_fifo[i] = 0;
+        always @(posedge clk) begin
+            if(rst) begin
+                TDATA_fifo[i] <= 0;
+                TVALID_fifo[i] <= 0;
+                TKEEP_fifo[i] <= 0;
+                TLAST_fifo[i] <= 0;
+            end
+        end
+    end
+    
     //Both TDATA_fifo and TVALID_fifo use the TDATA pointers
     reg [FIFO_ORDER-1:0] TDATA_wr_ptr = 0;
     reg [FIFO_ORDER-1:0] rd_ptr = 0;
@@ -152,7 +172,6 @@ module axistream_forwarder # (
     
     assign rdy_for_fwd_ack = (state == IDLE) || (state == WAITING && pending_will_be_zero_on_the_next_cycle);
     assign fwd_done = (state == WAITING) && pending_will_be_zero_on_the_next_cycle;
-    assign wr_to_keep_last = (state == NORMAL) && last_i;
     
     //Last address we will read from
     wire [PLEN_WIDTH-1:0] tmp;
@@ -200,24 +219,24 @@ module axistream_forwarder # (
     assign fwd_TLAST = TLAST_fifo[rd_ptr];
     
     //Read/write signals
-    assign rd_from_fifo = fwd_TKEEP && fwd_TREADY;
+    assign rd_from_fifo = fwd_TVALID && fwd_TREADY;
     assign wr_to_fifo = fwd_rd_data_vld;
     assign wr_to_keep_last = fwd_rd_en;
     
     //Update FIFO values
     always @(posedge clk) begin
-        if (wr_to_fifo) begin
+        if (wr_to_fifo && !rst) begin
             TDATA_fifo[TDATA_wr_ptr] <= fwd_rd_data;
             TVALID_fifo[TDATA_wr_ptr] <= 1;
         end 
         
-        if (wr_to_keep_last) begin
+        if (wr_to_keep_last && !rst) begin
             //TODO: implement proper TKEEP logic
             TKEEP_fifo[TLAST_wr_ptr] <= -'sd1;
             TLAST_fifo[TLAST_wr_ptr] <= (addr_i == max_addr);
         end
         
-        if (rd_from_fifo) begin
+        if (rd_from_fifo && !rst) begin
             TVALID_fifo[rd_ptr] <= 0;
         end
     end
@@ -229,10 +248,11 @@ module axistream_forwarder # (
             addr_i <= 0;
         end else begin
             //We reset the address on the last memory transfer, otherwise increment it
-            addr_i <= (addr_i == max_addr && fwd_rd_en) ? 0 : addr_i + fwd_rd_en;
+            addr_i <= last_i ? 0 : addr_i + fwd_rd_en;
         end
     end
     
+    assign fwd_addr = addr_i;
 
 endmodule
 
