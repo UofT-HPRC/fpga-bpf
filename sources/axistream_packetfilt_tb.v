@@ -9,26 +9,77 @@ a simulation of AXI Lite
 
 `ifdef FROM_AXISTREAM_PACKETFILT
 `include "axistream_packetfilt.v"
-`define forcer force
-`define lacher release
-`else /*For Vivado*/
-`define forcer
-`define lacher
+`define USING_ICARUS
 `endif
 
+`define CLOG2(x) (\
+   (((x) <= 2) ? 1 : \
+   (((x) <= 4) ? 2 : \
+   (((x) <= 8) ? 3 : \
+   (((x) <= 16) ? 4 : \
+   (((x) <= 32) ? 5 : \
+   (((x) <= 64) ? 6 : \
+   (((x) <= 128) ? 7 : \
+   (((x) <= 256) ? 8 : \
+   (((x) <= 512) ? 9 : \
+   (((x) <= 1024) ? 10 : \
+   (((x) <= 2048) ? 11 : \
+   (((x) <= 4096) ? 12 : \
+   (((x) <= 8192) ? 13 : \
+   (((x) <= 16384) ? 14 : \
+   (((x) <= 32768) ? 15 : \
+   (((x) <= 65536) ? 16 : \
+   -1)))))))))))))))))
+
+
+`define N                   4
+`define PACKET_MEM_BYTES    2048
+`define INST_MEM_DEPTH      512
+`define SN_FWD_DATA_WIDTH   64
+`define BUF_IN              0
+`define BUF_OUT             0
+`define PESS                0
+
+
+`define KEEP_WIDTH (`SN_FWD_DATA_WIDTH/8)
+`define CODE_ADDR_WIDTH (`CLOG2(`INST_MEM_DEPTH))
+`define CODE_DATA_WIDTH 64
+
 module axistream_packetfilt_tb;
-	reg clk;
-    //Other variables connected to your instance
+
+    reg clk;
+    reg rst;
+
+    
+    //AXI stream snoop interface
+    reg [`SN_FWD_DATA_WIDTH-1:0] sn_TDATA = 0;
+    reg [`KEEP_WIDTH-1:0] sn_TKEEP = 0;
+    reg sn_TREADY = 0;
+    reg sn_TVALID = 0;
+    reg sn_TLAST = 0;
+
+
+    //AXI Stream forwarder interface
+    wire [`SN_FWD_DATA_WIDTH-1:0] fwd_TDATA;
+    wire [`KEEP_WIDTH-1:0] fwd_TKEEP;
+    wire fwd_TLAST;
+    wire fwd_TVALID;
+    reg fwd_TREADY = 0;
+
+    reg [`CODE_ADDR_WIDTH-1:0] inst_wr_addr = 0;
+    reg [`CODE_DATA_WIDTH-1:0] inst_wr_data = 0;
+    reg inst_wr_en = 0;   
     
     integer fd, dummy;
     
     initial begin
         $dumpfile("axistream_packetfilt.vcd");
         $dumpvars;
-        $dumplimit(512000);
+        $dumplimit(5120000);
         
         clk <= 0;
-        //Initial values for your other variables
+        rst <= 0;
+        
         
         fd = $fopen("axistream_packetfilt_drivers.mem", "r");
         if (fd == 0) begin
@@ -54,12 +105,52 @@ module axistream_packetfilt_tb;
         end
         
         #0.01
-        dummy = $fscanf(fd, "%F%O%R%M%A%T", /* list of variables */);
+        dummy = $fscanf(fd, "%h%h%b%b%b%b%d%h%b",
+            sn_TDATA,
+            sn_TKEEP,
+            sn_TREADY,
+            sn_TVALID,
+            sn_TLAST,
+            fwd_TREADY,
+            inst_wr_addr,
+            inst_wr_data,
+            inst_wr_en
+        );
+        
+        force DUT.inst_wr_addr = inst_wr_addr;
+        force DUT.inst_wr_data = inst_wr_data;
+        force DUT.inst_wr_en = inst_wr_en;
+        //$display("addr:%x data:%x en:%b", inst_wr_addr, inst_wr_data, inst_wr_en);
+        
     end
 
-    mymodule DUT (
+    axistream_packetfilt # (
+            .N                  (`N                 ),
+            .PACKET_MEM_BYTES   (`PACKET_MEM_BYTES  ),
+            .INST_MEM_DEPTH     (`INST_MEM_DEPTH    ),
+            .SN_FWD_DATA_WIDTH  (`SN_FWD_DATA_WIDTH ),
+            .BUF_IN             (`BUF_IN            ),
+            .BUF_OUT            (`BUF_OUT           ),
+            .PESS               (`PESS              )
+    ) DUT (
         .clk(clk),
-        ...
+        .rst(rst),
+
+
+        //AXI stream snoop interface
+        .sn_TDATA(sn_TDATA),
+        .sn_TKEEP(sn_TKEEP),
+        .sn_TREADY(sn_TREADY),
+        .sn_TVALID(sn_TVALID),
+        .sn_TLAST(sn_TLAST),
+
+
+        //AXI Stream forwarder interface
+        .fwd_TDATA(fwd_TDATA),
+        .fwd_TKEEP(fwd_TKEEP),
+        .fwd_TLAST(fwd_TLAST),
+        .fwd_TVALID(fwd_TVALID),
+        .fwd_TREADY(fwd_TREADY)
     );
 
 

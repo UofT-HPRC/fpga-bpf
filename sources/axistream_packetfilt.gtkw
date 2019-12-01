@@ -1,0 +1,56 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Sun Dec  1 19:17:35 2019
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/axistream_packetfilt.vcd"
+[dumpfile_mtime] "Sun Dec  1 19:17:06 2019"
+[dumpfile_size] 1248543
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/axistream_packetfilt.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-17.662891 666800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] axistream_packetfilt_tb.
+[treeopen] axistream_packetfilt_tb.DUT.
+[treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.genblk1[0].filt.
+[treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.genblk1[0].filt.the_cpu.
+[treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.genblk1[0].filt.the_cpu.ctrl.
+[treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.genblk1[0].filt.the_cpu.ctrl.no_idle_stage.
+[treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.snooper_arbiter.genblk1.
+[treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.snooper_arbiter.genblk1.the_tag_tree.
+[sst_width] 299
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 610
+@28
+axistream_packetfilt_tb.clk
+axistream_packetfilt_tb.rst
+@22
+axistream_packetfilt_tb.inst_wr_addr[8:0]
+axistream_packetfilt_tb.inst_wr_data[63:0]
+@28
+axistream_packetfilt_tb.inst_wr_en
+@800200
+-snooper
+@22
+axistream_packetfilt_tb.sn_TDATA[63:0]
+axistream_packetfilt_tb.sn_TKEEP[7:0]
+@28
+axistream_packetfilt_tb.sn_TLAST
+axistream_packetfilt_tb.sn_TREADY
+axistream_packetfilt_tb.sn_TVALID
+@1000200
+-snooper
+@800200
+-forwarder
+@22
+axistream_packetfilt_tb.fwd_TDATA[63:0]
+axistream_packetfilt_tb.fwd_TKEEP[7:0]
+@28
+axistream_packetfilt_tb.fwd_TLAST
+axistream_packetfilt_tb.fwd_TREADY
+axistream_packetfilt_tb.fwd_TVALID
+@1000200
+-forwarder
+[pattern_trace] 1
+[pattern_trace] 0

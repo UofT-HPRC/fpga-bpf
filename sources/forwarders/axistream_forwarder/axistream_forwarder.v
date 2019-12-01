@@ -176,7 +176,7 @@ module axistream_forwarder # (
     //Last address we will read from
     wire [PLEN_WIDTH-1:0] tmp;
     assign tmp = fwd_byte_len - 1; //Need to do this to get around Verilog's syntax
-    assign max_addr = tmp[SN_FWD_ADDR_WIDTH + ADDR_SHIFT -: SN_FWD_ADDR_WIDTH];
+    assign max_addr = tmp[SN_FWD_ADDR_WIDTH + ADDR_SHIFT -1 -: SN_FWD_ADDR_WIDTH];
     
     //last_i
     assign last_i = (addr_i == max_addr) && fwd_rd_en;

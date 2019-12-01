@@ -51,8 +51,6 @@ TODO: Update rest of code to do this
    -1)))))))))))))))))
 
 `define KEEP_WIDTH (SN_FWD_DATA_WIDTH/8)
-`define CODE_ADDR_WIDTH (`CLOG2(INST_MEM_DEPTH))
-`define CODE_DATA_WIDTH 64
 module axistream_packetfilt # (
         parameter N = 4,
         parameter PACKET_MEM_BYTES = 2048,
@@ -83,14 +81,10 @@ module axistream_packetfilt # (
         output wire [`KEEP_WIDTH-1:0] fwd_TKEEP,
         output wire fwd_TLAST,
         output wire fwd_TVALID,
-        input wire fwd_TREADY,
+        input wire fwd_TREADY
     
-`ifdef DISABLE_AXILITE
-        //Interface for new code input
-        input wire [`CODE_ADDR_WIDTH-1:0] inst_wr_addr,
-        input wire [`CODE_DATA_WIDTH-1:0] inst_wr_data,
-        input wire inst_wr_en
-`else
+`ifndef DISABLE_AXILITE
+        , //yes, this comma needs to be here
         // AXI Write Address Channel     
         input  wire [AXI_ADDR_WIDTH-1:0] s_axi_awaddr,
         input  wire [2:0]                s_axi_awprot,
@@ -124,8 +118,8 @@ module axistream_packetfilt # (
         
 );
 
-    //`localparam CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH);
-    //`localparam CODE_DATA_WIDTH = 64;
+    `localparam CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH);
+    `localparam CODE_DATA_WIDTH = 64;
     `localparam BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES);
     `localparam SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8);
     `localparam INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1;
@@ -164,12 +158,13 @@ module axistream_packetfilt # (
     wire [31:0] inst_low_value; // Value of register 'inst_low', field 'value'
     wire inst_high_strobe; // Strobe logic for register 'inst_high' (pulsed when the register is written from the bus)
     wire [31:0] inst_high_value; // Value of register 'inst_high', field 'value'
-    
-    //Interface for new code input
-    wire [`CODE_ADDR_WIDTH-1:0] inst_wr_addr;
-    wire [`CODE_DATA_WIDTH-1:0] inst_wr_data;
-    wire inst_wr_en;    
 `endif
+
+    //Interface for new code input
+    //In simulation, these get forced from the testbench
+    wire [CODE_ADDR_WIDTH-1:0] inst_wr_addr;
+    wire [CODE_DATA_WIDTH-1:0] inst_wr_data;
+    wire inst_wr_en;   
     
     /********************/
     /***INSTANTIATIONS***/
@@ -276,7 +271,7 @@ module axistream_packetfilt # (
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT),
         .PESS(PESS)
-    ) the_actal_filter (
+    ) the_actual_filter (
         .clk(clk),
         .rst(rst),
 
@@ -335,8 +330,6 @@ module axistream_packetfilt # (
 endmodule
 
 `undef KEEP_WIDTH
-`undef CODE_ADDR_WIDTH
-`undef CODE_DATA_WIDTH
 `undef localparam
 `undef CLOG2
 `undef DISABLE_AXILITE

@@ -1,21 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Tue Nov 26 19:06:26 2019
+[*] Sun Dec  1 18:45:02 2019
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/snoopers/axistream_snooper/axistream_snooper.vcd"
-[dumpfile_mtime] "Tue Nov 26 19:04:52 2019"
-[dumpfile_size] 7782
+[dumpfile_mtime] "Sun Dec  1 18:42:42 2019"
+[dumpfile_size] 7794
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/snoopers/axistream_snooper/axistream_snooper.gtkw"
 [timestart] 0
-[size] 1916 1060
+[size] 956 1060
 [pos] -1 -541
 *-14.739454 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] testbench_template.
 [sst_width] 214
 [signals_width] 182
 [sst_expanded] 1
-[sst_vpaned_height] 314
+[sst_vpaned_height] 610
 @28
 testbench_template.clk
+testbench_template.rst
 @800200
 -AXIStream signals
 @22
@@ -29,7 +31,6 @@ testbench_template.sn_TLAST
 -AXIStream signals
 @28
 testbench_template.rdy_for_sn
-@29
 testbench_template.rdy_for_sn_ack
 @22
 testbench_template.sn_byte_inc[7:0]
@@ -38,5 +39,9 @@ testbench_template.sn_addr[8:0]
 @28
 testbench_template.sn_wr_en
 testbench_template.sn_done
+testbench_template.DUT.state[1:0]
+testbench_template.DUT.sn_TLAST_i
+@29
+testbench_template.DUT.rdy_for_sn_i
 [pattern_trace] 1
 [pattern_trace] 0
