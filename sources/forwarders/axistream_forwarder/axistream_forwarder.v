@@ -13,6 +13,7 @@ handshaking. I will do that tomorrow.
 TODOs from the code:
     - Disable aggressive fifo_full logic in pessimistic mode
     - Add bhand in pessimistic mode?
+    - Compute fwd_TVALID based on internal counts, instead of another FIFO?
 
 */
 
@@ -78,7 +79,7 @@ module axistream_forwarder # (
     
     //FIFO queues
     reg [SN_FWD_DATA_WIDTH-1:0] TDATA_fifo[0:FIFO_DEPTH-1];
-    reg TVALID_fifo[0:FIFO_DEPTH-1];
+    //reg TVALID_fifo[0:FIFO_DEPTH-1];
     reg [SN_FWD_DATA_WIDTH/8-1:0] TKEEP_fifo[0:FIFO_DEPTH-1];
     reg TLAST_fifo[0:FIFO_DEPTH-1];
     
@@ -89,15 +90,15 @@ module axistream_forwarder # (
     genvar i;
     for (i = 0; i < FIFO_DEPTH; i = i + 1) begin
         initial TDATA_fifo[i] = 0;
-        initial TVALID_fifo[i] = 0;
+        //initial TVALID_fifo[i] = 0;
         initial TKEEP_fifo[i] = 0;
         initial TLAST_fifo[i] = 0;
         always @(posedge clk) begin
             if(rst) begin
-                TDATA_fifo[i] <= 0;
-                TVALID_fifo[i] <= 0;
-                TKEEP_fifo[i] <= 0;
-                TLAST_fifo[i] <= 0;
+                //TDATA_fifo[i] <= 0;
+                //TVALID_fifo[i] <= 0;
+                //TKEEP_fifo[i] <= 0;
+                //TLAST_fifo[i] <= 0;
             end
         end
     end
@@ -215,7 +216,7 @@ module axistream_forwarder # (
     //TODO: have pessimistic mode gate these with a bhand?
     assign fwd_TDATA = TDATA_fifo[rd_ptr];
     assign fwd_TKEEP = TKEEP_fifo[rd_ptr];
-    assign fwd_TVALID = TVALID_fifo[rd_ptr];
+    assign fwd_TVALID = /*TVALID_fifo[rd_ptr]*/(in_flight_cnt - pending != 0);
     assign fwd_TLAST = TLAST_fifo[rd_ptr];
     
     //Read/write signals
@@ -227,7 +228,7 @@ module axistream_forwarder # (
     always @(posedge clk) begin
         if (wr_to_fifo && !rst) begin
             TDATA_fifo[TDATA_wr_ptr] <= fwd_rd_data;
-            TVALID_fifo[TDATA_wr_ptr] <= 1;
+            //TVALID_fifo[TDATA_wr_ptr] <= 1;
         end 
         
         if (wr_to_keep_last && !rst) begin
@@ -237,7 +238,7 @@ module axistream_forwarder # (
         end
         
         if (rd_from_fifo && !rst) begin
-            TVALID_fifo[rd_ptr] <= 0;
+            //TVALID_fifo[rd_ptr] <= 0;
         end
     end
     

@@ -12,4 +12,5 @@ else
     mkdir tmp
     cp $(find ../sources -name "*.v" -o -name "*vh" -o -name "*sv" | grep -v "tb" | grep -v "template") tmp/
     vivado -nolog -nojournal -notrace -mode batch -source ip_maker.tcl -tclargs $1 $2
+    rm -rf tmp
 fi
