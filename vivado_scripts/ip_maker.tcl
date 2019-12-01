@@ -21,8 +21,8 @@ set ip_name [lindex $argv 0]
 set part_name [lindex $argv 1]
 set project_name ${ip_name}_ip
 create_project ${project_name} ${project_name} -part $part_name
-import_files $ip_name/solution1/syn/verilog
-ipx::package_project -root_dir ${project_name}/${project_name}.srcs/sources_1/imports -vendor YOUR_NAME -library user -taxonomy /UserIP
+import_files tmp/
+ipx::package_project -root_dir ${project_name}/${project_name}.srcs/sources_1/imports -vendor Marco_Merlini -library fpga_bpf -taxonomy /UserIP
 
 # start GUI
 
