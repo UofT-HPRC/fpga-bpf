@@ -75,8 +75,7 @@ module snoop_arb # (
 `genif (N > 1) begin
     //Internal signals
     wire [TAG_SZ-1:0] selection_next;
-    reg [TAG_SZ-1:0] selection_i = 0;
-    wire [TAG_SZ-1:0] selection;
+    reg [TAG_SZ-1:0] selection = 0;
     
     wire [SN_ADDR_WIDTH-1:0] sn_addr_i;
     wire [DATA_WIDTH-1:0] sn_wr_data_i;
@@ -108,10 +107,10 @@ module snoop_arb # (
     //selection_i is registered when a handshake completes
     always @(posedge clk) begin
         if (rst) begin
-            selection_i <= 0;
+            selection <= 0;
         end else begin
             if (rdy && ack) 
-                selection_i <= selection_next;
+                selection <= selection_next;
         end
     end
     
@@ -131,7 +130,6 @@ module snoop_arb # (
     //mode, they are directly assigned to the corresponding output
     
     if (PESS) begin : pessimistc_delays
-        reg [TAG_SZ-1:0] selection_r = 0;
         
         reg [SN_ADDR_WIDTH-1:0] sn_addr_r = 0;
         reg [DATA_WIDTH-1:0] sn_wr_data_r = 0;
@@ -146,7 +144,6 @@ module snoop_arb # (
             sn_byte_inc_r <= sn_byte_inc_i;
             sn_done_r <= sn_done_i;
             rdy_for_sn_ack_r <= rdy_for_sn_ack_i;
-            selection_r <= selection_i;
         end
         assign sn_addr = sn_addr_r;
         assign sn_wr_data = sn_wr_data_r;
@@ -154,7 +151,6 @@ module snoop_arb # (
         assign sn_byte_inc = sn_byte_inc_r;
         assign sn_done = sn_done_r;
         assign rdy_for_sn_ack = rdy_for_sn_ack_r;
-        assign selection = selection_r;
     end else begin : direct_assignment
         assign sn_addr = sn_addr_i;
         assign sn_wr_data = sn_wr_data_i;
@@ -162,7 +158,6 @@ module snoop_arb # (
         assign sn_byte_inc = sn_byte_inc_i;
         assign sn_done = sn_done_i;
         assign rdy_for_sn_ack = rdy_for_sn_ack_i;
-        assign selection = selection_i;
     end
 
 end else begin
