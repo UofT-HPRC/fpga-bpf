@@ -36,9 +36,9 @@ a simulation of AXI Lite
 `define PACKET_MEM_BYTES    2048
 `define INST_MEM_DEPTH      512
 `define SN_FWD_DATA_WIDTH   64
-`define BUF_IN              0
-`define BUF_OUT             0
-`define PESS                0
+`define BUF_IN              1
+`define BUF_OUT             1
+`define PESS                1
 
 
 `define KEEP_WIDTH (`SN_FWD_DATA_WIDTH/8)

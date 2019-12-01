@@ -172,10 +172,10 @@ module fwd_arb # (
     //Assign remaining signals in forwarder -> filter direction
     
     assign fwd_addr = addr;
+    assign fwd_rd_en = rd_en;
     //Gate the hot signals
     for (i = 0; i < N; i = i + 1) begin : gate_hot
         assign fwd_done[i] = done && (selection == tags_arr[i]);
-        assign fwd_rd_en[i] = rd_en && (selection == tags_arr[i]);
     end
 endmodule
 

@@ -121,7 +121,7 @@ module axistream_packetfilt # (
     `localparam CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH);
     `localparam CODE_DATA_WIDTH = 64;
     `localparam BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES);
-    `localparam SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8);
+    `localparam SN_FWD_ADDR_WIDTH_MARK = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8);
     `localparam INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1;
     `localparam PLEN_WIDTH = 32;
 
@@ -130,7 +130,7 @@ module axistream_packetfilt # (
     /***********************************/
     
     //Interface to snooper
-    wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr;
+    wire [SN_FWD_ADDR_WIDTH_MARK-1:0] sn_addr;
     wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data;
     wire sn_wr_en;
     wire [INC_WIDTH-1:0] sn_byte_inc;
@@ -139,7 +139,7 @@ module axistream_packetfilt # (
     wire rdy_for_sn_ack; //Yeah, I'm ready for a snack
     
     //Interface to forwarder
-    wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
+    wire [SN_FWD_ADDR_WIDTH_MARK-1:0] fwd_addr;
     wire fwd_rd_en;
     wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data;
     wire fwd_rd_data_vld;
@@ -239,7 +239,7 @@ module axistream_packetfilt # (
 
     axistream_snooper # (
         .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
-        .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
+        .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH_MARK),
         .INC_WIDTH(INC_WIDTH),
         .PESS(PESS)
     ) the_snooper (
@@ -302,7 +302,7 @@ module axistream_packetfilt # (
     );
 
     axistream_forwarder # (
-        .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
+        .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH_MARK),
         .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH)
     ) the_forwarder (
