@@ -1,7 +1,0 @@
-Very simple counter with parametrizable width.
-
-Has an "up_ce" and a "down_ce". When both are asserted, nothing happens on this 
-cycle.
-
-I did not bother to write a testbench because I've been running low on time for 
-weeks.

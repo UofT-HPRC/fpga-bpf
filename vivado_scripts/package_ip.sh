@@ -11,5 +11,5 @@ else
     rm -rf tmp
     mkdir tmp
     cp $(find ../sources -name "*.v" | grep -v "tb") tmp/
-    # vivado -nolog -nojournal -notrace -mode batch -source ip_maker.tcl
+    vivado -nolog -nojournal -notrace -mode batch -source ip_maker.tcl
 fi
