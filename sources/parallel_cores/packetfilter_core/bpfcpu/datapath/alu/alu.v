@@ -10,6 +10,8 @@ A simple ALU designed to match the needs of the BPF VM.
 `include "../bpf_defs.vh"
 `elsif FROM_PARALLEL_CORES
 `include "packetfilter_core/bpf_defs.vh"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/bpf_defs.vh"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif

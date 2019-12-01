@@ -26,6 +26,11 @@
 `include "packetfilter_core/p3/p3ctrl/queues/cpuqueue.v"
 `include "packetfilter_core/p3/p3ctrl/queues/fwdqueue.v"
 `include "packetfilter_core/p3/p3ctrl/muxselinvert/muxselinvert.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/p3/p3ctrl/queues/snqueue.v"
+`include "parallel_cores/packetfilter_core/p3/p3ctrl/queues/cpuqueue.v"
+`include "parallel_cores/packetfilter_core/p3/p3ctrl/queues/fwdqueue.v"
+`include "parallel_cores/packetfilter_core/p3/p3ctrl/muxselinvert/muxselinvert.v"
 `endif
 
 /*

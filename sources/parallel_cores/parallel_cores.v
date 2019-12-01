@@ -13,6 +13,10 @@ a single packetfilter_core.
 `include "packetfilter_core/packetfilter_core.v"
 `include "arbitration/snoop_arb/snoop_arb.v"
 `include "arbitration/fwd_arb/fwd_arb.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/packetfilter_core.v"
+`include "parallel_cores/arbitration/snoop_arb/snoop_arb.v"
+`include "parallel_cores/arbitration/fwd_arb/fwd_arb.v"
 `endif
 
 `define CLOG2(x) (\

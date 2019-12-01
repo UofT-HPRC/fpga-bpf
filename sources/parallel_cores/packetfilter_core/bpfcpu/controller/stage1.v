@@ -35,6 +35,9 @@ ready signal on the bhand module.
 `elsif FROM_PARALLEL_CORES
 `include "packetfilter_core/bpf_defs.vh"
 `include "../generic/buffered_handshake/bhand.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/bpf_defs.vh"
+`include "generic/buffered_handshake/bhand.v"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif

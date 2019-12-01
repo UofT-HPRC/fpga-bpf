@@ -21,6 +21,13 @@
 `include "packetfilter_core/p3/agent_adapters/sn_adapter/sn_adapter.v"
 `include "packetfilter_core/p3/agent_adapters/cpu_adapter/cpu_adapter.v"
 `include "packetfilter_core/p3/agent_adapters/fwd_adapter/fwd_adapter.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/p3/p3ctrl/p3ctrl.v"
+`include "parallel_cores/packetfilter_core/p3/muxes/muxes.v"
+`include "parallel_cores/packetfilter_core/p3/p_ng/p_ng.v"
+`include "parallel_cores/packetfilter_core/p3/agent_adapters/sn_adapter/sn_adapter.v"
+`include "parallel_cores/packetfilter_core/p3/agent_adapters/cpu_adapter/cpu_adapter.v"
+`include "parallel_cores/packetfilter_core/p3/agent_adapters/fwd_adapter/fwd_adapter.v"
 `endif
 /*
 

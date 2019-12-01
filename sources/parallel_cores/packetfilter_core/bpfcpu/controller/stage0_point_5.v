@@ -16,6 +16,8 @@ combinational path from code memory output to datapath control signals.
 `include "../../generic/buffered_handshake/bhand.v"
 `elsif FROM_PARALLEL_CORES
 `include "../generic/buffered_handshake/bhand.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "generic/buffered_handshake/bhand.v"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif

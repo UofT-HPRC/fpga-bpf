@@ -24,6 +24,8 @@ in case fanout is too high.
 `include "../tag_tree/tag_tree.v"
 `elsif FROM_PARALLEL_CORES
 `include "arbitration/tag_tree/tag_tree.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/arbitration/tag_tree/tag_tree.v"
 `endif
 
 `define genif generate if

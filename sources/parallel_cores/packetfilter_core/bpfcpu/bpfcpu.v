@@ -16,6 +16,9 @@ signals with P3 controller
 `elsif FROM_PARALLEL_CORES
 `include "packetfilter_core/bpfcpu/controller/controller.v"
 `include "packetfilter_core/bpfcpu/datapath/datapath.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/bpfcpu/controller/controller.v"
+`include "parallel_cores/packetfilter_core/bpfcpu/datapath/datapath.v"
 `endif
 
 module bpfcpu # (

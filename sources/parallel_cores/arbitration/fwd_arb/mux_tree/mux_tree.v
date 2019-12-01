@@ -11,6 +11,8 @@ mux_tree.v
 `include "mux_tree/mux_tree_node/mux_tree_node.v"
 `elsif FROM_PARALLEL_CORES
 `include "arbitration/fwd_arb/mux_tree/mux_tree_node/mux_tree_node.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/arbitration/fwd_arb/mux_tree/mux_tree_node/mux_tree_node.v"
 `endif
 
 `define CLOG2(x) (\

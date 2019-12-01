@@ -48,6 +48,10 @@ Whatever other small jobs are left
 `include "packetfilter_core/bpf_defs.vh"
 `include "packetfilter_core/bpfcpu/datapath/alu/alu.v"
 `include "packetfilter_core/bpfcpu/datapath/regfile.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/bpf_defs.vh"
+`include "parallel_cores/packetfilter_core/bpfcpu/datapath/alu/alu.v"
+`include "parallel_cores/packetfilter_core/bpfcpu/datapath/regfile.v"
 `else /*For Vivado's sake*/
 `include "bpf_defs.vh"
 `endif

@@ -20,6 +20,10 @@ actually set it to a specific number just to cut down on BRAM usage
 `include "packetfilter_core/p3/p3.v"
 `include "packetfilter_core/inst_mem/inst_mem.v"
 `include "packetfilter_core/bpfcpu/bpfcpu.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/p3/p3.v"
+`include "parallel_cores/packetfilter_core/inst_mem/inst_mem.v"
+`include "parallel_cores/packetfilter_core/bpfcpu/bpfcpu.v"
 `endif
 
 `define CLOG2(x) (\

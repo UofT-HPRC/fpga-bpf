@@ -30,6 +30,12 @@ Hooks up all the controller stages into one module
 `include "packetfilter_core/bpfcpu/controller/stage0_point_5.v"
 `include "packetfilter_core/bpfcpu/controller/stage1.v"
 `include "packetfilter_core/bpfcpu/controller/stage2.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/packetfilter_core/bpf_defs.vh"
+`include "parallel_cores/packetfilter_core/bpfcpu/controller/stage0.v"
+`include "parallel_cores/packetfilter_core/bpfcpu/controller/stage0_point_5.v"
+`include "parallel_cores/packetfilter_core/bpfcpu/controller/stage1.v"
+`include "parallel_cores/packetfilter_core/bpfcpu/controller/stage2.v"
 `else /* For Vivado */
 `include "bpf_defs.vh"
 `endif

@@ -17,6 +17,10 @@ tags for each packetfilter_core.
 `include "arbitration/fwd_arb/tag_gen/tag_gen.v"
 `include "arbitration/fwd_arb/mux_tree/mux_tree.v"
 `include "arbitration/tag_tree/tag_tree.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "parallel_cores/arbitration/fwd_arb/tag_gen/tag_gen.v"
+`include "parallel_cores/arbitration/fwd_arb/mux_tree/mux_tree.v"
+`include "parallel_cores/arbitration/tag_tree/tag_tree.v"
 `endif
 
 `define CLOG2(x) (\
