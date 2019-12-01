@@ -10,6 +10,6 @@ if [ $? -ne 0 ]; then
 else
     rm -rf tmp
     mkdir tmp
-    cp $(find ../sources -name "*.v" | grep -v "tb") tmp/
-    vivado -nolog -nojournal -notrace -mode batch -source ip_maker.tcl -tclargs packetfilt "xczu19eg-ffvc1760-2-i"
+    cp $(find ../sources -name "*.v" -o -name "*vh" -o -name "*sv" | grep -v "tb" | grep -v "template") tmp/
+    vivado -nolog -nojournal -notrace -mode batch -source ip_maker.tcl -tclargs $1 $2
 fi

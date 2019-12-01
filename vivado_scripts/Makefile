@@ -7,9 +7,9 @@ include config.mk
 
 all: clean
 	# Package IP nicely using Vivado
-	vivado -mode tcl -nolog -nojournal -source scripts/ip_maker.tcl -tclargs $(ip_name) $(part_name)
+	./package_ip.sh $(ip_name) $(part_name)
 	# Clean up after Vivado...
-	scripts/pick_up_vivados_dirty_socks.sh
+	./pick_up_vivados_dirty_socks.sh
 clean:
 	rm -rf tmp
 	rm -rf $(ip_name)_ip

@@ -112,7 +112,7 @@ module axistream_packetfilt # (
         // AXI Write Response Channel    
         output wire [1:0]                s_axi_bresp,
         output wire                      s_axi_bvalid,
-        input  wire                      s_axi_bready,
+        input  wire                      s_axi_bready
 `endif
         
         
@@ -233,7 +233,7 @@ module axistream_packetfilt # (
         .inst_low_value(inst_low_value),
         .inst_low_strobe(inst_low_strobe),
             
-        .control_start(control_start),
+        .control_start(control_start)
     );
 `endif
 

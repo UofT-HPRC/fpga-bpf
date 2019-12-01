@@ -4,3 +4,5 @@
 # delete it
 
 rm -f *log
+rm -rf .Xil
+rm -f vivado*
