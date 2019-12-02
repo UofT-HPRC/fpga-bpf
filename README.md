@@ -13,6 +13,8 @@ http://stable.ascii-flow.appspot.com/#Draw
 
 All Makefiles and simulations performed using Icarus Verilog.
 
+**UPDATE**: With all the pessimistic registers turned on, the filter can now run at 323 MHz! At some point I will go back and figure out just how high I can crank the frequency
+
 # Intro
 
 In 1992/1993, Steve McCanne and Van Jacobson of Lawrence Berkely Labs [proposed the BSD packet filter](https://www.tcpdump.org/papers/bpf-usenix93.pdf) architecture, as part of the [`tcpdump` project](https://www.tcpdump.org/). `tcpdump` was a network analysis utility which, along with the help of some code added to the Linux kernel, copied any incoming or outgoing network packet into userspace. Then, the `tcpdump` program could be used to run some basic analytics. In particular, there was a simple query language to filter out certain packets (for example, "show me all incoming TCP packets on port 4444").
