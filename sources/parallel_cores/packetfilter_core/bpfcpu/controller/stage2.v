@@ -100,7 +100,6 @@ module stage2 # (
     /************************************/
     /**Forward-declare internal signals**/
     /************************************/
-    //reg [5:0] count_i = 0; //PROBABLY NO LONGER NEEDED. REMOVE WHEN SURE
     
     //Named subfields of instruction
     wire [7:0] opcode_i;
@@ -139,7 +138,6 @@ module stage2 # (
     
     //count number of cycles instruction has been around for
     wire PC_en_i;
-    //wire [5:0] icount_i; //PROBABLY NO LONGER NEEDED. REMOVE WHEN SURE
     wire [CODE_ADDR_WIDTH-1:0] jmp_correction_i;
     
     
@@ -164,7 +162,6 @@ module stage2 # (
     assign ALU_vld_i  = ALU_vld;
     
     assign PC_en_i = PC_en;
-    //assign icount_i = icount; //PROBABLY NO LONGER NEEDED. REMOVE WHEN SURE
     
     
     /************************************/
@@ -219,22 +216,7 @@ module stage2 # (
             rdy <= 1;
         end
     end
-    /* //PROBABLY NO LONGER NEEDED. REMOVE WHEN SURE
-    //count_i
-    //When valid and ready are high, we load a new count. Otherise, the internal
-    //count increments
-    always @(posedge clk) begin  
-        if (rst) begin
-            count_i <= 0;
-        end else begin
-            if (prev_vld && rdy) begin
-                count_i <= icount_i;
-            end else begin
-                count_i <= count_i + PC_en_i;
-            end
-        end
-    end
-    */
+    
     //jt_out_i and jf_out_i
     assign jt_out_i = jt_i;
     assign jf_out_i = jf_i;
@@ -329,9 +311,9 @@ module stage2 # (
     
     //jmp_correction_i
 `genif (CODE_ADDR_WIDTH > 6) begin
-    assign jmp_correction_i = $signed(/*count_i*/ icount);
+    assign jmp_correction_i = $signed(icount);
 end else begin
-    assign jmp_correction_i = /*count_i*/ icount;
+    assign jmp_correction_i = icount;
 `endgen
     
     //acc_i and rej_i

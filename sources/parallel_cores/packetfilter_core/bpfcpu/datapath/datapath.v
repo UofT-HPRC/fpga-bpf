@@ -166,8 +166,6 @@ module datapath # (
     //Program Counter (PC) register's new value
     //jt, jf, and imm (as per the BPF standard) are interpreted as offsets from
     //the NEXT instruction
-    //NOTE: the +1s are in comments, since I'm pretty sure they're wrong. I
-    //will only remove them when I feel really sure about that
     always @(posedge clk) begin
         if (rst) PC <= 0;
         else if (PC_en == 1'b1) begin
@@ -175,11 +173,11 @@ module datapath # (
                 `PC_SEL_PLUS_1:
                     PC <= PC + 1;
                 `PC_SEL_PLUS_JT:
-                    PC <= PC + /*1 +*/ jt - jmp_correction; 
+                    PC <= PC + jt - jmp_correction; 
                 `PC_SEL_PLUS_JF:
-                    PC <= PC + /*1 +*/ jf - jmp_correction;
+                    PC <= PC + jf - jmp_correction;
                 `PC_SEL_PLUS_IMM:
-                    PC <= PC + 1 + imm_stage2 - jmp_correction; 
+                    PC <= PC + imm_stage2 - jmp_correction; 
             endcase
         end
     end

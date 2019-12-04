@@ -170,7 +170,7 @@ module fwd_arb # (
         .clk(clk),
         .rst(rst),
         
-        .sel(selection),
+        .sel(selection), //TODO: delay this input by MEM_LAT cycles, then remove WAITING state from forwarder
         .ins(mux_ins),
         .result({rd_data, rd_data_vld, byte_len})
     );
