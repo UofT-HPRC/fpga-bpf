@@ -37,15 +37,16 @@ nxt_vld = (!wr_en) && (strb || curvld);				(POS)
 */
 
 //TODO: Should these be parameters? And by the way, there are a lot of hardcoded widths
-`define CODE_ADDR_WIDTH 10
 `define CODE_DATA_WIDTH 64 
 `define PACKET_BYTE_ADDR_WIDTH 12
 
-module regstrb2mem(
+module regstrb2mem # (
+    parameter CODE_ADDR_WIDTH = 9
+)(
 	input wire clk,
 
 	//Interface to codemem
-	output reg [`CODE_ADDR_WIDTH-1:0] code_mem_wr_addr = 0,
+	output reg [CODE_ADDR_WIDTH-1:0] code_mem_wr_addr = 0,
 	output wire [`CODE_DATA_WIDTH-1:0] code_mem_wr_data,
 	output wire code_mem_wr_en,
 	
@@ -59,7 +60,7 @@ module regstrb2mem(
 );
     
     
-wire [`CODE_ADDR_WIDTH-1:0] next_code_mem_wr_addr;
+wire [CODE_ADDR_WIDTH-1:0] next_code_mem_wr_addr;
 
 assign code_mem_wr_data = {inst_high_value, inst_low_value};
 

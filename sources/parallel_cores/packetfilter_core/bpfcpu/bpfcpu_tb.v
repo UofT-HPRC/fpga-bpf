@@ -41,8 +41,9 @@ should always accept of course
 `define PESS                0
 
 //`define ACCEPTALL
-`define UDPFEEDBEEF
+//`define UDPFEEDBEEF
 //`define UDP
+`define COUNTING
 
 `ifdef ACCEPTALL
     `define INST_FILE "bpfcpu_insts_acceptall.mem"
@@ -56,6 +57,10 @@ should always accept of course
     `define INST_FILE "bpfcpu_insts_udp.mem"
     `define NUM_INSTS 12
     `define DRIVERS_FILE "bpfcpu_drivers_udpfeedbeef.mem"
+`elsif COUNTING
+    `define INST_FILE "bpfcpu_insts_counting.mem"
+    `define NUM_INSTS 5
+    `define DRIVERS_FILE "bpfcpu_drivers_counting.mem"
 `endif
 
 module bpfcpu_tb;        

@@ -17,6 +17,12 @@ TODOs from the code:
 
 */
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 `define CLOG2(x) (\
    (((x) <= 2) ? 1 : \
    (((x) <= 4) ? 2 : \
@@ -67,8 +73,8 @@ module axistream_forwarder # (
 );
     
     //Local parameters
-    parameter FIFO_DEPTH = 2**(FIFO_ORDER);
-    parameter ADDR_SHIFT = `CLOG2(SN_FWD_DATA_WIDTH/8);
+    `localparam FIFO_DEPTH = 2**(FIFO_ORDER);
+    `localparam ADDR_SHIFT = `CLOG2(SN_FWD_DATA_WIDTH/8);
     
     /**********************/
     /***Internal signals***/
@@ -138,9 +144,9 @@ module axistream_forwarder # (
     
     //STATE MACHINE SIGNALS
     //---------------------
-    parameter IDLE = 2'b00;
-    parameter NORMAL = 2'b01;
-    parameter WAITING = 2'b11;
+    `localparam IDLE = 2'b00;
+    `localparam NORMAL = 2'b01;
+    `localparam WAITING = 2'b11;
     reg [1:0] state = IDLE;
     wire last_i; //This signal is asserted when the last read request for this packet
     //is transmitted (NOT the same as TLAST!)
@@ -258,3 +264,4 @@ module axistream_forwarder # (
 endmodule
 
 `undef CLOG2
+`undef localparam

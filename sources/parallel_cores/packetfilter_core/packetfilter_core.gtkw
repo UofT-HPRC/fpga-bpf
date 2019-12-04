@@ -1,21 +1,27 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Tue Nov 26 01:05:32 2019
+[*] Wed Dec  4 02:49:32 2019
 [*]
-[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/packetfilter_core/packetfilter_core.vcd"
-[dumpfile_mtime] "Tue Nov 26 01:00:56 2019"
-[dumpfile_size] 197433
-[savefile] "/home/mahkoe/research/fpga-bpf/sources/packetfilter_core/packetfilter_core.gtkw"
-[timestart] 0
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/parallel_cores/packetfilter_core/packetfilter_core.vcd"
+[dumpfile_mtime] "Wed Dec  4 02:48:43 2019"
+[dumpfile_size] 196533
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/parallel_cores/packetfilter_core/packetfilter_core.gtkw"
+[timestart] 418000
 [size] 1916 1060
 [pos] -1 -1
-*-16.172279 685700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-15.554657 661200 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] packetfilter_core_tb.
 [treeopen] packetfilter_core_tb.DUT.
+[treeopen] packetfilter_core_tb.DUT.the_cpu.
+[treeopen] packetfilter_core_tb.DUT.the_cpu.ctrl.
+[treeopen] packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.
+[treeopen] packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.
+[treeopen] packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.handshaker.
+[treeopen] packetfilter_core_tb.DUT.the_p3_system.
 [sst_width] 214
-[signals_width] 206
+[signals_width] 254
 [sst_expanded] 1
-[sst_vpaned_height] 314
+[sst_vpaned_height] 610
 @28
 packetfilter_core_tb.clk
 packetfilter_core_tb.rst
@@ -40,11 +46,12 @@ packetfilter_core_tb.sn_addr[7:0]
 @28
 packetfilter_core_tb.sn_wr_en
 packetfilter_core_tb.sn_done
-packetfilter_core_tb.sn_done_ack
 @1000200
 -snooper
 @800200
 -forwarder
+@24
+packetfilter_core_tb.DUT.fwd_byte_len[31:0]
 @28
 packetfilter_core_tb.rdy_for_fwd
 packetfilter_core_tb.rdy_for_fwd_ack
@@ -55,22 +62,76 @@ packetfilter_core_tb.fwd_rd_data[63:0]
 packetfilter_core_tb.fwd_rd_data_vld
 packetfilter_core_tb.fwd_rd_en
 packetfilter_core_tb.fwd_done
-packetfilter_core_tb.fwd_done_ack
 @1000200
 -forwarder
 @200
 -CPU internals
-@24
-packetfilter_core_tb.DUT.cpu_byte_len[31:0]
 @22
-packetfilter_core_tb.DUT.byte_rd_addr[10:0]
-@29
-packetfilter_core_tb.DUT.cpu_rd_en
-@22
-packetfilter_core_tb.DUT.resized_mem_data[31:0]
+packetfilter_core_tb.DUT.the_cpu.dpath.PC[8:0]
+packetfilter_core_tb.DUT.the_cpu.resized_mem_data[31:0]
 @28
-packetfilter_core_tb.DUT.resized_mem_data_vld
-packetfilter_core_tb.DUT.cpu_acc
-packetfilter_core_tb.DUT.cpu_rej
+packetfilter_core_tb.DUT.the_cpu.resized_mem_data_vld
+packetfilter_core_tb.DUT.the_cpu.ctrl.inst_rd_en
+packetfilter_core_tb.DUT.the_cpu.cpu_acc
+packetfilter_core_tb.DUT.the_cpu.cpu_rej
+@201
+-Other stuff I added to help 
+@28
+packetfilter_core_tb.DUT.the_cpu.dpath.PC_en
+packetfilter_core_tb.DUT.the_cpu.dpath.PC_sel[1:0]
+@22
+packetfilter_core_tb.DUT.the_cpu.dpath.jt[7:0]
+packetfilter_core_tb.DUT.the_cpu.dpath.jf[7:0]
+packetfilter_core_tb.DUT.the_cpu.dpath.jmp_correction[8:0]
+packetfilter_core_tb.DUT.the_cpu.dpath.A[31:0]
+@200
+-fetch
+@28
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.fetch.PC_en
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.fetch.inst_rd_en
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.fetch.next_rdy
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.fetch.rst
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.fetch.vld
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.fetch.branch_mispredict
+@200
+-decode
+@28
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.we_read_A
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.we_read_X
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.stage2_writes_A
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.stage2_writes_X
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.stalled_i
+@22
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.instr_in[63:0]
+@28
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.rdy
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.prev_vld
+@22
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.instr_out[63:0]
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.ocount[5:0]
+@28
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.vld
+packetfilter_core_tb.DUT.the_cpu.ctrl.no_idle_stage.decode.next_rdy
+@200
+-writeback
+@28
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.rst
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.prev_vld
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.rdy
+@22
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.icount[5:0]
+@200
+-count_i[5:0]
+@22
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.instr_in[63:0]
+@28
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.prev_vld
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.rdy
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.awaiting_ALU
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.eq
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.ALU_vld
+packetfilter_core_tb.DUT.the_cpu.ctrl.writeback.branch_mispredict
+@200
+-other
 [pattern_trace] 1
 [pattern_trace] 0

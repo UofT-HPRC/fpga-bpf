@@ -21,6 +21,17 @@ propagation delays and a bunch of extra logic.
 //Undefine this for normal usage
 //`define PRELOAD_TEST_PROGRAM
 
+
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+
+//(* keep_hierarchy = "yes" *)
+`endif
+
+//sdpram doesn't infer correctly! This is a Vivado bug. We'll use true dual port
+//instead, even though I don't like it...
 module sdpram # (parameter
     ADDR_WIDTH = 10,
     DATA_WIDTH = 64 //TODO: I might try shrinking the opcodes at some point
@@ -33,10 +44,10 @@ module sdpram # (parameter
     input wire [ADDR_WIDTH-1:0] rd_addr,
     output reg [DATA_WIDTH-1:0] rd_data
 );
-
-    parameter DEPTH = 2**ADDR_WIDTH;
+    `localparam DEPTH = 2**ADDR_WIDTH;
 
     reg [DATA_WIDTH-1:0] data[0:DEPTH-1];
+    initial data[0] = 64'h000600000000FFFF;
 
     //For testing purposes, this preloads the memory with a program
     `ifdef PRELOAD_TEST_PROGRAM
@@ -73,7 +84,9 @@ module sdpram # (parameter
 
 endmodule
 
-
+`ifndef ICARUS_VERILOG
+(* keep_hierarchy = "yes" *)
+`endif
 module inst_mem # (
 	parameter ADDR_WIDTH = 10,
     parameter DATA_WIDTH = 64 //TODO: I might try shrinking the opcodes at some point
@@ -101,3 +114,5 @@ sdpram # (.ADDR_WIDTH(ADDR_WIDTH),.DATA_WIDTH(DATA_WIDTH)) myram (
 );
 
 endmodule
+
+`undef localparam

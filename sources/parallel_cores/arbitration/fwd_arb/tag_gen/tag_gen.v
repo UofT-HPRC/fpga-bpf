@@ -34,6 +34,12 @@ discover if this is a long or short path
    (((x) <= 65536) ? 16 : \
    -1)))))))))))))))))
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 module tag_gen #(
 	parameter N = 4,
 	parameter PADDED = (N%3 == 1) ? N : ((N%3 == 0) ? (N+1) : (N+2)),
@@ -41,9 +47,9 @@ module tag_gen #(
 ) (
 	output wire [TAG_SZ*N-1:0] tags
 );
-	parameter MAX_H = TAG_SZ/2;
-	parameter NUM_NODES = PADDED + (PADDED-1)/3;
-	parameter X_C = NUM_NODES - (4**MAX_H - 1) / 3; 
+	`localparam MAX_H = TAG_SZ/2;
+	`localparam NUM_NODES = PADDED + (PADDED-1)/3;
+	`localparam X_C = NUM_NODES - (4**MAX_H - 1) / 3; 
 	
 	wire [TAG_SZ-1:0] tags_i[0:N-1];
 	
@@ -73,3 +79,4 @@ module tag_gen #(
 endmodule
 
 `undef CLOG2
+`undef localparam

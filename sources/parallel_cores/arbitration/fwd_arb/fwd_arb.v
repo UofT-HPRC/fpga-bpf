@@ -23,6 +23,12 @@ tags for each packetfilter_core.
 `include "parallel_cores/arbitration/tag_tree/tag_tree.v"
 `endif
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 `define CLOG2(x) (\
    (((x) <= 2) ? 1 : \
    (((x) <= 4) ? 2 : \
@@ -85,8 +91,8 @@ module fwd_arb # (
 );
     
     //local parameters
-    parameter PADDED = (N%3 == 1) ? N : ((N%3 == 0) ? (N+1) : (N+2));
-    parameter TAG_SZ = 2*((`CLOG2(PADDED)+1)/2); //= 2 * ceil(log_4(PADDED))
+    `localparam PADDED = (N%3 == 1) ? N : ((N%3 == 0) ? (N+1) : (N+2));
+    `localparam TAG_SZ = 2*((`CLOG2(PADDED)+1)/2); //= 2 * ceil(log_4(PADDED))
     
     //Internal signals
     wire [TAG_SZ*N-1:0] tags_i; //holds tag_gen output
@@ -180,3 +186,4 @@ module fwd_arb # (
 endmodule
 
 `undef CLOG2
+`undef localparam

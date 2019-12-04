@@ -7,6 +7,12 @@ really bad about it... I don't think it can get cleaner than this.
 
 */
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 //A little helper module
 module mux3 # (parameter
 	WIDTH = 1
@@ -121,10 +127,10 @@ wire [ADDR_WIDTH + DATA_WIDTH + `ENABLE_BIT + INC_WIDTH + `RESET_SIG + `ENABLE_B
 wire [ADDR_WIDTH + DATA_WIDTH + `ENABLE_BIT + INC_WIDTH + `RESET_SIG + `ENABLE_BIT -1:0] from_cpu_padded;
 wire [ADDR_WIDTH + DATA_WIDTH + `ENABLE_BIT + INC_WIDTH + `RESET_SIG + `ENABLE_BIT -1:0] from_fwd_padded;
 
-parameter [DATA_WIDTH-1:0] no_wr_data = 0;
-parameter [`ENABLE_BIT-1:0] no_enable_bit = 0;
-parameter [INC_WIDTH-1:0] no_byte_inc = 0;
-parameter [`RESET_SIG-1:0] no_reset_sig = 0;
+`localparam [DATA_WIDTH-1:0] no_wr_data = 0;
+`localparam [`ENABLE_BIT-1:0] no_enable_bit = 0;
+`localparam [INC_WIDTH-1:0] no_byte_inc = 0;
+`localparam [`RESET_SIG-1:0] no_reset_sig = 0;
 
 assign from_sn_padded = {from_sn, no_reset_sig, no_enable_bit};
 assign from_cpu_padded = {from_cpu[ADDR_WIDTH + `RESET_SIG + `ENABLE_BIT -1:2], no_wr_data, no_byte_inc, no_enable_bit, from_cpu[1:0]};
@@ -156,3 +162,4 @@ mux3 # (ADDR_WIDTH + DATA_WIDTH + `ENABLE_BIT + INC_WIDTH + `RESET_SIG + `ENABLE
 );
 
 endmodule
+`undef localparam

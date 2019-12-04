@@ -11,6 +11,12 @@ This is basically an AXI to BRAM bridge, but with the extra byte_inc logic
 `define genif generate if
 `define endgen end endgenerate
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 module axistream_snooper # (
     parameter SN_FWD_DATA_WIDTH = 64,
     parameter SN_FWD_ADDR_WIDTH = 9,
@@ -62,9 +68,9 @@ module axistream_snooper # (
     
     
     //State machine signals
-    parameter NOT_STARTED = 2'b00;
-    parameter WAITING = 2'b01;
-    parameter STARTED = 2'b11;
+    `localparam NOT_STARTED = 2'b00;
+    `localparam WAITING = 2'b01;
+    `localparam STARTED = 2'b11;
     reg [1:0] state = NOT_STARTED;
     wire valid_i;
     wire done_i;
@@ -176,3 +182,5 @@ end else begin
     assign rdy_for_sn_ack = rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
 
 endmodule
+
+`undef localparam

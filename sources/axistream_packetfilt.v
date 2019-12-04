@@ -273,7 +273,7 @@ module axistream_packetfilt # (
         .PESS(PESS)
     ) the_actual_filter (
         .clk(clk),
-        .rst(rst),
+        .rst(rst || !control_start),
 
 
         //Interface to snooper

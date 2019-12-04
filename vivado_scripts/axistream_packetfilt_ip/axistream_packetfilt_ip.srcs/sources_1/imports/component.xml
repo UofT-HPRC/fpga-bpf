@@ -332,7 +332,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>fa6834ba</spirit:value>
+            <spirit:value>b904ee6b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -348,7 +348,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>fa6834ba</spirit:value>
+            <spirit:value>b904ee6b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -964,6 +964,10 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
+        <spirit:name>tmp/dp_bram.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
         <spirit:name>tmp/fwd_adapter.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
@@ -1118,6 +1122,10 @@
       </spirit:file>
       <spirit:file>
         <spirit:name>tmp/datapath.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>tmp/dp_bram.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -1318,13 +1326,13 @@
       <xilinx:displayName>axistream_packetfilt_v1_0</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
       <xilinx:coreRevision>1</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2019-12-01T21:26:23Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2019-12-04T02:50:31Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2018.3</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="71b88859"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="b9bc4061"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="46e85426"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="17659273"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="a8c8a9b4"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="d132ef68"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="cf95246b"/>

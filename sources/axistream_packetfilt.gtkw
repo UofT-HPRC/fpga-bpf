@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Sun Dec  1 19:17:35 2019
+[*] Mon Dec  2 23:22:41 2019
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/axistream_packetfilt.vcd"
-[dumpfile_mtime] "Sun Dec  1 19:17:06 2019"
-[dumpfile_size] 1248543
+[dumpfile_mtime] "Mon Dec  2 23:22:30 2019"
+[dumpfile_size] 1168947
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/axistream_packetfilt.gtkw"
 [timestart] 0
 [size] 1916 1060
@@ -15,7 +15,6 @@
 [treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.genblk1[0].filt.
 [treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.genblk1[0].filt.the_cpu.
 [treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.genblk1[0].filt.the_cpu.ctrl.
-[treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.genblk1[0].filt.the_cpu.ctrl.no_idle_stage.
 [treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.snooper_arbiter.genblk1.
 [treeopen] axistream_packetfilt_tb.DUT.the_actual_filter.snooper_arbiter.genblk1.the_tag_tree.
 [sst_width] 299

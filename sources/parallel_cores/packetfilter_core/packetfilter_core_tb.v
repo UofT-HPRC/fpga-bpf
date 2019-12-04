@@ -81,6 +81,7 @@ module packetfilter_core_tb;
         clk <= 0;
         rst <= 1;
         
+        //fd = $fopen("counting_drivers.mem", "r");
         fd = $fopen("packetfilter_core_drivers.mem", "r");
         if (fd == 0) begin
             $display("Could not open file");

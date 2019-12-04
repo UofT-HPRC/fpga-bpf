@@ -1,3 +1,8 @@
+
+`ifndef TAG_TREE_INCLUDE_GUARD
+`define TAG_TREE_INCLUDE_GUARD 1
+
+
 `timescale 1ns / 1ps
 
 /*
@@ -5,9 +10,6 @@ tag_tree.v
 
 Wires up tree_nodes to make a tree. Is smart about not making a tree when N = 1.
 */
-
-`ifndef TAG_TREE_INCLUDE_GUARD
-`define TAG_TREE_INCLUDE_GUARD 1
 
 `ifdef FROM_TAG_TREE
 `include "tree_node/tree_node.v"

@@ -79,7 +79,7 @@ module axistream_packetfilt_tb;
         
         clk <= 0;
         rst <= 0;
-        
+        force DUT.control_start = 1;
         
         fd = $fopen("axistream_packetfilt_drivers.mem", "r");
         if (fd == 0) begin

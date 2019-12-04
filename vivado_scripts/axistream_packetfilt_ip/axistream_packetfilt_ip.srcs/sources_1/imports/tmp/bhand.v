@@ -1,5 +1,7 @@
-`timescale 1ns / 1ps
+`ifndef BHAND_INCLUDE_GUARD
+`define BHAND_INCLUDE_GUARD 1
 
+`timescale 1ns / 1ps
 /*
 bhand.v
 
@@ -7,9 +9,6 @@ Implements a buffered handshake. Also has a parameter for turning on a
 "counting" mode. This counts how many cycles an input has been in the FIFO.
 
 */
-
-`ifndef BHAND_INCLUDE_GUARD
-`define BHAND_INCLUDE_GUARD 1
 
 `define genif generate if
 `define endgen end endgenerate

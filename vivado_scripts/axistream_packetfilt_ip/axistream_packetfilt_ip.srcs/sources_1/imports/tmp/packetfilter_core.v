@@ -26,6 +26,12 @@ actually set it to a specific number just to cut down on BRAM usage
 `include "parallel_cores/packetfilter_core/bpfcpu/bpfcpu.v"
 `endif
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 `define CLOG2(x) (\
    (((x) <= 2) ? 1 : \
    (((x) <= 4) ? 2 : \
@@ -96,7 +102,7 @@ module packetfilter_core # (
     input wire inst_wr_en
     
 );
-    parameter P_NG_ADDR_WIDTH = SN_FWD_ADDR_WIDTH + 1;
+    `localparam P_NG_ADDR_WIDTH = SN_FWD_ADDR_WIDTH + 1;
     
     
     
@@ -210,3 +216,4 @@ module packetfilter_core # (
 endmodule
 
 `undef CLOG2
+`undef localparam

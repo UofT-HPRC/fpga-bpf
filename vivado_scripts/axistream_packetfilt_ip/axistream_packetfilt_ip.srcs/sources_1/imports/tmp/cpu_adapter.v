@@ -40,6 +40,12 @@ C1: (Input: bigword; Output: resized_mem_data)
 //I kept needing this value in the code
 `define N (BYTE_ADDR_WIDTH - ADDR_WIDTH)
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 //Assumes that 2**ADDR_WIDTH * (2*PORT_DATA_WIDTH) == 2**BYTE_ADDR_WIDTH
 //where PORT_DATA_WIDTH is in bytes
 //And please note, SN_FWD_DATA_WIDTH = 2*PORT_DATA_WIDTH
@@ -84,7 +90,7 @@ module cpu_adapter # (
 );
     
     //Memory latency
-    parameter MEM_LAT = 1 + BUF_IN + BUF_OUT;
+    `localparam MEM_LAT = 1 + BUF_IN + BUF_OUT;
     
     /************************************/
     /**Forward-declare internal signals**/
@@ -233,3 +239,6 @@ endgenerate
     
     assign rdy_for_cpu = rdy_for_cpu_i;
 endmodule
+
+`undef N
+`undef localparam

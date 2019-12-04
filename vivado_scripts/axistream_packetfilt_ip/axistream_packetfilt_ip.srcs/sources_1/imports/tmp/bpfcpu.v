@@ -21,6 +21,12 @@ signals with P3 controller
 `include "parallel_cores/packetfilter_core/bpfcpu/datapath/datapath.v"
 `endif
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 module bpfcpu # (
     parameter BYTE_ADDR_WIDTH = 12,
     parameter PLEN_WIDTH = 32,
@@ -59,8 +65,8 @@ module bpfcpu # (
     assign done_sig = (cpu_acc || cpu_rej);
     
     //Control FSM for P3 handshaking
-    parameter STOPPED = 0;
-    parameter STARTED = 1;
+    `localparam STOPPED = 0;
+    `localparam STARTED = 1;
     reg state = STOPPED;
     
     //next-state logic
@@ -186,3 +192,5 @@ module bpfcpu # (
     );
 
 endmodule
+
+`undef localparam

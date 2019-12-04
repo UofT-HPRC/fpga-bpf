@@ -20,48 +20,22 @@ Modules are structured as:
     actual logic (which may have internal buffering)
     output buffering (if necessary
 */
-
-
-//Quick module which Vivado should synthesize as a BRAM
-//See the Xilinx Synthesis Technology report for details
-module dp_bram # (
-    parameter ADDR_WIDTH = 10,
-    parameter PORT_WIDTH = 32
-) (
-    input wire clk,
-    
-    input wire en,                           //@0
-    
-    input wire [ADDR_WIDTH-1:0] addra,  //@0
-    input wire [ADDR_WIDTH-1:0] addrb,  //@0
-
-    input wire [PORT_WIDTH-1:0] dia,    //@0
-    input wire [PORT_WIDTH-1:0] dib,    //@0
-    input wire wr_en,                   //@0
-    
-    output reg [PORT_WIDTH-1:0] doa,    //@1
-    output reg [PORT_WIDTH-1:0] dob     //@1
-);
-    reg [PORT_WIDTH-1:0] data [0:2**ADDR_WIDTH-1];
-
-    always @(posedge clk) begin
-        if (en) begin
-            if (wr_en == 1'b1) begin
-                data[addra] <= dia;
-            end
-            doa <= data[addra]; //Read-first mode
-        end
-    end
-
-    always @(posedge clk) begin
-        if (en) begin
-            if (wr_en == 1'b1) begin
-                data[addrb] <= dib;
-            end
-            dob <= data[addrb]; //Read-first mode
-        end
-    end
-endmodule
+`ifdef FROM_CONTROLLER
+`include "../../../../generic/dp_bram/dp_bram.v"
+`elsif FROM_P_NG
+`include "../../../../generic/dp_bram/dp_bram.v"
+`elsif FROM_BPFCPU
+`include "../../../generic/dp_bram/dp_bram.v"
+`elsif FROM_P3
+`include "../../../generic/dp_bram/dp_bram.v"
+`elsif FROM_PACKETFILTER_CORE
+`include "../../generic/dp_bram/dp_bram.v"
+`elsif FROM_PARALLEL_CORES
+`include "../generic/dp_bram/dp_bram.v"
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "generic/dp_bram/dp_bram.v"
+`else /* For Vivado */
+`endif
 
 
 //The actual module we're after is here
@@ -176,7 +150,8 @@ endgenerate
 
         .dia(idata_i[SN_FWD_WIDTH-1:PORT_WIDTH]), //@0
         .dib(idata_i[PORT_WIDTH-1:0]), //@0
-        .wr_en(wr_en_i), //@0
+        .wr_ena(wr_en_i), //@0
+        .wr_enb(wr_en_i), //@0
         
         .doa(odata_i[SN_FWD_WIDTH-1:PORT_WIDTH]), //@1
         .dob(odata_i[PORT_WIDTH-1:0]) //@1

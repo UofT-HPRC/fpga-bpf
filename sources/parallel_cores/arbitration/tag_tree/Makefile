@@ -7,7 +7,7 @@ $(MODULE).vcd:	$(MODULE).vvp
 	vvp $(MODULE).vvp
 
 $(MODULE).vvp:	$(MODULE).v $(MODULE)_tb.v
-	iverilog -DFROM_$(MODULE_CAPS) -g2012 -o $(MODULE).vvp $(MODULE)_tb.v
+	iverilog -DICARUS_VERILOG -DFROM_$(MODULE_CAPS) -g2012 -o $(MODULE).vvp $(MODULE)_tb.v
 
 open:	$(MODULE).vcd
 	gtkwave $(MODULE).vcd --autosavename &

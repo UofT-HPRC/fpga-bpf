@@ -15,6 +15,12 @@ mux_tree.v
 `include "parallel_cores/arbitration/fwd_arb/mux_tree/mux_tree_node/mux_tree_node.v"
 `endif
 
+`ifdef ICARUS_VERILOG
+`define localparam parameter
+`else /*For Vivado*/
+`define localparam localparam
+`endif
+
 `define CLOG2(x) (\
    (((x) <= 1) ? 0 : \
    (((x) <= 2) ? 1 : \
@@ -71,9 +77,9 @@ module mux_tree # (
     
 );
     
-	parameter NUM_NODES = PADDED + (PADDED-1)/3; //Total nodes in tree
-	parameter MAX_H = `CLOG4(PADDED); //Tree height
-	parameter X_C = `MIN(N,NUM_NODES - (4**MAX_H - 1) / 3); //Cutoff between long and short paths
+	`localparam NUM_NODES = PADDED + (PADDED-1)/3; //Total nodes in tree
+	`localparam MAX_H = `CLOG4(PADDED); //Tree height
+	`localparam X_C = `MIN(N,NUM_NODES - (4**MAX_H - 1) / 3); //Cutoff between long and short paths
     
     //Tree nodes. Organized as usual array representation of an array
     wire [WIDTH-1:0] nodes[0:NUM_NODES-1];
@@ -152,3 +158,4 @@ endmodule
 `undef CLOG2
 `undef CLOG4
     `undef H
+`undef localparam

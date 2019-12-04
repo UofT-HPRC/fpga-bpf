@@ -16,7 +16,8 @@ Can be parameterized to perform buffered handshaking, or to be combinational.
 `include "../../../generic/buffered_handshake/bhand.v"
 `elsif FROM_PARALLEL_CORES
 `include "../generic/buffered_handshake/bhand.v"
-`else /*For Vivado*/
+`elsif FROM_AXISTREAM_PACKETFILT
+`include "generic/buffered_handshake/bhand.v"
 `endif
 
 `define genif generate if
