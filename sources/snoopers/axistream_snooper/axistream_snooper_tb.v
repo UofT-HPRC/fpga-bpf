@@ -34,6 +34,8 @@ module testbench_template;
     reg rdy_for_sn;
     wire rdy_for_sn_ack; //Yeah; I'm ready for a snack
     
+    wire packet_dropped_inc;
+    
     integer fd, dummy;
     
     initial begin
@@ -106,7 +108,8 @@ module testbench_template;
         .sn_done(sn_done),
         //.sn_done_ack(sn_done_ack),
         .rdy_for_sn(rdy_for_sn),
-        .rdy_for_sn_ack(rdy_for_sn_ack) //Yeah, I'm ready for a snack
+        .rdy_for_sn_ack(rdy_for_sn_ack), //Yeah, I'm ready for a snack
+        .packet_dropped_inc(packet_dropped_inc)
     );
 
 

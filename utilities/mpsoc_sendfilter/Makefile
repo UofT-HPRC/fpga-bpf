@@ -1,2 +1,2 @@
-newsendfilt:	senfilter.c
-	gcc -o newsendfilt -Wall -fno-diagnostics-show-caret senfilter.c
+newsendfilt:	sendfilter.c
+	gcc -o sendfilter -Wall -fno-diagnostics-show-caret sendfilter.c
