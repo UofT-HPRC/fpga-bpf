@@ -120,29 +120,21 @@ module alu # (
     
     always @(posedge clk) begin
     	if (rst) begin
-            ALU_out_r <= 0;
-            eq_r <= 0;
-            gt_r <= 0;
-            ge_r <= 0;
-            set_r <= 0;
             ALU_vld_r <= 0;
     	end else begin
 			if (ALU_en_i) begin
-				ALU_out_r <= ALU_out_i;
-				eq_r <= eq_i;
-				gt_r <= gt_i;
-				ge_r <= ge_i;
-				set_r <= set_i;
 				ALU_vld_r <= ALU_vld_i;
 			end else begin
-				ALU_out_r <= ALU_out_r;
-				eq_r <= eq_r;
-				gt_r <= gt_r;
-				ge_r <= ge_r;
-				set_r <= set_r;
 				ALU_vld_r <= (ALU_ack) ? 0 : ALU_vld_r;
 			end
 		end
+        if (ALU_en_i) begin
+            ALU_out_r <= ALU_out_i;
+            eq_r <= eq_i;
+            gt_r <= gt_i;
+            ge_r <= ge_i;
+            set_r <= set_i;
+        end 
     end
     
     assign ALU_out = ALU_out_r;

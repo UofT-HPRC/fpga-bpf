@@ -115,8 +115,7 @@ module datapath # (
     
     //Accumulator's new value
     always @(posedge clk) begin
-        if (rst) A <= 0;
-        else if (A_en == 1'b1) begin
+        if (A_en == 1'b1) begin
             case (A_sel)
                 `A_SEL_IMM:
                     A <= imm_stage2; //Note use of imm_stage2
@@ -140,8 +139,7 @@ module datapath # (
 
     //Auxiliary (X) register's new value
     always @(posedge clk) begin
-        if (rst) X <= 0;
-        else if (X_en == 1'b1) begin
+        if (X_en == 1'b1) begin
             case (X_sel)
                 `X_SEL_IMM:
                     X <= imm_stage2; //Note use of imm_stage2

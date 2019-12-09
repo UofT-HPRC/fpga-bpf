@@ -45,7 +45,9 @@ module axistream_snooper # (
     output wire [INC_WIDTH-1:0] sn_byte_inc,
     output wire sn_done,
     input wire rdy_for_sn,
-    output wire rdy_for_sn_ack //Yeah, I'm ready for a snack
+    output wire rdy_for_sn_ack, //Yeah, I'm ready for a snack
+    
+    output wire packet_dropped_inc //At any clock edge, a 1 means increment number of dropped packets
 );
     /************************************/
     /**Forward-declare internal signals**/
@@ -90,18 +92,14 @@ module axistream_snooper # (
     
     always @(posedge clk) begin
         if (rst) begin
-            sn_TDATA_r <= 0;
-            sn_TKEEP_r <= 0;
-            sn_TREADY_r <= 0;
             sn_TVALID_r <= 0;
-            sn_TLAST_r <= 0;
         end else begin
-            sn_TDATA_r <= sn_TDATA;
-            sn_TKEEP_r <= sn_TKEEP;
-            sn_TREADY_r <= sn_TREADY;
             sn_TVALID_r <= sn_TVALID;
-            sn_TLAST_r <= sn_TLAST;
         end
+        sn_TDATA_r <= sn_TDATA;
+        sn_TKEEP_r <= sn_TKEEP;
+        sn_TREADY_r <= sn_TREADY;
+        sn_TLAST_r <= sn_TLAST;
     end
 
     assign sn_TDATA_i = sn_TDATA_r;
@@ -144,7 +142,7 @@ end else begin
                 WAITING:
                     //TODO: should I keep assuming ready never goes low once it 
                     //goes high? The rest of the system is designed that way
-                    state <= sn_TLAST_i ? STARTED : WAITING;
+                    state <= (sn_TVALID_i && sn_TREADY_i && sn_TLAST_i) ? STARTED : WAITING;
                 STARTED:
                     state <= ({sn_TLAST_i, rdy_for_sn_i} == 2'b10) ? NOT_STARTED : STARTED;
             endcase
@@ -180,6 +178,8 @@ end else begin
     assign sn_byte_inc = sn_byte_inc_i;
     assign sn_done = sn_done_i;
     assign rdy_for_sn_ack = rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
+    
+    assign packet_dropped_inc = (state == WAITING) && (sn_TVALID_i && sn_TREADY_i && sn_TLAST_i);
 
 endmodule
 

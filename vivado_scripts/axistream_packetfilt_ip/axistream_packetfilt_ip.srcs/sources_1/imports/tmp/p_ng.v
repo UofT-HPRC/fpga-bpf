@@ -65,6 +65,9 @@ module p_ng # (
 
 
     //Real quick, let's get the length logic out of the way:
+`ifndef ICARUS_VERILOG
+    (* dont_touch = "true" *) byte_length_i;
+`endif
     reg [32:0] byte_length_i = 0;
     always @(posedge clk) begin
         if (!rst) begin
@@ -104,16 +107,13 @@ generate
         
         always @(posedge clk) begin
             if (!rst) begin
-                rd_en_r <= rd_en;
                 wr_en_r <= wr_en;
-                addr_r <= addr;
-                idata_r <= idata;
             end else begin
-                rd_en_r <= 0;
                 wr_en_r <= 0;
-                addr_r <= 0;
-                idata_r <= 0;
             end
+            rd_en_r <= rd_en;
+            addr_r <= addr;
+            idata_r <= idata;
         end
         
         assign rd_en_i = rd_en_r;
@@ -178,12 +178,11 @@ generate
         
         always @(posedge clk) begin
             if (!rst) begin
-                odata_r <= odata_i;
                 odata_vld_r <= odata_vld_i;
             end else begin
-                odata_r <= 0;
                 odata_vld_r <= 0;
             end
+            odata_r <= odata_i;
         end
         
         assign odata = odata_r;

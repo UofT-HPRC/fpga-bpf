@@ -216,12 +216,11 @@ generate
         reg resized_mem_data_vld_r = 0;
         always @(posedge clk) begin
             if (!rst) begin
-                resized_mem_data_r <= resized_mem_data_i;
                 resized_mem_data_vld_r <= resized_mem_data_vld_i;
             end else begin 
-                resized_mem_data_r <= 0;
                 resized_mem_data_vld_r <= 0;
             end
+            resized_mem_data_r <= resized_mem_data_i;
         end
         
         assign resized_mem_data = resized_mem_data_r;

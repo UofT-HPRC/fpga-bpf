@@ -65,21 +65,20 @@ module bhand # (
     assign extra_mem_en = shift_in && mem_vld && !shift_out;
     
     always @(posedge clk) begin
+        //extra_mem_vld's next value
         if (rst) begin
-            extra_mem <= 0;
             extra_mem_vld <= 0;
         end else begin
-            //extra_mem's next value
-            if (extra_mem_en) begin
-                extra_mem <= idata;
-            end
-            
-            //extra_mem_vld's next value
             if (extra_mem_en) begin
                 extra_mem_vld <= 1;
             end else if (shift_out) begin
                 extra_mem_vld <= 0;
             end
+        end
+        
+        //extra_mem's next value
+        if (extra_mem_en) begin
+            extra_mem <= idata;
         end
     end
     
@@ -99,21 +98,20 @@ module bhand # (
     assign mem_en = mem_rdy && (idata_vld || extra_mem_vld);
     
     always @(posedge clk) begin
+        //mem_vld's next value
         if (rst) begin
-            mem <= 0;
             mem_vld <= 0;
         end else begin
-            //mem's next value
-            if (mem_en) begin
-                mem <= extra_mem_vld ? extra_mem : idata;
-            end
-            
-            //mem_vld's next value
             if (mem_en) begin
                 mem_vld <= 1;
             end else if (shift_out) begin
                 mem_vld <= 0;
             end
+        end
+        
+        //mem's next value
+        if (mem_en) begin
+            mem <= extra_mem_vld ? extra_mem : idata;
         end
     end
 

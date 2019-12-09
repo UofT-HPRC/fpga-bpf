@@ -106,10 +106,7 @@ module snoop_arb # (
     
     //selection_i is registered when a handshake completes
     always @(posedge clk) begin
-        if (rst) begin
-            selection <= 0;
-        end else begin
-            if (rdy && ack) 
+        if (rdy && ack) begin
                 selection <= selection_next;
         end
     end

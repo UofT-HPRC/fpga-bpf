@@ -4,6 +4,8 @@
 # Call as:
 # vivado -mode tcl -nolog -nojournal -source scripts/ip_package.tcl -tclargs $ip_name $part_name
 
+# start_gui
+
 set ip_name [lindex $argv 0]
 set part_name [lindex $argv 1]
 set project_name ${ip_name}_ip

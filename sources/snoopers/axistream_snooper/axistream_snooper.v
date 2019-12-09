@@ -92,18 +92,14 @@ module axistream_snooper # (
     
     always @(posedge clk) begin
         if (rst) begin
-            sn_TDATA_r <= 0;
-            sn_TKEEP_r <= 0;
-            sn_TREADY_r <= 0;
             sn_TVALID_r <= 0;
-            sn_TLAST_r <= 0;
         end else begin
-            sn_TDATA_r <= sn_TDATA;
-            sn_TKEEP_r <= sn_TKEEP;
-            sn_TREADY_r <= sn_TREADY;
             sn_TVALID_r <= sn_TVALID;
-            sn_TLAST_r <= sn_TLAST;
         end
+        sn_TDATA_r <= sn_TDATA;
+        sn_TKEEP_r <= sn_TKEEP;
+        sn_TREADY_r <= sn_TREADY;
+        sn_TLAST_r <= sn_TLAST;
     end
 
     assign sn_TDATA_i = sn_TDATA_r;

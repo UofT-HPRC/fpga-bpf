@@ -81,7 +81,10 @@ module axistream_packetfilt # (
         output wire [`KEEP_WIDTH-1:0] fwd_TKEEP,
         output wire fwd_TLAST,
         output wire fwd_TVALID,
-        input wire fwd_TREADY
+        input wire fwd_TREADY,
+        
+        //Debug outputs
+        output wire [15:0] num_packets_dropped
     
 `ifndef DISABLE_AXILITE
         , //yes, this comma needs to be here
@@ -158,6 +161,17 @@ module axistream_packetfilt # (
     wire [31:0] inst_low_value; // Value of register 'inst_low', field 'value'
     wire inst_high_strobe; // Strobe logic for register 'inst_high' (pulsed when the register is written from the bus)
     wire [31:0] inst_high_value; // Value of register 'inst_high', field 'value'
+`endif
+    
+    //Maintain count of dropped packets
+    wire dropped_inc;
+    reg [15:0] dropped_cnt = 0;
+    always @(posedge clk) dropped_cnt <= dropped_cnt + dropped_inc;
+    
+    //Send output count to all the right places
+    assign num_packets_dropped = dropped_cnt;
+`ifndef DISABLE_AXILITE
+    assign status_num_packets_dropped = dropped_cnt;
 `endif
 
     //Interface for new code input
@@ -260,7 +274,8 @@ module axistream_packetfilt # (
         .sn_byte_inc(sn_byte_inc),
         .sn_done(sn_done),
         .rdy_for_sn(rdy_for_sn),
-        .rdy_for_sn_ack(rdy_for_sn_ack) //Yeah, I'm ready for a snack
+        .rdy_for_sn_ack(rdy_for_sn_ack), //Yeah, I'm ready for a snack
+        .packet_dropped_inc(dropped_inc)
     );
 
     parallel_cores # (

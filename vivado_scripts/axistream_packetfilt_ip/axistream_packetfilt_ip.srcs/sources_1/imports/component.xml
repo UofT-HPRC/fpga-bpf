@@ -332,7 +332,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>b904ee6b</spirit:value>
+            <spirit:value>5071d4be</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -348,7 +348,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>b904ee6b</spirit:value>
+            <spirit:value>5071d4be</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -553,6 +553,23 @@
           <spirit:driver>
             <spirit:defaultValue spirit:format="long">1</spirit:defaultValue>
           </spirit:driver>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>num_packets_dropped</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">15</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
         </spirit:wire>
       </spirit:port>
       <spirit:port>
@@ -1326,14 +1343,14 @@
       <xilinx:displayName>axistream_packetfilt_v1_0</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
       <xilinx:coreRevision>1</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2019-12-04T02:50:31Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2019-12-09T07:26:05Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2018.3</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="71b88859"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="b9bc4061"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="17659273"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="a8c8a9b4"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="69ee7443"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="b86401b1"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="d132ef68"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="cf95246b"/>
     </xilinx:packagingInfo>

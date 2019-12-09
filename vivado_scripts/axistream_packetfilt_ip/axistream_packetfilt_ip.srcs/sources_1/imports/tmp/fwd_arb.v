@@ -139,11 +139,8 @@ module fwd_arb # (
 
     //selection_i is registered when a handshake completes
     always @(posedge clk) begin
-        if (rst) begin
-            selection <= 0;
-        end else begin
-            if (rdy && ack) 
-                selection <= selection_next;
+        if (rdy && ack) begin
+            selection <= selection_next;
         end
     end
     
@@ -170,7 +167,7 @@ module fwd_arb # (
         .clk(clk),
         .rst(rst),
         
-        .sel(selection),
+        .sel(selection), //TODO: delay this input by MEM_LAT cycles, then remove WAITING state from forwarder
         .ins(mux_ins),
         .result({rd_data, rd_data_vld, byte_len})
     );
