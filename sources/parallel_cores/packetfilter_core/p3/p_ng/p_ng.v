@@ -66,9 +66,9 @@ module p_ng # (
 
     //Real quick, let's get the length logic out of the way:
 `ifndef ICARUS_VERILOG
-    (* dont_touch = "true" *) byte_length_i;
+    (* dont_touch = "true" *)
 `endif
-    reg [32:0] byte_length_i = 0;
+    reg [31:0] byte_length_i = 0;
     always @(posedge clk) begin
         if (!rst) begin
             if (wr_en) begin
