@@ -212,7 +212,7 @@ module axistream_forwarder # (
     //TODO: have pessimistic mode gate these with a bhand?
     assign fwd_TDATA = TDATA_fifo[rd_ptr];
     assign fwd_TKEEP = TKEEP_fifo[rd_ptr];
-    assign fwd_TVALID = (in_flight_cnt - pending != 0);
+    assign fwd_TVALID = ((in_flight_cnt - pending) != 0);
     assign fwd_TLAST = TLAST_fifo[rd_ptr];
     
     //Read/write signals

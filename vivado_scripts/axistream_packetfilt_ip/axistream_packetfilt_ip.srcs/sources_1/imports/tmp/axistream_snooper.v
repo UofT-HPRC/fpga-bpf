@@ -179,7 +179,7 @@ end else begin
     assign sn_done = sn_done_i;
     assign rdy_for_sn_ack = rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
     
-    assign packet_dropped_inc = (state == WAITING) && (sn_TVALID_i && sn_TREADY_i && sn_TLAST_i);
+    assign packet_dropped_inc = (state != STARTED) && (sn_TVALID_i && sn_TREADY_i && sn_TLAST_i);
 
 endmodule
 
