@@ -1,14 +1,14 @@
 [*]
 [*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
-[*] Mon Dec  2 23:22:41 2019
+[*] Wed Dec 11 05:26:55 2019
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/axistream_packetfilt.vcd"
-[dumpfile_mtime] "Mon Dec  2 23:22:30 2019"
-[dumpfile_size] 1168947
+[dumpfile_mtime] "Wed Dec 11 05:26:39 2019"
+[dumpfile_size] 1171207
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/axistream_packetfilt.gtkw"
 [timestart] 0
 [size] 1916 1060
-[pos] -1 -1
+[pos] -1 -541
 *-17.662891 666800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] axistream_packetfilt_tb.
 [treeopen] axistream_packetfilt_tb.DUT.
@@ -51,5 +51,7 @@ axistream_packetfilt_tb.fwd_TREADY
 axistream_packetfilt_tb.fwd_TVALID
 @1000200
 -forwarder
+@23
+axistream_packetfilt_tb.DUT.dropped_cnt[15:0]
 [pattern_trace] 1
 [pattern_trace] 0

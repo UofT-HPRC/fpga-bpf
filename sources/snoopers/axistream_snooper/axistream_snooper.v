@@ -125,6 +125,10 @@ end else begin
     /**Do the logic**/
     /****************/
     
+    //Cleans up code a bit
+    wire lastrdyvalid;
+    assign lastrdyvalid = sn_TLAST_i && sn_TREADY_i && sn_TVALID_i;
+    
     //State machine logic. Please see READNE.txt for more details along
     //with a nice diagram
     
@@ -138,21 +142,21 @@ end else begin
                     //Normally we go to WAITING as soon as ready goes high, but
                     //we also include a special case for when ready and last are
                     //high at on the same cycle
-                    state <= rdy_for_sn_i ? (sn_TLAST_i ? STARTED : WAITING) : NOT_STARTED;
+                    state <= rdy_for_sn_i ? (lastrdyvalid ? STARTED : WAITING) : NOT_STARTED;
                 WAITING:
                     //TODO: should I keep assuming ready never goes low once it 
                     //goes high? The rest of the system is designed that way
-                    state <= (sn_TVALID_i && sn_TREADY_i && sn_TLAST_i) ? STARTED : WAITING;
+                    state <= (lastrdyvalid) ? STARTED : WAITING;
                 STARTED:
-                    state <= ({sn_TLAST_i, rdy_for_sn_i} == 2'b10) ? NOT_STARTED : STARTED;
+                    state <= ({lastrdyvalid, rdy_for_sn_i} == 2'b10) ? NOT_STARTED : STARTED;
             endcase
         end
     end
     
     //state machine outputs. Note this is a Mealy machine
-    assign rdy_for_sn_ack_i = (state == NOT_STARTED) || (state == STARTED && sn_TLAST_i);
+    assign rdy_for_sn_ack_i = (state == NOT_STARTED) || (state == STARTED && lastrdyvalid);
     assign valid_i = (state == STARTED) && sn_TVALID_i && sn_TREADY_i;
-    assign done_i = (state == STARTED) && sn_TLAST_i;
+    assign done_i = (state == STARTED) && lastrdyvalid;
     
     //Actual AXI-to-BRAM conversion
     assign sn_wr_data_i = sn_TDATA_i;
@@ -179,7 +183,7 @@ end else begin
     assign sn_done = sn_done_i;
     assign rdy_for_sn_ack = rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
     
-    assign packet_dropped_inc = (state != STARTED) && (sn_TVALID_i && sn_TREADY_i && sn_TLAST_i);
+    assign packet_dropped_inc = (state != STARTED) && lastrdyvalid;
 
 endmodule
 
