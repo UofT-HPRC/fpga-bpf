@@ -41,8 +41,8 @@ module snoop_arb # (
     //0 = all combinational
     //1 = delay stage on every second level
     //2 = delay stage on all levels
-    parameter DELAY_CONF = (N>16)? 1 : 0,
-    parameter PESS = (N>16) //Enables pessimistic mode
+    parameter PESS = (N>16), //Enables pessimistic mode
+    parameter DELAY_CONF = (PESS) ? 1 : 0
 ) (
     input wire clk,
     input wire rst,
@@ -122,6 +122,7 @@ module snoop_arb # (
         assign sn_done_i[i] = done && (selection == i);
     end
     
+    assign rdy_for_sn_ack = rdy_for_sn_ack_i;
     
     //In pessimistic mode, all internal signals are delayed. In non-pessimistic 
     //mode, they are directly assigned to the corresponding output
@@ -140,21 +141,21 @@ module snoop_arb # (
             sn_wr_en_r <= sn_wr_en_i;
             sn_byte_inc_r <= sn_byte_inc_i;
             sn_done_r <= sn_done_i;
-            rdy_for_sn_ack_r <= rdy_for_sn_ack_i;
+            //rdy_for_sn_ack_r <= rdy_for_sn_ack_i; //Didn't notice first time I coded it. This shouldn't...
         end
         assign sn_addr = sn_addr_r;
         assign sn_wr_data = sn_wr_data_r;
         assign sn_wr_en = sn_wr_en_r;
         assign sn_byte_inc = sn_byte_inc_r;
         assign sn_done = sn_done_r;
-        assign rdy_for_sn_ack = rdy_for_sn_ack_r;
+        //assign rdy_for_sn_ack = rdy_for_sn_ack_r;
     end else begin : direct_assignment
         assign sn_addr = sn_addr_i;
         assign sn_wr_data = sn_wr_data_i;
         assign sn_wr_en = sn_wr_en_i;
         assign sn_byte_inc = sn_byte_inc_i;
         assign sn_done = sn_done_i;
-        assign rdy_for_sn_ack = rdy_for_sn_ack_i;
+        //assign rdy_for_sn_ack = rdy_for_sn_ack_i;//... be delayed. Should set DELAY_CONF=1 instead
     end
 
 end else begin

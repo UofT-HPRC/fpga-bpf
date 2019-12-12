@@ -258,7 +258,7 @@ module axistream_packetfilt # (
         .PESS(PESS)
     ) the_snooper (
         .clk(clk),
-        .rst(rst),
+        .rst(!control_start),
 
         //AXI stream snoop interface
         .sn_TDATA(sn_TDATA),
@@ -288,7 +288,7 @@ module axistream_packetfilt # (
         .PESS(PESS)
     ) the_actual_filter (
         .clk(clk),
-        .rst(rst || !control_start),
+        .rst(!control_start),
 
 
         //Interface to snooper
@@ -322,7 +322,7 @@ module axistream_packetfilt # (
         .PLEN_WIDTH(PLEN_WIDTH)
     ) the_forwarder (
         .clk(clk),
-        .rst(rst),
+        .rst(!control_start),
 
         //AXI Stream interface
         .fwd_TDATA(fwd_TDATA),
