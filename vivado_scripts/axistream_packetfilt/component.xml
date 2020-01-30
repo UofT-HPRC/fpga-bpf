@@ -936,160 +936,160 @@
     <spirit:fileSet>
       <spirit:name>xilinx_anylanguagesynthesis_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>tmp/bpf_defs.vh</spirit:name>
+        <spirit:name>src/bpf_defs.vh</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:isIncludeFile>true</spirit:isIncludeFile>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/alu.v</spirit:name>
+        <spirit:name>src/alu.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/axistream_forwarder.v</spirit:name>
+        <spirit:name>src/axistream_forwarder.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/axistream_packetfilt.v</spirit:name>
+        <spirit:name>src/axistream_packetfilt.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/axistream_snooper.v</spirit:name>
+        <spirit:name>src/axistream_snooper.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/bhand.v</spirit:name>
+        <spirit:name>src/bhand.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/bpfcpu.v</spirit:name>
+        <spirit:name>src/bpfcpu.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/controller.v</spirit:name>
+        <spirit:name>src/controller.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/cpu_adapter.v</spirit:name>
+        <spirit:name>src/cpu_adapter.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/cpuqueue.v</spirit:name>
+        <spirit:name>src/cpuqueue.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/datapath.v</spirit:name>
+        <spirit:name>src/datapath.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/dp_bram.v</spirit:name>
+        <spirit:name>src/dp_bram.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/fwd_adapter.v</spirit:name>
+        <spirit:name>src/fwd_adapter.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/fwd_arb.v</spirit:name>
+        <spirit:name>src/fwd_arb.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/fwdqueue.v</spirit:name>
+        <spirit:name>src/fwdqueue.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/inst_mem.v</spirit:name>
+        <spirit:name>src/inst_mem.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/mux_tree.v</spirit:name>
+        <spirit:name>src/mux_tree.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/mux_tree_node.v</spirit:name>
+        <spirit:name>src/mux_tree_node.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/muxes.v</spirit:name>
+        <spirit:name>src/muxes.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/muxselinvert.v</spirit:name>
+        <spirit:name>src/muxselinvert.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/p3.v</spirit:name>
+        <spirit:name>src/p3.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/p3ctrl.v</spirit:name>
+        <spirit:name>src/p3ctrl.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/p_ng.v</spirit:name>
+        <spirit:name>src/p_ng.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/packetfilter_core.v</spirit:name>
+        <spirit:name>src/packetfilter_core.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/parallel_cores.v</spirit:name>
+        <spirit:name>src/parallel_cores.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/regfile.v</spirit:name>
+        <spirit:name>src/regfile.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/regstrb2mem.v</spirit:name>
+        <spirit:name>src/regstrb2mem.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/sn_adapter.v</spirit:name>
+        <spirit:name>src/sn_adapter.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/snoop_arb.v</spirit:name>
+        <spirit:name>src/snoop_arb.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/snqueue.v</spirit:name>
+        <spirit:name>src/snqueue.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/stage0.v</spirit:name>
+        <spirit:name>src/stage0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/stage0_point_5.v</spirit:name>
+        <spirit:name>src/stage0_point_5.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/stage1.v</spirit:name>
+        <spirit:name>src/stage1.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/stage2.v</spirit:name>
+        <spirit:name>src/stage2.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/tag_gen.v</spirit:name>
+        <spirit:name>src/tag_gen.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/tag_tree.v</spirit:name>
+        <spirit:name>src/tag_tree.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/tree_node.v</spirit:name>
+        <spirit:name>src/tree_node.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/packet_filter_regs_pkg.sv</spirit:name>
+        <spirit:name>src/packet_filter_regs_pkg.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/packet_filter_regs.sv</spirit:name>
+        <spirit:name>src/packet_filter_regs.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_f7edcee3</spirit:userFileType>
       </spirit:file>
@@ -1097,160 +1097,160 @@
     <spirit:fileSet>
       <spirit:name>xilinx_anylanguagebehavioralsimulation_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>tmp/bpf_defs.vh</spirit:name>
+        <spirit:name>src/bpf_defs.vh</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:isIncludeFile>true</spirit:isIncludeFile>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/alu.v</spirit:name>
+        <spirit:name>src/alu.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/axistream_forwarder.v</spirit:name>
+        <spirit:name>src/axistream_forwarder.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/axistream_packetfilt.v</spirit:name>
+        <spirit:name>src/axistream_packetfilt.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/axistream_snooper.v</spirit:name>
+        <spirit:name>src/axistream_snooper.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/bhand.v</spirit:name>
+        <spirit:name>src/bhand.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/bpfcpu.v</spirit:name>
+        <spirit:name>src/bpfcpu.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/controller.v</spirit:name>
+        <spirit:name>src/controller.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/cpu_adapter.v</spirit:name>
+        <spirit:name>src/cpu_adapter.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/cpuqueue.v</spirit:name>
+        <spirit:name>src/cpuqueue.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/datapath.v</spirit:name>
+        <spirit:name>src/datapath.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/dp_bram.v</spirit:name>
+        <spirit:name>src/dp_bram.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/fwd_adapter.v</spirit:name>
+        <spirit:name>src/fwd_adapter.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/fwd_arb.v</spirit:name>
+        <spirit:name>src/fwd_arb.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/fwdqueue.v</spirit:name>
+        <spirit:name>src/fwdqueue.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/inst_mem.v</spirit:name>
+        <spirit:name>src/inst_mem.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/mux_tree.v</spirit:name>
+        <spirit:name>src/mux_tree.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/mux_tree_node.v</spirit:name>
+        <spirit:name>src/mux_tree_node.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/muxes.v</spirit:name>
+        <spirit:name>src/muxes.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/muxselinvert.v</spirit:name>
+        <spirit:name>src/muxselinvert.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/p3.v</spirit:name>
+        <spirit:name>src/p3.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/p3ctrl.v</spirit:name>
+        <spirit:name>src/p3ctrl.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/p_ng.v</spirit:name>
+        <spirit:name>src/p_ng.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/packetfilter_core.v</spirit:name>
+        <spirit:name>src/packetfilter_core.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/parallel_cores.v</spirit:name>
+        <spirit:name>src/parallel_cores.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/regfile.v</spirit:name>
+        <spirit:name>src/regfile.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/regstrb2mem.v</spirit:name>
+        <spirit:name>src/regstrb2mem.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/sn_adapter.v</spirit:name>
+        <spirit:name>src/sn_adapter.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/snoop_arb.v</spirit:name>
+        <spirit:name>src/snoop_arb.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/snqueue.v</spirit:name>
+        <spirit:name>src/snqueue.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/stage0.v</spirit:name>
+        <spirit:name>src/stage0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/stage0_point_5.v</spirit:name>
+        <spirit:name>src/stage0_point_5.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/stage1.v</spirit:name>
+        <spirit:name>src/stage1.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/stage2.v</spirit:name>
+        <spirit:name>src/stage2.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/tag_gen.v</spirit:name>
+        <spirit:name>src/tag_gen.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/tag_tree.v</spirit:name>
+        <spirit:name>src/tag_tree.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/tree_node.v</spirit:name>
+        <spirit:name>src/tree_node.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/packet_filter_regs_pkg.sv</spirit:name>
+        <spirit:name>src/packet_filter_regs_pkg.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>tmp/packet_filter_regs.sv</spirit:name>
+        <spirit:name>src/packet_filter_regs.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
       </spirit:file>
     </spirit:fileSet>
@@ -1343,7 +1343,7 @@
       <xilinx:displayName>axistream_packetfilt_v1_0</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
       <xilinx:coreRevision>1</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2019-12-11T23:01:58Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2020-01-30T22:04:45Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2018.3</xilinx:xilinxVersion>

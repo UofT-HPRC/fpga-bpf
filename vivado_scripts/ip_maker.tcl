@@ -9,9 +9,9 @@
 set ip_name [lindex $argv 0]
 set part_name [lindex $argv 1]
 set project_name ${ip_name}_ip
-create_project ${project_name} ${project_name} -part $part_name
-import_files tmp/
-ipx::package_project -root_dir ${project_name}/${project_name}.srcs/sources_1/imports -vendor Marco_Merlini -library fpga_bpf -taxonomy /UserIP
+create_project ${project_name} ${project_name} -part ${part_name}
+add_files ${ip_name}/src
+ipx::package_project -root_dir ${ip_name} -vendor Marco_Merlini -library fpga_bpf -taxonomy /UserIP
 
 # Fix monitor interface for snooper
 ipx::remove_port_map TREADY [ipx::get_bus_interfaces sn -of_objects [ipx::current_core]]
