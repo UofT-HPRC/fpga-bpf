@@ -18,6 +18,33 @@ ipx::remove_port_map TREADY [ipx::get_bus_interfaces sn -of_objects [ipx::curren
 set_property interface_mode monitor [ipx::get_bus_interfaces sn -of_objects [ipx::current_core]]
 ipx::add_port_map TREADY [ipx::get_bus_interfaces sn -of_objects [ipx::current_core]]
 set_property physical_name sn_TREADY [ipx::get_port_maps TREADY -of_objects [ipx::get_bus_interfaces sn -of_objects [ipx::current_core]]]
+set_property enablement_dependency {spirit:decode(id('MODELPARAM_VALUE.ENABLE_BACKPRESSURE')) = 0} [ipx::get_bus_interfaces sn -of_objects [ipx::current_core]]
+
+# Add backpressure snooper interface
+ipx::add_bus_parameter POLARITY [ipx::get_bus_interfaces rst -of_objects [ipx::current_core]]
+set_property VALUE ACTIVE_HIGH [ipx::get_bus_parameters POLARITY -of_objects [ipx::get_bus_interfaces rst -of_objects [ipx::current_core]]]
+set_property enablement_dependency {spirit:decode(id('MODELPARAM_VALUE.ENABLE_BACKPRESSURE')) = 0} [ipx::get_bus_interfaces sn -of_objects [ipx::current_core]]
+ipx::add_bus_interface sn_bp [ipx::current_core]
+set_property abstraction_type_vlnv xilinx.com:interface:axis_rtl:1.0 [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]
+set_property bus_type_vlnv xilinx.com:interface:axis:1.0 [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]
+set_property enablement_dependency {spirit:decode(id('MODELPARAM_VALUE.ENABLE_BACKPRESSURE')) != 0} [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]
+ipx::add_port_map TDATA [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]
+set_property physical_name sn_TDATA [ipx::get_port_maps TDATA -of_objects [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]]
+ipx::add_port_map TVALID [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]
+set_property physical_name sn_TVALID [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]]
+ipx::add_port_map TLAST [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]
+set_property physical_name sn_TLAST [ipx::get_port_maps TLAST -of_objects [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]]
+ipx::add_port_map TKEEP [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]
+set_property physical_name sn_TKEEP [ipx::get_port_maps TKEEP -of_objects [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]]
+ipx::add_port_map TREADY [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]
+set_property physical_name sn_bp_TREADY [ipx::get_port_maps TREADY -of_objects [ipx::get_bus_interfaces sn_bp -of_objects [ipx::current_core]]]
+
+# Fix up 'rst' interface
+ipx::add_bus_parameter POLARITY [ipx::get_bus_interfaces rst -of_objects [ipx::current_core]]
+set_property VALUE ACTIVE_HIGH [ipx::get_bus_parameters POLARITY -of_objects [ipx::get_bus_interfaces rst -of_objects [ipx::current_core]]]
+
+# Fix up 'clk' interface
+set_property VALUE {fwd:sn:sn_bp:s_axi} [ipx::get_bus_parameters ASSOCIATED_BUSIF -of_objects [ipx::get_bus_interfaces clk -of_objects [ipx::current_core ]]]
 
 # Add info for "N" parameter
 set_property tooltip {Number of parallel packetfilter cores} [ipgui::get_guiparamspec -name "N" -component [ipx::current_core] ]
@@ -62,6 +89,14 @@ set_property value_format bool [ipx::get_hdl_parameters PESS -of_objects [ipx::c
 
 # Remove option to futz with AXI Lite address width
 ipgui::remove_param -component [ipx::current_core] [ipgui::get_guiparamspec -name "AXI_ADDR_WIDTH" -component [ipx::current_core]]
+
+# ENABLE_BACKPRESSURE parameter
+set_property tooltip {The snoop interface will assert backpressure instead of dropping packets} [ipgui::get_guiparamspec -name "ENABLE_BACKPRESSURE" -component [ipx::current_core] ]
+set_property widget {checkBox} [ipgui::get_guiparamspec -name "ENABLE_BACKPRESSURE" -component [ipx::current_core] ]
+set_property value false [ipx::get_user_parameters ENABLE_BACKPRESSURE -of_objects [ipx::current_core]]
+set_property value false [ipx::get_hdl_parameters ENABLE_BACKPRESSURE -of_objects [ipx::current_core]]
+set_property value_format bool [ipx::get_user_parameters ENABLE_BACKPRESSURE -of_objects [ipx::current_core]]
+set_property value_format bool [ipx::get_hdl_parameters ENABLE_BACKPRESSURE -of_objects [ipx::current_core]]
 
 # Actually create the IP
 ipx::create_xgui_files [ipx::current_core]

@@ -7,6 +7,8 @@ proc init_gui { IPINST } {
   set_property tooltip {Enable this if really having trouble meeting timing} ${BUF_IN}
   set BUF_OUT [ipgui::add_param $IPINST -name "BUF_OUT" -parent ${Page_0}]
   set_property tooltip {Only disable this if you think you can get away with it} ${BUF_OUT}
+  set ENABLE_BACKPRESSURE [ipgui::add_param $IPINST -name "ENABLE_BACKPRESSURE" -parent ${Page_0}]
+  set_property tooltip {The snoop interface will assert backpressure instead of dropping packets} ${ENABLE_BACKPRESSURE}
   set INST_MEM_DEPTH [ipgui::add_param $IPINST -name "INST_MEM_DEPTH" -parent ${Page_0}]
   set_property tooltip {This will be rounded up internally to a power of 2. Sets the size of the instruction memory} ${INST_MEM_DEPTH}
   set N [ipgui::add_param $IPINST -name "N" -parent ${Page_0}]
@@ -44,6 +46,15 @@ proc update_PARAM_VALUE.BUF_OUT { PARAM_VALUE.BUF_OUT } {
 
 proc validate_PARAM_VALUE.BUF_OUT { PARAM_VALUE.BUF_OUT } {
 	# Procedure called to validate BUF_OUT
+	return true
+}
+
+proc update_PARAM_VALUE.ENABLE_BACKPRESSURE { PARAM_VALUE.ENABLE_BACKPRESSURE } {
+	# Procedure called to update ENABLE_BACKPRESSURE when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.ENABLE_BACKPRESSURE { PARAM_VALUE.ENABLE_BACKPRESSURE } {
+	# Procedure called to validate ENABLE_BACKPRESSURE
 	return true
 }
 
@@ -126,6 +137,11 @@ proc update_MODELPARAM_VALUE.BUF_OUT { MODELPARAM_VALUE.BUF_OUT PARAM_VALUE.BUF_
 proc update_MODELPARAM_VALUE.PESS { MODELPARAM_VALUE.PESS PARAM_VALUE.PESS } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.PESS}] ${MODELPARAM_VALUE.PESS}
+}
+
+proc update_MODELPARAM_VALUE.ENABLE_BACKPRESSURE { MODELPARAM_VALUE.ENABLE_BACKPRESSURE PARAM_VALUE.ENABLE_BACKPRESSURE } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.ENABLE_BACKPRESSURE}] ${MODELPARAM_VALUE.ENABLE_BACKPRESSURE}
 }
 
 proc update_MODELPARAM_VALUE.AXI_ADDR_WIDTH { MODELPARAM_VALUE.AXI_ADDR_WIDTH PARAM_VALUE.AXI_ADDR_WIDTH } {
