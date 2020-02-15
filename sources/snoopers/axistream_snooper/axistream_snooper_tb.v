@@ -23,6 +23,7 @@ module testbench_template;
     reg [`SN_FWD_DATA_WIDTH-1:0] sn_TDATA;
     reg [KEEP_WIDTH-1:0] sn_TKEEP;
     reg sn_TREADY;
+    wire sn_bp_TREADY;
     reg sn_TVALID;
     reg sn_TLAST;
     wire [`SN_FWD_ADDR_WIDTH-1:0] sn_addr;
@@ -92,13 +93,15 @@ module testbench_template;
         .SN_FWD_DATA_WIDTH(`SN_FWD_DATA_WIDTH),
         .SN_FWD_ADDR_WIDTH(`SN_FWD_ADDR_WIDTH),
         .INC_WIDTH        (`INC_WIDTH        ),
-        .PESS             (`PESS             )
+        .PESS             (`PESS             ),
+        .ENABLE_BACKPRESSURE(1)
     ) DUT (
         .clk(clk),
         .rst(rst),
         .sn_TDATA(sn_TDATA),
         .sn_TKEEP(sn_TKEEP),
         .sn_TREADY(sn_TREADY),
+        .sn_bp_TREADY(sn_bp_TREADY),
         .sn_TVALID(sn_TVALID),
         .sn_TLAST(sn_TLAST),
         .sn_addr(sn_addr),
