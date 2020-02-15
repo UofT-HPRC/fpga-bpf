@@ -58,7 +58,8 @@ module axistream_packetfilt # (
         parameter SN_FWD_DATA_WIDTH = 64,
         parameter BUF_IN = 0,
         parameter BUF_OUT = 0,
-        parameter PESS = 0
+        parameter PESS = 0,
+        parameter ENABLE_BACKPRESSURE = 0
 `ifndef DISABLE_AXILITE
         , //yes, this comma needs to be here
         parameter AXI_ADDR_WIDTH = 12 // width of the AXI address bus
@@ -72,6 +73,7 @@ module axistream_packetfilt # (
         input wire [SN_FWD_DATA_WIDTH-1:0] sn_TDATA,
         input wire [`KEEP_WIDTH-1:0] sn_TKEEP,
         input wire sn_TREADY,
+        output wire sn_bp_TREADY,
         input wire sn_TVALID,
         input wire sn_TLAST,
     
@@ -255,7 +257,8 @@ module axistream_packetfilt # (
         .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
         .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
         .INC_WIDTH(INC_WIDTH),
-        .PESS(PESS)
+        .PESS(PESS),
+        .ENABLE_BACKPRESSURE(ENABLE_BACKPRESSURE)
     ) the_snooper (
         .clk(clk),
         .rst(!control_start),
@@ -264,6 +267,7 @@ module axistream_packetfilt # (
         .sn_TDATA(sn_TDATA),
         .sn_TKEEP(sn_TKEEP),
         .sn_TREADY(sn_TREADY),
+        .sn_bp_TREADY(sn_bp_TREADY),
         .sn_TVALID(sn_TVALID),
         .sn_TLAST(sn_TLAST),
 

@@ -39,6 +39,7 @@ a simulation of AXI Lite
 `define BUF_IN              1
 `define BUF_OUT             1
 `define PESS                1
+`define ENABLE_BACKPRESSURE 1
 
 
 `define KEEP_WIDTH (`SN_FWD_DATA_WIDTH/8)
@@ -55,6 +56,7 @@ module axistream_packetfilt_tb;
     reg [`SN_FWD_DATA_WIDTH-1:0] sn_TDATA = 0;
     reg [`KEEP_WIDTH-1:0] sn_TKEEP = 0;
     reg sn_TREADY = 0;
+    wire sn_bp_TREADY;
     reg sn_TVALID = 0;
     reg sn_TLAST = 0;
     
@@ -132,7 +134,8 @@ module axistream_packetfilt_tb;
             .SN_FWD_DATA_WIDTH  (`SN_FWD_DATA_WIDTH ),
             .BUF_IN             (`BUF_IN            ),
             .BUF_OUT            (`BUF_OUT           ),
-            .PESS               (`PESS              )
+            .PESS               (`PESS              ),
+            .ENABLE_BACKPRESSURE(`ENABLE_BACKPRESSURE)
     ) DUT (
         .clk(clk),
         .rst(rst),
@@ -142,6 +145,7 @@ module axistream_packetfilt_tb;
         .sn_TDATA(sn_TDATA),
         .sn_TKEEP(sn_TKEEP),
         .sn_TREADY(sn_TREADY),
+        .sn_bp_TREADY(sn_bp_TREADY),
         .sn_TVALID(sn_TVALID),
         .sn_TLAST(sn_TLAST),
 

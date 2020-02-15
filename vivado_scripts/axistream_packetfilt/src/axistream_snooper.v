@@ -22,6 +22,7 @@ module axistream_snooper # (
     parameter SN_FWD_ADDR_WIDTH = 9,
     parameter INC_WIDTH = 8,
     parameter PESS = 0,
+    parameter ENABLE_BACKPRESSURE = 0,
     
     //Derived parameters. Don't set these
     parameter KEEP_WIDTH = SN_FWD_DATA_WIDTH/8
@@ -30,11 +31,11 @@ module axistream_snooper # (
     input wire rst,
     
     //AXI stream snoop interface
-    //TODO: have parameter to enable/disable backpressure
     //TODO: enable/disable TKEEP? 
     input wire [SN_FWD_DATA_WIDTH-1:0] sn_TDATA,
     input wire [KEEP_WIDTH-1:0] sn_TKEEP,
     input wire sn_TREADY,
+    output wire sn_bp_TREADY, 
     input wire sn_TVALID,
     input wire sn_TLAST,
     
@@ -57,6 +58,7 @@ module axistream_snooper # (
     wire [SN_FWD_DATA_WIDTH-1:0] sn_TDATA_i;
     wire [KEEP_WIDTH-1:0] sn_TKEEP_i;
     wire sn_TREADY_i;
+    wire sn_bp_TREADY_i;
     wire sn_TVALID_i;
     wire sn_TLAST_i;
     
@@ -73,7 +75,12 @@ module axistream_snooper # (
     `localparam NOT_STARTED = 2'b00;
     `localparam WAITING = 2'b01;
     `localparam STARTED = 2'b11;
-    reg [1:0] state = NOT_STARTED;
+    reg [1:0] state;
+`genif (ENABLE_BACKPRESSURE == 0) begin
+    initial state <= NOT_STARTED;
+end else begin
+    initial state <= STARTED;
+`endgen
     wire valid_i;
     wire done_i;
     reg [SN_FWD_ADDR_WIDTH-1:0] addr_i = 0;
@@ -133,6 +140,7 @@ end else begin
     //with a nice diagram
     
     //next-state logic
+`genif (ENABLE_BACKPRESSURE == 0) begin
     always @(posedge clk) begin
         if (rst) begin
             state <= NOT_STARTED;
@@ -153,10 +161,42 @@ end else begin
         end
     end
     
+end else begin
+    //When backpressure is enabled, there is no need for a WAITING state, since
+    //we assume that we'll never "start listening" halfway through a packet. 
+    //Also, sn_bp_TREADY is always high when we are in the STARTED state
+    always @(posedge clk) begin
+        if (rst) begin
+            state <= STARTED;
+        end else begin
+            case (state)
+                NOT_STARTED:
+                    //Note: rdy_for_sn_ack is always high when we are NOT_STARTED
+                    //so we can go to STARTED as soon as rdy_for_sn is asserted
+                    state <= rdy_for_sn_i ? STARTED : NOT_STARTED;
+                STARTED:
+                    //The only way to leave the started state is if an input 
+                    //packet ends and the packet filter is not currently ready
+                    //for the snooper
+                    state <= ({sn_TREADY_i && sn_TLAST_i, rdy_for_sn_i} == 2'b10) ? NOT_STARTED : STARTED;
+            endcase
+        end
+    end
+`endgen
+
     //state machine outputs. Note this is a Mealy machine
     assign rdy_for_sn_ack_i = (state == NOT_STARTED) || (state == STARTED && lastrdyvalid);
-    assign valid_i = (state == STARTED) && sn_TVALID_i && sn_TREADY_i;
+`genif (ENABLE_BACKPRESSURE == 0) begin
+    assign valid_i = (state == STARTED) && sn_TVALID_i  && sn_TREADY_i;
+end else begin
+    assign valid_i = (state == STARTED) && sn_TVALID_i;
+`endgen
     assign done_i = (state == STARTED) && lastrdyvalid;
+
+`genif (ENABLE_BACKPRESSURE != 0) begin
+    //Flits are only accepted when the state is STARTED
+    assign sn_bp_TREADY_i = (state == STARTED);
+`endgen
     
     //Actual AXI-to-BRAM conversion
     assign sn_wr_data_i = sn_TDATA_i;
@@ -182,6 +222,9 @@ end else begin
     assign sn_byte_inc = sn_byte_inc_i;
     assign sn_done = sn_done_i;
     assign rdy_for_sn_ack = rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
+    
+    //AXI Stream interface
+    assign sn_bp_TREADY = sn_bp_TREADY_i;
     
     assign packet_dropped_inc = (state != STARTED) && lastrdyvalid;
 
