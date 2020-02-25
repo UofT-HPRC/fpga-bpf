@@ -1,5 +1,8 @@
 `timescale 1ns / 1ps
 
+`ifndef PACKETFILTER_CORE_INCLUDE_GUARD
+`define PACKETFILTER_CORE_INCLUDE_GUARD 1
+
 /*
 
 packetfilter_core.v
@@ -217,3 +220,5 @@ endmodule
 
 `undef CLOG2
 `undef localparam
+
+`endif //PACKETFILTER_CORE_INCLUDE_GUARD

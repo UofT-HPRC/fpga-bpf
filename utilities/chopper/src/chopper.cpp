@@ -4,8 +4,8 @@
 #include "parameter_vals.h"
 struct dataword
 {
-	ap_uint<1024> data;
-	ap_uint<128> keep;
+	ap_uint<512> data;
+	ap_uint<64> keep;
 	ap_uint<1> last;
 };
 void chopper(

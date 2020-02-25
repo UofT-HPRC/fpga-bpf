@@ -26,6 +26,7 @@ TODO: Update rest of code to do this
 `include "parallel_cores/parallel_cores.v"
 `include "snoopers/axistream_snooper/axistream_snooper.v"
 `include "forwarders/axistream_forwarder/axistream_forwarder.v"
+`include "parallel_cores/packetfilter_core/packetfilter_core.v"
 `define localparam parameter
 `else /*For Vivado*/
 `define localparam localparam
@@ -282,6 +283,13 @@ module axistream_packetfilt # (
         .packet_dropped_inc(dropped_inc)
     );
 
+//SPECIAL CASE: When N = 1, we don't instantiate all that complicated logic for
+//arbitration. Normally I would prefer to keep things simple and pay the price
+//of unneeded extra logic, but I expect N=1 to be fairly common. So, we'll do
+//the optimization
+
+generate if (N > 1) begin
+    //Here we need the parallel_cores module
     parallel_cores # (
         .N(N),
         .PACKET_MEM_BYTES(PACKET_MEM_BYTES),
@@ -319,6 +327,48 @@ module axistream_packetfilt # (
         .inst_wr_data(inst_wr_data),
         .inst_wr_en(inst_wr_en)
     );
+    
+end else begin
+    //In this case, N = 1 and we only need one packetfilter_core
+    //Here we only need a packetfilter_core module
+    packetfilter_core # (
+        .PACKET_MEM_BYTES(PACKET_MEM_BYTES),
+        .INST_MEM_DEPTH(INST_MEM_DEPTH),
+        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .BUF_IN(BUF_IN),
+        .BUF_OUT(BUF_OUT),
+        .PESS(PESS)
+    ) the_actual_filter (
+        .clk(clk),
+        .rst(!control_start),
+
+
+        //Interface to snooper
+        .sn_addr(sn_addr),
+        .sn_wr_data(sn_wr_data),
+        .sn_wr_en(sn_wr_en),
+        .sn_byte_inc(sn_byte_inc),
+        .sn_done(sn_done),
+        .rdy_for_sn(rdy_for_sn),
+        .rdy_for_sn_ack(rdy_for_sn_ack), //Yeah, I'm ready for a snack
+
+        //Interface to forwarder
+        .fwd_addr(fwd_addr),
+        .fwd_rd_en(fwd_rd_en),
+        .fwd_rd_data(fwd_rd_data),
+        .fwd_rd_data_vld(fwd_rd_data_vld),
+        .fwd_byte_len(fwd_byte_len),
+        .fwd_done(fwd_done),
+        .rdy_for_fwd(rdy_for_fwd),
+        .rdy_for_fwd_ack(rdy_for_fwd_ack),
+
+        //Interface for new code input
+        .inst_wr_addr(inst_wr_addr),
+        .inst_wr_data(inst_wr_data),
+        .inst_wr_en(inst_wr_en)
+    );
+
+end endgenerate
 
     axistream_forwarder # (
         .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),

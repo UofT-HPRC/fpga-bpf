@@ -1,1 +1,1 @@
-#define divisors 4
+#define divisors 6

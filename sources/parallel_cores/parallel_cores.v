@@ -148,7 +148,6 @@ module parallel_cores # (
             .rdy_for_sn(rdy_for_sn_i[i]),
             .rdy_for_sn_ack(rdy_for_sn_ack_i[i]), //Yeah, I'm ready for a snack
 
-            //TODO forwarder arbiter stuff
             //Interface to forwarder
             .fwd_addr(fwd_addr_i),
             .fwd_rd_en(fwd_rd_en_i[i]),
