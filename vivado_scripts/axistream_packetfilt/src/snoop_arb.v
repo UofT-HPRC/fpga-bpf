@@ -74,8 +74,10 @@ module snoop_arb # (
 
 `genif (N > 1) begin
     //Internal signals
-    wire [TAG_SZ-1:0] selection_next;
-    reg [TAG_SZ-1:0] selection = 0;
+    reg time_to_update = 1;
+    wire [TAG_SZ-1:0] selection;
+    reg [TAG_SZ-1:0] selection_r = 0;
+    wire [TAG_SZ-1:0] tag;
     
     wire [SN_ADDR_WIDTH-1:0] sn_addr_i;
     wire [DATA_WIDTH-1:0] sn_wr_data_i;
@@ -96,7 +98,7 @@ module snoop_arb # (
         .clk(clk),
         .rst(rst),
         
-        .tag(selection_next),
+        .tag(tag),
         .rdy(rdy),
         .ack(ack),
         
@@ -104,12 +106,13 @@ module snoop_arb # (
         .ack_out(rdy_for_sn_ack_i)
     );
     
-    //selection_i is registered when a handshake completes
+    //When a handshake completes, we allow selection to update on the next cycle
     always @(posedge clk) begin
-        if (rdy && ack) begin
-                selection <= selection_next;
-        end
+        time_to_update <= (rdy && ack);
+        selection_r <= selection;
     end
+    
+    assign selection = (time_to_update) ? tag : selection_r;
     
     //Assign the rest of the internal signals
     assign sn_addr_i = addr;
