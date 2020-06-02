@@ -19,6 +19,8 @@ proc init_gui { IPINST } {
   set_property tooltip {If you are really desperate, this option enables several extra registers to help ease timing} ${PESS}
   ipgui::add_param $IPINST -name "SN_FWD_DATA_WIDTH" -parent ${Page_0}
 
+  set SHOW_DBG_PORTS [ipgui::add_param $IPINST -name "SHOW_DBG_PORTS"]
+  set_property tooltip {Exports some information from CPU0 for looking at in an ILA} ${SHOW_DBG_PORTS}
 
 }
 
@@ -46,6 +48,33 @@ proc update_PARAM_VALUE.BUF_OUT { PARAM_VALUE.BUF_OUT } {
 
 proc validate_PARAM_VALUE.BUF_OUT { PARAM_VALUE.BUF_OUT } {
 	# Procedure called to validate BUF_OUT
+	return true
+}
+
+proc update_PARAM_VALUE.BYTE_ADDR_WIDTH { PARAM_VALUE.BYTE_ADDR_WIDTH } {
+	# Procedure called to update BYTE_ADDR_WIDTH when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.BYTE_ADDR_WIDTH { PARAM_VALUE.BYTE_ADDR_WIDTH } {
+	# Procedure called to validate BYTE_ADDR_WIDTH
+	return true
+}
+
+proc update_PARAM_VALUE.CODE_ADDR_WIDTH { PARAM_VALUE.CODE_ADDR_WIDTH } {
+	# Procedure called to update CODE_ADDR_WIDTH when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.CODE_ADDR_WIDTH { PARAM_VALUE.CODE_ADDR_WIDTH } {
+	# Procedure called to validate CODE_ADDR_WIDTH
+	return true
+}
+
+proc update_PARAM_VALUE.CODE_DATA_WIDTH { PARAM_VALUE.CODE_DATA_WIDTH } {
+	# Procedure called to update CODE_DATA_WIDTH when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.CODE_DATA_WIDTH { PARAM_VALUE.CODE_DATA_WIDTH } {
+	# Procedure called to validate CODE_DATA_WIDTH
 	return true
 }
 
@@ -91,6 +120,15 @@ proc update_PARAM_VALUE.PESS { PARAM_VALUE.PESS } {
 
 proc validate_PARAM_VALUE.PESS { PARAM_VALUE.PESS } {
 	# Procedure called to validate PESS
+	return true
+}
+
+proc update_PARAM_VALUE.SHOW_DBG_PORTS { PARAM_VALUE.SHOW_DBG_PORTS } {
+	# Procedure called to update SHOW_DBG_PORTS when any of the dependent parameters in the arguments change
+}
+
+proc validate_PARAM_VALUE.SHOW_DBG_PORTS { PARAM_VALUE.SHOW_DBG_PORTS } {
+	# Procedure called to validate SHOW_DBG_PORTS
 	return true
 }
 
@@ -142,6 +180,21 @@ proc update_MODELPARAM_VALUE.PESS { MODELPARAM_VALUE.PESS PARAM_VALUE.PESS } {
 proc update_MODELPARAM_VALUE.ENABLE_BACKPRESSURE { MODELPARAM_VALUE.ENABLE_BACKPRESSURE PARAM_VALUE.ENABLE_BACKPRESSURE } {
 	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
 	set_property value [get_property value ${PARAM_VALUE.ENABLE_BACKPRESSURE}] ${MODELPARAM_VALUE.ENABLE_BACKPRESSURE}
+}
+
+proc update_MODELPARAM_VALUE.CODE_ADDR_WIDTH { MODELPARAM_VALUE.CODE_ADDR_WIDTH PARAM_VALUE.CODE_ADDR_WIDTH } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.CODE_ADDR_WIDTH}] ${MODELPARAM_VALUE.CODE_ADDR_WIDTH}
+}
+
+proc update_MODELPARAM_VALUE.CODE_DATA_WIDTH { MODELPARAM_VALUE.CODE_DATA_WIDTH PARAM_VALUE.CODE_DATA_WIDTH } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.CODE_DATA_WIDTH}] ${MODELPARAM_VALUE.CODE_DATA_WIDTH}
+}
+
+proc update_MODELPARAM_VALUE.BYTE_ADDR_WIDTH { MODELPARAM_VALUE.BYTE_ADDR_WIDTH PARAM_VALUE.BYTE_ADDR_WIDTH } {
+	# Procedure called to set VHDL generic/Verilog parameter value(s) based on TCL parameter value
+	set_property value [get_property value ${PARAM_VALUE.BYTE_ADDR_WIDTH}] ${MODELPARAM_VALUE.BYTE_ADDR_WIDTH}
 }
 
 proc update_MODELPARAM_VALUE.AXI_ADDR_WIDTH { MODELPARAM_VALUE.AXI_ADDR_WIDTH PARAM_VALUE.AXI_ADDR_WIDTH } {

@@ -400,7 +400,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>dc9ac695</spirit:value>
+            <spirit:value>6d8e6567</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -416,7 +416,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>dc9ac695</spirit:value>
+            <spirit:value>6d8e6567</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -430,7 +430,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>6f847f03</spirit:value>
+            <spirit:value>d61513d2</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -652,6 +652,202 @@
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
         </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_byte_rd_addr</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.BYTE_ADDR_WIDTH&apos;)) - 1)">10</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_byte_rd_addr" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_rd_en</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_rd_en" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_resized_mem_data</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_resized_mem_data" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_resized_mem_data_valid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_resized_mem_data_valid" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_acc</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_acc" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_rej</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_rej" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_inst_rd_addr</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.CODE_ADDR_WIDTH&apos;)) - 1)">8</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_inst_rd_addr" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_inst_rd_en</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_inst_rd_en" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>cpu0_inst_rd_data</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.CODE_DATA_WIDTH&apos;)) - 1)">63</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.cpu0_inst_rd_data" xilinx:dependency="SHOW_DBG_PORTS != 0">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
       </spirit:port>
       <spirit:port>
         <spirit:name>s_axi_awaddr</spirit:name>
@@ -1012,6 +1208,21 @@
         <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.ENABLE_BACKPRESSURE">false</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>CODE_ADDR_WIDTH</spirit:name>
+        <spirit:displayName>Code Addr Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.CODE_ADDR_WIDTH" spirit:dependency="((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 2) ? 1 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 4) ? 2 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 8) ? 3 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 16) ? 4 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 32) ? 5 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 64) ? 6 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 128) ? 7 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 256) ? 8 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 512) ? 9 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 1024) ? 10 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 2048) ? 11 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 4096) ? 12 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 8192) ? 13 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 16384) ? 14 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 32768) ? 15 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.INST_MEM_DEPTH&apos;)) &lt;= 65536) ? 16 : -1))))))))))))))))">9</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>CODE_DATA_WIDTH</spirit:name>
+        <spirit:displayName>Code Data Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.CODE_DATA_WIDTH">64</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>BYTE_ADDR_WIDTH</spirit:name>
+        <spirit:displayName>Byte Addr Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.BYTE_ADDR_WIDTH" spirit:dependency="((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 2) ? 1 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 4) ? 2 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 8) ? 3 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 16) ? 4 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 32) ? 5 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 64) ? 6 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 128) ? 7 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 256) ? 8 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 512) ? 9 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 1024) ? 10 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 2048) ? 11 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 4096) ? 12 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 8192) ? 13 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 16384) ? 14 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 32768) ? 15 : ((spirit:decode(id(&apos;MODELPARAM_VALUE.PACKET_MEM_BYTES&apos;)) &lt;= 65536) ? 16 : -1))))))))))))))))">11</spirit:value>
+      </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>AXI_ADDR_WIDTH</spirit:name>
         <spirit:displayName>Axi Addr Width</spirit:displayName>
         <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.AXI_ADDR_WIDTH">12</spirit:value>
@@ -1345,7 +1556,7 @@
       <spirit:file>
         <spirit:name>xgui/axistream_packetfilt_v1_0.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_6f847f03</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_d61513d2</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -1393,13 +1604,61 @@
       <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.ENABLE_BACKPRESSURE">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
+      <spirit:name>CODE_ADDR_WIDTH</spirit:name>
+      <spirit:displayName>Code Addr Width</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.CODE_ADDR_WIDTH">9</spirit:value>
+      <spirit:vendorExtensions>
+        <xilinx:parameterInfo>
+          <xilinx:enablement>
+            <xilinx:isEnabled xilinx:id="PARAM_ENABLEMENT.CODE_ADDR_WIDTH">false</xilinx:isEnabled>
+          </xilinx:enablement>
+        </xilinx:parameterInfo>
+      </spirit:vendorExtensions>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>CODE_DATA_WIDTH</spirit:name>
+      <spirit:displayName>Code Data Width</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.CODE_DATA_WIDTH">64</spirit:value>
+      <spirit:vendorExtensions>
+        <xilinx:parameterInfo>
+          <xilinx:enablement>
+            <xilinx:isEnabled xilinx:id="PARAM_ENABLEMENT.CODE_DATA_WIDTH">false</xilinx:isEnabled>
+          </xilinx:enablement>
+        </xilinx:parameterInfo>
+      </spirit:vendorExtensions>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>BYTE_ADDR_WIDTH</spirit:name>
+      <spirit:displayName>Byte Addr Width</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.BYTE_ADDR_WIDTH">11</spirit:value>
+      <spirit:vendorExtensions>
+        <xilinx:parameterInfo>
+          <xilinx:enablement>
+            <xilinx:isEnabled xilinx:id="PARAM_ENABLEMENT.BYTE_ADDR_WIDTH">false</xilinx:isEnabled>
+          </xilinx:enablement>
+        </xilinx:parameterInfo>
+      </spirit:vendorExtensions>
+    </spirit:parameter>
+    <spirit:parameter>
       <spirit:name>AXI_ADDR_WIDTH</spirit:name>
       <spirit:displayName>Axi Addr Width</spirit:displayName>
       <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.AXI_ADDR_WIDTH">12</spirit:value>
+      <spirit:vendorExtensions>
+        <xilinx:parameterInfo>
+          <xilinx:enablement>
+            <xilinx:isEnabled xilinx:id="PARAM_ENABLEMENT.AXI_ADDR_WIDTH">false</xilinx:isEnabled>
+          </xilinx:enablement>
+        </xilinx:parameterInfo>
+      </spirit:vendorExtensions>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
       <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">axistream_packetfilt_v1_0</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>SHOW_DBG_PORTS</spirit:name>
+      <spirit:displayName>Show Debug Ports</spirit:displayName>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.SHOW_DBG_PORTS">false</spirit:value>
     </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
@@ -1434,16 +1693,16 @@
       <xilinx:displayName>axistream_packetfilt_v1_0</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
       <xilinx:coreRevision>1</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2020-05-22T14:59:09Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2020-06-02T07:06:29Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2018.3</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="7894671d"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="b9bc4061"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="9e5446f1"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="da7a310b"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="9c6e1c83"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="8c94a4ba"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="29997c4f"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="1969d8bc"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="a56c5938"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="4820d76a"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

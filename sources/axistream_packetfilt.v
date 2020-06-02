@@ -63,17 +63,9 @@ module axistream_packetfilt # (
         parameter ENABLE_BACKPRESSURE = 0,
         
         //Not to be set manually
-		parameter BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES),
-        parameter DBG_INFO_WIDTH = 
-			  BYTE_ADDR_WIDTH	//byte_rd_addr
-			+ 1					//cpu_rd_en
-			+ 32				//resized_mem_data
-			+ 1					//resized_mem_data_vld
-			+ 1					//cpu_acc
-			+ 1					//cpu_rej
-			+ CODE_ADDR_WIDTH	//inst_rd_addr
-			+ 1					//inst_rd_en
-			+ CODE_DATA_WIDTH	//inst_rd_data
+        parameter CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH),
+        parameter CODE_DATA_WIDTH = 64,
+		parameter BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES)
 `ifndef DISABLE_AXILITE
         , //yes, this comma needs to be here
         parameter AXI_ADDR_WIDTH = 12 // width of the AXI address bus
@@ -146,12 +138,24 @@ module axistream_packetfilt # (
         
 );
 
-    `localparam CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH);
-    `localparam CODE_DATA_WIDTH = 64;
+    //`localparam CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH);
+    //`localparam CODE_DATA_WIDTH = 64;
     //`localparam BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES);
     `localparam SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8);
     `localparam INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1;
     `localparam PLEN_WIDTH = 32;
+    
+    `localparam DBG_INFO_WIDTH = 
+			  BYTE_ADDR_WIDTH	//byte_rd_addr
+			+ 1					//cpu_rd_en
+			+ 32				//resized_mem_data
+			+ 1					//resized_mem_data_vld
+			+ 1					//cpu_acc
+			+ 1					//cpu_rej
+			+ CODE_ADDR_WIDTH	//inst_rd_addr
+			+ 1					//inst_rd_en
+			+ CODE_DATA_WIDTH	//inst_rd_data
+    ;
 
     /***********************************/
     /***CONNECTIONS TO PARALLEL CORES***/
@@ -401,8 +405,7 @@ end else begin
 end endgenerate
 	
 	//Assign debug probes
-	assign {        
-	    num_packets_dropped,
+	assign {
         cpu0_byte_rd_addr,
         cpu0_rd_en,
         cpu0_resized_mem_data,

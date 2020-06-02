@@ -88,6 +88,7 @@ set_property value_format bool [ipx::get_user_parameters PESS -of_objects [ipx::
 set_property value_format bool [ipx::get_hdl_parameters PESS -of_objects [ipx::current_core]]
 
 # Remove option to futz with AXI Lite address width
+set_property enablement_value false [ipx::get_user_parameters AXI_ADDR_WIDTH -of_objects [ipx::current_core]]
 ipgui::remove_param -component [ipx::current_core] [ipgui::get_guiparamspec -name "AXI_ADDR_WIDTH" -component [ipx::current_core]]
 
 # ENABLE_BACKPRESSURE parameter
@@ -98,13 +99,39 @@ set_property value false [ipx::get_hdl_parameters ENABLE_BACKPRESSURE -of_object
 set_property value_format bool [ipx::get_user_parameters ENABLE_BACKPRESSURE -of_objects [ipx::current_core]]
 set_property value_format bool [ipx::get_hdl_parameters ENABLE_BACKPRESSURE -of_objects [ipx::current_core]]
 
+# Remove option to futz with automatically derived parameters
+set_property enablement_value false [ipx::get_user_parameters CODE_ADDR_WIDTH -of_objects [ipx::current_core]]
+ipgui::remove_param -component [ipx::current_core] [ipgui::get_guiparamspec -name "CODE_ADDR_WIDTH" -component [ipx::current_core]]
+set_property enablement_value false [ipx::get_user_parameters CODE_DATA_WIDTH -of_objects [ipx::current_core]]
+ipgui::remove_param -component [ipx::current_core] [ipgui::get_guiparamspec -name "CODE_DATA_WIDTH" -component [ipx::current_core]]
+set_property enablement_value false [ipx::get_user_parameters BYTE_ADDR_WIDTH -of_objects [ipx::current_core]]
+ipgui::remove_param -component [ipx::current_core] [ipgui::get_guiparamspec -name "BYTE_ADDR_WIDTH" -component [ipx::current_core]]
+
+# Add new parameter for toggling debug outputs
+ipx::add_user_parameter SHOW_DBG_PORTS [ipx::current_core]
+set_property value_resolve_type user [ipx::get_user_parameters SHOW_DBG_PORTS -of_objects [ipx::current_core]]
+ipgui::add_param -name {SHOW_DBG_PORTS} -component [ipx::current_core]
+set_property display_name {Show Debug Ports} [ipgui::get_guiparamspec -name "SHOW_DBG_PORTS" -component [ipx::current_core] ]
+set_property tooltip {Exports some information from CPU0 for looking at in an ILA} [ipgui::get_guiparamspec -name "SHOW_DBG_PORTS" -component [ipx::current_core] ]
+set_property widget {checkBox} [ipgui::get_guiparamspec -name "SHOW_DBG_PORTS" -component [ipx::current_core] ]
+set_property value false [ipx::get_user_parameters SHOW_DBG_PORTS -of_objects [ipx::current_core]]
+set_property value_format bool [ipx::get_user_parameters SHOW_DBG_PORTS -of_objects [ipx::current_core]]
+
+# Hide debug ports if the user doesn't want to see them
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_byte_rd_addr -of_objects [ipx::current_core]]
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_rd_en -of_objects [ipx::current_core]]
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_resized_mem_data -of_objects [ipx::current_core]]
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_resized_mem_data_valid -of_objects [ipx::current_core]]
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_acc -of_objects [ipx::current_core]]
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_rej -of_objects [ipx::current_core]]
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_inst_rd_addr -of_objects [ipx::current_core]]
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_inst_rd_en -of_objects [ipx::current_core]]
+set_property ENABLEMENT_DEPENDENCY {SHOW_DBG_PORTS != 0} [ipx::get_ports cpu0_inst_rd_data -of_objects [ipx::current_core]]
+
 # Actually create the IP
 ipx::create_xgui_files [ipx::current_core]
 ipx::update_checksums [ipx::current_core]
 ipx::save_core [ipx::current_core]
 close_project 
 exit
-
-
-
 

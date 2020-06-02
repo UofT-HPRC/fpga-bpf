@@ -105,6 +105,8 @@ module stage1 (
     
     wire [63:0] instr_out_i;
     
+    wire PC_en_i;
+    
     wire [5:0] icount_i;
     wire [5:0] ocount_i;
     
