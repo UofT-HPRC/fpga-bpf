@@ -60,7 +60,20 @@ module axistream_packetfilt # (
         parameter BUF_IN = 0,
         parameter BUF_OUT = 0,
         parameter PESS = 0,
-        parameter ENABLE_BACKPRESSURE = 0
+        parameter ENABLE_BACKPRESSURE = 0,
+        
+        //Not to be set manually
+		parameter BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES),
+        parameter DBG_INFO_WIDTH = 
+			  BYTE_ADDR_WIDTH	//byte_rd_addr
+			+ 1					//cpu_rd_en
+			+ 32				//resized_mem_data
+			+ 1					//resized_mem_data_vld
+			+ 1					//cpu_acc
+			+ 1					//cpu_rej
+			+ CODE_ADDR_WIDTH	//inst_rd_addr
+			+ 1					//inst_rd_en
+			+ CODE_DATA_WIDTH	//inst_rd_data
 `ifndef DISABLE_AXILITE
         , //yes, this comma needs to be here
         parameter AXI_ADDR_WIDTH = 12 // width of the AXI address bus
@@ -87,7 +100,16 @@ module axistream_packetfilt # (
         input wire fwd_TREADY,
         
         //Debug outputs
-        output wire [15:0] num_packets_dropped
+        output wire [15:0] num_packets_dropped,
+        output wire [BYTE_ADDR_WIDTH -1 :0] cpu0_byte_rd_addr,
+        output wire cpu0_rd_en,
+        output wire [31:0] cpu0_resized_mem_data,
+        output wire cpu0_resized_mem_data_valid,
+        output wire cpu0_acc,
+        output wire cpu0_rej,
+        output wire [CODE_ADDR_WIDTH -1:0] cpu0_inst_rd_addr,
+        output wire cpu0_inst_rd_en,
+        output wire [CODE_DATA_WIDTH -1:0] cpu0_inst_rd_data
     
 `ifndef DISABLE_AXILITE
         , //yes, this comma needs to be here
@@ -126,7 +148,7 @@ module axistream_packetfilt # (
 
     `localparam CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH);
     `localparam CODE_DATA_WIDTH = 64;
-    `localparam BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES);
+    //`localparam BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES);
     `localparam SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8);
     `localparam INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1;
     `localparam PLEN_WIDTH = 32;
@@ -288,6 +310,8 @@ module axistream_packetfilt # (
 //of unneeded extra logic, but I expect N=1 to be fairly common. So, we'll do
 //the optimization
 
+	wire [N*DBG_INFO_WIDTH -1:0] dbg_info;
+
 generate if (N > 1) begin
     //Here we need the parallel_cores module
     parallel_cores # (
@@ -325,7 +349,10 @@ generate if (N > 1) begin
         //Interface for new code input
         .inst_wr_addr(inst_wr_addr),
         .inst_wr_data(inst_wr_data),
-        .inst_wr_en(inst_wr_en)
+        .inst_wr_en(inst_wr_en),
+        
+        //Debug probes
+        .dbg_info(dbg_info)
     );
     
 end else begin
@@ -365,11 +392,28 @@ end else begin
         //Interface for new code input
         .inst_wr_addr(inst_wr_addr),
         .inst_wr_data(inst_wr_data),
-        .inst_wr_en(inst_wr_en)
+        .inst_wr_en(inst_wr_en),
+        
+        //Debug probes
+        .dbg_info(dbg_info)
     );
 
 end endgenerate
-
+	
+	//Assign debug probes
+	assign {        
+	    num_packets_dropped,
+        cpu0_byte_rd_addr,
+        cpu0_rd_en,
+        cpu0_resized_mem_data,
+        cpu0_resized_mem_data_valid,
+        cpu0_acc,
+        cpu0_rej,
+        cpu0_inst_rd_addr,
+        cpu0_inst_rd_en,
+        cpu0_inst_rd_data
+    } = dbg_info[DBG_INFO_WIDTH -1:0];
+	
     axistream_forwarder # (
         .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
         .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),

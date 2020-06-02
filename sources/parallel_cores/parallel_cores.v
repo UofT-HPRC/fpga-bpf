@@ -64,7 +64,18 @@ module parallel_cores # (
     parameter BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES),
     parameter SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8),
     parameter INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1,
-    parameter PLEN_WIDTH = 32
+    parameter PLEN_WIDTH = 32,
+    
+    parameter DBG_INFO_WIDTH = 
+	  BYTE_ADDR_WIDTH	//byte_rd_addr
+	+ 1					//cpu_rd_en
+	+ 32				//resized_mem_data
+	+ 1					//resized_mem_data_vld
+	+ 1					//cpu_acc
+	+ 1					//cpu_rej
+	+ CODE_ADDR_WIDTH	//inst_rd_addr
+	+ 1					//inst_rd_en
+	+ CODE_DATA_WIDTH	//inst_rd_data
 ) (
     input wire clk,
     input wire rst,
@@ -92,7 +103,10 @@ module parallel_cores # (
     //Interface for new code input
     input wire [CODE_ADDR_WIDTH-1:0] inst_wr_addr,
     input wire [CODE_DATA_WIDTH-1:0] inst_wr_data,
-    input wire inst_wr_en
+    input wire inst_wr_en,
+    
+    //Debug probes
+    output wire [N*DBG_INFO_WIDTH -1:0] dbg_info
 );
     /*************************************/
     /***snoop_arb <=> packetfiler_cores***/
@@ -161,7 +175,10 @@ module parallel_cores # (
             //Interface for new code input
             .inst_wr_addr(inst_wr_addr),
             .inst_wr_data(inst_wr_data),
-            .inst_wr_en(inst_wr_en)
+            .inst_wr_en(inst_wr_en),
+            
+            //Debug probes
+            .dbg_info(dbg_info[DBG_INFO_WIDTH*(i+1) - 1 -: DBG_INFO_WIDTH])
         );
     end endgenerate
     

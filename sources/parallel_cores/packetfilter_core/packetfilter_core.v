@@ -74,7 +74,18 @@ module packetfilter_core # (
     
     parameter INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1,
     
-    parameter PLEN_WIDTH = 32
+    parameter PLEN_WIDTH = 32,
+    
+	parameter DBG_INFO_WIDTH = 
+	  BYTE_ADDR_WIDTH	//byte_rd_addr
+	+ 1					//cpu_rd_en
+	+ 32				//resized_mem_data
+	+ 1					//resized_mem_data_vld
+	+ 1					//cpu_acc
+	+ 1					//cpu_rej
+	+ CODE_ADDR_WIDTH	//inst_rd_addr
+	+ 1					//inst_rd_en
+	+ CODE_DATA_WIDTH	//inst_rd_data
 ) (
     input wire clk,
     input wire rst,
@@ -102,12 +113,12 @@ module packetfilter_core # (
     //Interface for new code input
     input wire [CODE_ADDR_WIDTH-1:0] inst_wr_addr,
     input wire [CODE_DATA_WIDTH-1:0] inst_wr_data,
-    input wire inst_wr_en
+    input wire inst_wr_en,
     
+    //Debug probes
+    output wire [DBG_INFO_WIDTH -1:0] dbg_info
 );
-    `localparam P_NG_ADDR_WIDTH = SN_FWD_ADDR_WIDTH + 1;
-    
-    
+    `localparam P_NG_ADDR_WIDTH = SN_FWD_ADDR_WIDTH + 1;    
     
     /************************/
     /***P3 system <=> CPU ***/
@@ -215,7 +226,22 @@ module packetfilter_core # (
         .inst_rd_en(inst_rd_en),
         .instr_in(inst_rd_data)
     );
-
+	
+	assign dbg_info = {
+		byte_rd_addr        ,
+	    cpu_rd_en           ,
+	    resized_mem_data    ,
+	    resized_mem_data_vld,
+	    cpu_acc             ,
+	    cpu_rej             ,
+	    inst_rd_addr        ,
+	    inst_rd_en          ,
+	    inst_rd_data
+	};
+	
+	
+	
+	
 endmodule
 
 `undef CLOG2
