@@ -1,0 +1,50 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Thu Jun  4 18:34:55 2020
+[*]
+[dumpfile] "/home/mahkoe/research/fpga-bpf/sources/snoopers/axistream_snooper/sn_width_adapter/sn_width_adapter.vcd"
+[dumpfile_mtime] "Thu Jun  4 18:33:31 2020"
+[dumpfile_size] 4683
+[savefile] "/home/mahkoe/research/fpga-bpf/sources/snoopers/axistream_snooper/sn_width_adapter/sn_width_adapter.gtkw"
+[timestart] 0
+[size] 1916 1060
+[pos] -1 -1
+*-14.458161 90300 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] sn_width_adapter_tb.
+[sst_width] 228
+[signals_width] 166
+[sst_expanded] 1
+[sst_vpaned_height] 301
+@28
+sn_width_adapter_tb.clk
+sn_width_adapter_tb.rst
+@800200
+-IN
+@22
+sn_width_adapter_tb.in_addr[9:0]
+sn_width_adapter_tb.in_wr_data[31:0]
+@28
+sn_width_adapter_tb.in_wr_en
+@22
+sn_width_adapter_tb.in_byte_inc[7:0]
+@28
+sn_width_adapter_tb.in_done
+@1000200
+-IN
+@800200
+-OUT
+@22
+sn_width_adapter_tb.out_addr[8:0]
+sn_width_adapter_tb.out_wr_data[63:0]
+@28
+sn_width_adapter_tb.out_wr_en
+@24
+sn_width_adapter_tb.out_byte_inc[7:0]
+@28
+sn_width_adapter_tb.out_done
+@1000200
+-OUT
+@25
+sn_width_adapter_tb.DUT.offset
+[pattern_trace] 1
+[pattern_trace] 0
