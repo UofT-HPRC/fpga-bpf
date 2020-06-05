@@ -50,8 +50,8 @@ tags for each packetfilter_core.
 
 module fwd_arb # (
     parameter N = 4,
-    parameter SN_FWD_ADDR_WIDTH = 8,
-    parameter SN_FWD_DATA_WIDTH = 64,
+    parameter PACKMEM_ADDR_WIDTH = 8,
+    parameter PACKMEM_DATA_WIDTH = 64,
     parameter PLEN_WIDTH = 32,
     //DELAY_CONF:
     //0 = all combinational
@@ -65,9 +65,9 @@ module fwd_arb # (
     //TODO: fix this terrible naming convention!
     
     //Interface to forwarder
-    input wire [SN_FWD_ADDR_WIDTH-1:0] addr,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] addr,
     input wire rd_en,
-    output wire [SN_FWD_DATA_WIDTH-1:0] rd_data,
+    output wire [PACKMEM_DATA_WIDTH-1:0] rd_data,
     output wire rd_data_vld,
     output wire [PLEN_WIDTH-1:0] byte_len,
     input wire done,
@@ -79,9 +79,9 @@ module fwd_arb # (
     //Only hot signals need to be gated, however, we need to take in all the
     //outputs and put them through a MUX. So, since Verilog doesn't support 2D
     //ports, we have to do some really ugly stuff
-    output wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr,
+    output wire [PACKMEM_ADDR_WIDTH-1:0] fwd_addr,
     output wire [N-1:0] fwd_rd_en,
-    input wire [N*SN_FWD_DATA_WIDTH-1:0] fwd_rd_data,
+    input wire [N*PACKMEM_DATA_WIDTH-1:0] fwd_rd_data,
     input wire [N-1:0] fwd_rd_data_vld,
     input wire [N*PLEN_WIDTH-1:0] fwd_byte_len,
     output wire [N-1:0] fwd_done,
@@ -148,13 +148,13 @@ module fwd_arb # (
     
     //Need to reshape and reindex the inputs to work with the mux tree
     `define MEM_VLD 1
-    `define MUX_WIDTH (SN_FWD_DATA_WIDTH + `MEM_VLD + PLEN_WIDTH)
+    `define MUX_WIDTH (PACKMEM_DATA_WIDTH + `MEM_VLD + PLEN_WIDTH)
     
     wire [N*`MUX_WIDTH-1:0] mux_ins;
     
     for (i = 0; i < N; i = i + 1) begin
         assign mux_ins[`MUX_WIDTH*(i+1)-1 -: `MUX_WIDTH] = {
-            fwd_rd_data[SN_FWD_DATA_WIDTH*(i+1)-1 -: SN_FWD_DATA_WIDTH],
+            fwd_rd_data[PACKMEM_DATA_WIDTH*(i+1)-1 -: PACKMEM_DATA_WIDTH],
             fwd_rd_data_vld[i],
             fwd_byte_len[PLEN_WIDTH*(i+1)-1 -: PLEN_WIDTH]
         };
@@ -162,7 +162,7 @@ module fwd_arb # (
     
     mux_tree # (
         .N(N),
-        .WIDTH(SN_FWD_DATA_WIDTH + `MEM_VLD + PLEN_WIDTH)
+        .WIDTH(PACKMEM_DATA_WIDTH + `MEM_VLD + PLEN_WIDTH)
     ) the_big_mux (
         .clk(clk),
         .rst(rst),

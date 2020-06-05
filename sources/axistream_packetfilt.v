@@ -178,19 +178,19 @@ module axistream_packetfilt # (
     /***CONNECTIONS TO PARALLEL CORES***/
     /***********************************/
     
-    //Interface to snooper
-    wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr;
-    wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data;
+    //Interface from packet mem to snooper
+    wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr;
+    wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data;
     wire sn_wr_en;
     wire [INC_WIDTH-1:0] sn_byte_inc;
     wire sn_done;
     wire rdy_for_sn;
     wire rdy_for_sn_ack; //Yeah, I'm ready for a snack
     
-    //Interface to forwarder
-    wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
+    //Interface from packet mem to forwarder
+    wire [PACKMEM_ADDR_WIDTH-1:0] fwd_addr;
     wire fwd_rd_en;
-    wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data;
+    wire [PACKMEM_DATA_WIDTH-1:0] fwd_rd_data;
     wire fwd_rd_data_vld;
     wire [PLEN_WIDTH-1:0] fwd_byte_len;
     wire fwd_done;
@@ -341,7 +341,7 @@ generate if (N > 1) begin
         .N(N),
         .PACKET_MEM_BYTES(PACKET_MEM_BYTES),
         .INST_MEM_DEPTH(INST_MEM_DEPTH),
-        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT),
         .PESS(PESS)
@@ -384,7 +384,7 @@ end else begin
     packetfilter_core # (
         .PACKET_MEM_BYTES(PACKET_MEM_BYTES),
         .INST_MEM_DEPTH(INST_MEM_DEPTH),
-        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT),
         .PESS(PESS)

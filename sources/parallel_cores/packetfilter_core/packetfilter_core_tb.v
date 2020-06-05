@@ -33,7 +33,7 @@ Replace innards with desired logic
 
 `define PACKET_MEM_BYTES    2048
 `define INST_MEM_DEPTH      512
-`define SN_FWD_DATA_WIDTH   64
+`define PACKMEM_DATA_WIDTH   64
 `define BUF_IN              0
 `define BUF_OUT             0
 `define PESS                0
@@ -44,24 +44,24 @@ module packetfilter_core_tb;
     parameter CODE_DATA_WIDTH = 64;
     
     parameter BYTE_ADDR_WIDTH = `CLOG2(`PACKET_MEM_BYTES);
-    parameter SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(`SN_FWD_DATA_WIDTH/8);
+    parameter PACKMEM_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(`PACKMEM_DATA_WIDTH/8);
     
-    parameter INC_WIDTH = `CLOG2(`SN_FWD_DATA_WIDTH/8)+1;
+    parameter INC_WIDTH = `CLOG2(`PACKMEM_DATA_WIDTH/8)+1;
     
     parameter PLEN_WIDTH = 32;
 
     reg clk;
     reg rst;
-    reg [SN_FWD_ADDR_WIDTH-1:0] sn_addr;
-    reg [`SN_FWD_DATA_WIDTH-1:0] sn_wr_data;
+    reg [PACKMEM_ADDR_WIDTH-1:0] sn_addr;
+    reg [`PACKMEM_DATA_WIDTH-1:0] sn_wr_data;
     reg sn_wr_en;
     reg [INC_WIDTH-1:0] sn_byte_inc;
     reg sn_done;
     wire rdy_for_sn;
     reg rdy_for_sn_ack; //Yeah, I'm ready for a snack
-    reg [SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
+    reg [PACKMEM_ADDR_WIDTH-1:0] fwd_addr;
     reg fwd_rd_en;
-    wire [`SN_FWD_DATA_WIDTH-1:0] fwd_rd_data;
+    wire [`PACKMEM_DATA_WIDTH-1:0] fwd_rd_data;
     wire fwd_rd_data_vld;
     wire [PLEN_WIDTH-1:0] fwd_byte_len;
     reg fwd_done;
@@ -131,7 +131,7 @@ module packetfilter_core_tb;
     packetfilter_core # (
         .PACKET_MEM_BYTES  (`PACKET_MEM_BYTES ),
         .INST_MEM_DEPTH    (`INST_MEM_DEPTH   ),
-        .SN_FWD_DATA_WIDTH (`SN_FWD_DATA_WIDTH),
+        .PACKMEM_DATA_WIDTH (`PACKMEM_DATA_WIDTH),
         .BUF_IN            (`BUF_IN           ),
         .BUF_OUT           (`BUF_OUT          ),
         .PESS              (`PESS             )

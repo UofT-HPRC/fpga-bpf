@@ -32,8 +32,8 @@ in case fanout is too high.
 `define endgen end endgenerate
 
 module snoop_arb # (
-    parameter SN_ADDR_WIDTH = 8,
-    parameter DATA_WIDTH = 64,
+    parameter PACKMEM_ADDR_WIDTH = 8,
+    parameter PACKMEM_DATA_WIDTH = 64,
     parameter INC_WIDTH = 8,
     parameter N = 4,
     parameter TAG_SZ = 5,
@@ -50,8 +50,8 @@ module snoop_arb # (
     //TODO: fix this terrible naming convention!
         
     //Interface to snooper
-    input wire [SN_ADDR_WIDTH-1:0] addr,
-    input wire [DATA_WIDTH-1:0] wr_data,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] addr,
+    input wire [PACKMEM_DATA_WIDTH-1:0] wr_data,
     input wire wr_en,
     input wire [INC_WIDTH-1:0] byte_inc,
     input wire done,
@@ -63,8 +63,8 @@ module snoop_arb # (
     input wire [N-1:0] rdy_for_sn,
     
     //Only hot signals need to be gated, so we avoid the 2D array port problem 
-    output wire [SN_ADDR_WIDTH-1:0] sn_addr,
-    output wire [DATA_WIDTH-1:0] sn_wr_data,
+    output wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr,
+    output wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data,
     output wire [N-1:0] sn_wr_en,
     output wire [INC_WIDTH-1:0] sn_byte_inc,
     output wire [N-1:0] sn_done,
@@ -79,8 +79,8 @@ module snoop_arb # (
     reg [TAG_SZ-1:0] selection_r = 0;
     wire [TAG_SZ-1:0] tag;
     
-    wire [SN_ADDR_WIDTH-1:0] sn_addr_i;
-    wire [DATA_WIDTH-1:0] sn_wr_data_i;
+    wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr_i;
+    wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data_i;
     wire [N-1:0] sn_wr_en_i;
     wire [INC_WIDTH-1:0] sn_byte_inc_i;
     wire [N-1:0] sn_done_i;
@@ -132,8 +132,8 @@ module snoop_arb # (
     
     if (PESS) begin : pessimistc_delays
         
-        reg [SN_ADDR_WIDTH-1:0] sn_addr_r = 0;
-        reg [DATA_WIDTH-1:0] sn_wr_data_r = 0;
+        reg [PACKMEM_ADDR_WIDTH-1:0] sn_addr_r = 0;
+        reg [PACKMEM_DATA_WIDTH-1:0] sn_wr_data_r = 0;
         reg [N-1:0] sn_wr_en_r = 0;
         reg [INC_WIDTH-1:0] sn_byte_inc_r = 0;
         reg [N-1:0] sn_done_r = 0;

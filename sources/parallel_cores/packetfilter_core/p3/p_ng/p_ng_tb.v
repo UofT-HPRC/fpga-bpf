@@ -9,8 +9,8 @@ Testbench associated with p_ng.v
 
 */
 
-`define ADDR_WIDTH 10
-`define SN_FWD_WIDTH 64
+`define PACKMEM_ADDR_WIDTH 10
+`define PACKMEM_DATA_WIDTH 64
 `define INC_WIDTH 8
 `define PLEN_WIDTH 32
 
@@ -20,20 +20,20 @@ module p_ng_tb;
     reg rst; //Note: does not actually change the stored memory
     reg rd_en; //@0
     reg wr_en; //@0
-    reg [`ADDR_WIDTH-1:0] addr; //@0
-    reg [`SN_FWD_WIDTH-1:0] idata; //@0
+    reg [`PACKMEM_ADDR_WIDTH-1:0] addr; //@0
+    reg [`PACKMEM_DATA_WIDTH-1:0] idata; //@0
     reg [`INC_WIDTH-1:0] byte_inc; //@0
     
-    wire [`SN_FWD_WIDTH-1:0] odata_NOBUF; //@1
+    wire [`PACKMEM_DATA_WIDTH-1:0] odata_NOBUF; //@1
     wire odata_vld_NOBUF; //@1
     
-    wire [`SN_FWD_WIDTH-1:0] odata_INBUF; //@2
+    wire [`PACKMEM_DATA_WIDTH-1:0] odata_INBUF; //@2
     wire odata_vld_INBUF; //@2
     
-    wire [`SN_FWD_WIDTH-1:0] odata_OUTBUF; //@2
+    wire [`PACKMEM_DATA_WIDTH-1:0] odata_OUTBUF; //@2
     wire odata_vld_OUTBUF; //@2
     
-    wire [`SN_FWD_WIDTH-1:0] odata_BOTHBUF; //@3
+    wire [`PACKMEM_DATA_WIDTH-1:0] odata_BOTHBUF; //@3
     wire odata_vld_BOTHBUF; //@3
     
     wire [`PLEN_WIDTH-1:0] byte_length_NOBUF; //@1
@@ -72,8 +72,8 @@ module p_ng_tb;
     end
 
     p_ng # (
-        .ADDR_WIDTH(`ADDR_WIDTH),
-        .SN_FWD_WIDTH(`SN_FWD_WIDTH),
+        .ADDR_WIDTH(`PACKMEM_ADDR_WIDTH),
+        .DATA_WIDTH(`PACKMEM_DATA_WIDTH),
         .INC_WIDTH(`INC_WIDTH),
         .PLEN_WIDTH(`PLEN_WIDTH),
         //parameters controlling addition of pessmistic registers
@@ -93,8 +93,10 @@ module p_ng_tb;
     );
     
     p_ng # (
-        .ADDR_WIDTH(10),
-        .SN_FWD_WIDTH(64),
+        .ADDR_WIDTH(`PACKMEM_ADDR_WIDTH),
+        .DATA_WIDTH(`PACKMEM_DATA_WIDTH),
+        .INC_WIDTH(`INC_WIDTH),
+        .PLEN_WIDTH(`PLEN_WIDTH),
         //parameters controlling addition of pessmistic registers
         .BUF_IN(1),
         .BUF_OUT(0)
@@ -112,8 +114,10 @@ module p_ng_tb;
     );
 
     p_ng # (
-        .ADDR_WIDTH(10),
-        .SN_FWD_WIDTH(64),
+        .ADDR_WIDTH(`PACKMEM_ADDR_WIDTH),
+        .DATA_WIDTH(`PACKMEM_DATA_WIDTH),
+        .INC_WIDTH(`INC_WIDTH),
+        .PLEN_WIDTH(`PLEN_WIDTH),
         //parameters controlling addition of pessmistic registers
         .BUF_IN(0),
         .BUF_OUT(1)
@@ -132,8 +136,10 @@ module p_ng_tb;
 
 
     p_ng # (
-        .ADDR_WIDTH(10),
-        .SN_FWD_WIDTH(64),
+        .ADDR_WIDTH(`PACKMEM_ADDR_WIDTH),
+        .DATA_WIDTH(`PACKMEM_DATA_WIDTH),
+        .INC_WIDTH(`INC_WIDTH),
+        .PLEN_WIDTH(`PLEN_WIDTH),
         //parameters controlling addition of pessmistic registers
         .BUF_IN(1),
         .BUF_OUT(1)

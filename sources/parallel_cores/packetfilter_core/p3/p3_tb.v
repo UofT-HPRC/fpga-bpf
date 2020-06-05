@@ -4,10 +4,9 @@
 `include "p3.v"
 `endif
 
-`define SN_FWD_ADDR_WIDTH 9
-`define ADDR_WIDTH 10
+`define PACKMEM_ADDR_WIDTH 9
+`define PACKMEM_DATA_WIDTH 64
 `define BYTE_ADDR_WIDTH 12
-`define SN_FWD_DATA_WIDTH 64
 `define INC_WIDTH 8
 `define PLEN_WIDTH 32
 `define BUF_IN 0
@@ -18,8 +17,8 @@ module p3_tb;
 
     reg clk;
     reg rst;
-    reg [`SN_FWD_ADDR_WIDTH-1:0] sn_addr;
-    reg [`SN_FWD_DATA_WIDTH-1:0] sn_wr_data;
+    reg [`PACKMEM_ADDR_WIDTH-1:0] sn_addr;
+    reg [`PACKMEM_DATA_WIDTH-1:0] sn_wr_data;
     reg sn_wr_en;
     reg [`INC_WIDTH-1:0] sn_byte_inc;
     reg sn_done;
@@ -35,9 +34,9 @@ module p3_tb;
     reg cpu_rej;
     wire rdy_for_cpu;
     reg rdy_for_cpu_ack;
-    reg [`SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
+    reg [`PACKMEM_ADDR_WIDTH-1:0] fwd_addr;
     reg fwd_rd_en;
-    wire [`SN_FWD_DATA_WIDTH-1:0] fwd_rd_data;
+    wire [`PACKMEM_DATA_WIDTH-1:0] fwd_rd_data;
     wire fwd_rd_data_vld;
     wire [`PLEN_WIDTH-1:0] fwd_byte_len;
     reg fwd_done;
@@ -130,10 +129,10 @@ module p3_tb;
     end
     
     p3 # (
-        .SN_FWD_ADDR_WIDTH(`SN_FWD_ADDR_WIDTH),
-        .ADDR_WIDTH(`ADDR_WIDTH),
+        .PACKMEM_ADDR_WIDTH(`PACKMEM_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH(`PACKMEM_DATA_WIDTH),
+        .INTERNAL_ADDR_WIDTH(`PACKMEM_ADDR_WIDTH + 1),
         .BYTE_ADDR_WIDTH(`BYTE_ADDR_WIDTH),
-        .SN_FWD_DATA_WIDTH(`SN_FWD_DATA_WIDTH),
         .INC_WIDTH(`INC_WIDTH),
         .PLEN_WIDTH(`PLEN_WIDTH),
         .BUF_IN(`BUF_IN),

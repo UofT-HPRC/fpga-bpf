@@ -4,7 +4,7 @@ p3.vcd:	p3.vvp
 	vvp p3.vvp
 
 p3.vvp:	p3.v p3_tb.v p3_drivers.mem
-	iverilog -DICARUS_VERILOG -DFROM_P3 -g2012 -o p3.vvp p3_tb.v
+	iverilog -Wall -Wno-timescale -DICARUS_VERILOG -DFROM_P3 -g2012 -o p3.vvp p3_tb.v
 
 open:	p3.vcd
 	gtkwave p3.vcd --autosavename &

@@ -98,8 +98,8 @@ module snoop_arb_tb;
     end
 
     snoop_arb # (
-        .SN_ADDR_WIDTH (`SN_ADDR_WIDTH),
-        .DATA_WIDTH    (`DATA_WIDTH   ),
+        .PACKMEM_ADDR_WIDTH (`SN_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH    (`DATA_WIDTH   ),
         .INC_WIDTH     (`INC_WIDTH    ),
         .N             (`N            ),
         .TAG_SZ        (`TAG_SZ       ),

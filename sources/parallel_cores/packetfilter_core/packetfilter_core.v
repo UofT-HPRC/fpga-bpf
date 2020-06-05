@@ -57,7 +57,7 @@ actually set it to a specific number just to cut down on BRAM usage
 module packetfilter_core # (
     parameter PACKET_MEM_BYTES = 2048,
     parameter INST_MEM_DEPTH = 512,
-    parameter SN_FWD_DATA_WIDTH = 64,
+    parameter PACKMEM_DATA_WIDTH = 64,
     parameter BUF_IN = 0,
     parameter BUF_OUT = 0,
     parameter PESS = 0,
@@ -70,9 +70,9 @@ module packetfilter_core # (
     parameter CODE_DATA_WIDTH = 64,
     
     parameter BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES),
-    parameter SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8),
+    parameter PACKMEM_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(PACKMEM_DATA_WIDTH/8),
     
-    parameter INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1,
+    parameter INC_WIDTH = `CLOG2(PACKMEM_DATA_WIDTH/8)+1,
     
     parameter PLEN_WIDTH = 32,
     
@@ -92,8 +92,8 @@ module packetfilter_core # (
     
     
     //Interface to snooper
-    input wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr,
-    input wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr,
+    input wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data,
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     input wire sn_done,
@@ -101,9 +101,9 @@ module packetfilter_core # (
     input wire rdy_for_sn_ack, //Yeah, I'm ready for a snack
     
     //Interface to forwarder
-    input wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] fwd_addr,
     input wire fwd_rd_en,
-    output wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data,
+    output wire [PACKMEM_DATA_WIDTH-1:0] fwd_rd_data,
     output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     input wire fwd_done,
@@ -118,7 +118,7 @@ module packetfilter_core # (
     //Debug probes
     output wire [DBG_INFO_WIDTH -1:0] dbg_info
 );
-    `localparam P_NG_ADDR_WIDTH = SN_FWD_ADDR_WIDTH + 1;    
+    `localparam P_NG_ADDR_WIDTH = PACKMEM_ADDR_WIDTH + 1;    
     
     /************************/
     /***P3 system <=> CPU ***/
@@ -145,10 +145,10 @@ module packetfilter_core # (
     wire inst_rd_en;
     
     p3 # (
-        .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
-        .ADDR_WIDTH(P_NG_ADDR_WIDTH),
+        .PACKMEM_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
+        .INTERNAL_ADDR_WIDTH(P_NG_ADDR_WIDTH),
         .BYTE_ADDR_WIDTH(BYTE_ADDR_WIDTH),
-        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
