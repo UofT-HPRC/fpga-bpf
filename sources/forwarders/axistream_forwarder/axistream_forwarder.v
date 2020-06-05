@@ -47,8 +47,8 @@ TODOs from the code:
 module axistream_forwarder # (
     parameter SN_FWD_ADDR_WIDTH = 8,
     parameter SN_FWD_DATA_WIDTH = 64,
-    parameter PACKMEM_ADDR_WIDTH = 8,
-    parameter PACKMEM_DATA_WIDTH = 64,
+    parameter PACKMEM_ADDR_WIDTH = SN_FWD_ADDR_WIDTH,
+    parameter PACKMEM_DATA_WIDTH = SN_FWD_DATA_WIDTH,
     parameter MEM_LAT = 2,
     parameter PLEN_WIDTH = 32,
     
