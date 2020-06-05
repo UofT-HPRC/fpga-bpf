@@ -1,5 +1,7 @@
 # fpga-bpf
 
+This code is free for non-commercial use. Please send any enquiries to marco.merlini@utoronto.ca
+
 Original repo was here:
 https://github.com/esophagus-now/fpga-bpf
 
