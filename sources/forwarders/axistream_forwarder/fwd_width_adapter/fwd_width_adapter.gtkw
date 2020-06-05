@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri Jun  5 14:23:50 2020
+[*] Fri Jun  5 17:26:33 2020
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/forwarders/axistream_forwarder/fwd_width_adapter/fwd_width_adapter.vcd"
-[dumpfile_mtime] "Fri Jun  5 14:21:09 2020"
-[dumpfile_size] 242179
+[dumpfile_mtime] "Fri Jun  5 17:26:11 2020"
+[dumpfile_size] 241837
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/forwarders/axistream_forwarder/fwd_width_adapter/fwd_width_adapter.gtkw"
-[timestart] 182900
-[size] 1916 1060
+[timestart] 0
+[size] 1916 1041
 [pos] -1 -1
-*-14.708249 115000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.708249 35000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] fwd_width_adapter_tb.
 [sst_width] 228
 [signals_width] 211
 [sst_expanded] 1
-[sst_vpaned_height] 301
+[sst_vpaned_height] 294
 @22
 fwd_width_adapter_tb.DUT.fwd_addr[9:0]
 @28
@@ -22,7 +22,7 @@ fwd_width_adapter_tb.rd_en
 @22
 fwd_width_adapter_tb.fwd_rd_data[31:0]
 @29
-fwd_width_adapter_tb.fwd_rd_data_vld
+fwd_width_adapter_tb.mem_rd_data_vld
 @800200
 -fakemem
 @22

@@ -22,7 +22,6 @@ module fwd_width_adapter_tb # (
     //Interface to forwarder
     reg [FWD_ADDR_WIDTH-1:0] fwd_addr = 0;
     wire [FWD_WIDTH-1:0] fwd_rd_data;
-    wire fwd_rd_data_vld;
     
     //Interface to packet mem
     wire [MEM_ADDR_WIDTH-1:0] mem_addr;
@@ -72,12 +71,10 @@ module fwd_width_adapter_tb # (
         //Interface to forwarder
 		.fwd_addr(fwd_addr),
 		.fwd_rd_data(fwd_rd_data),
-		.fwd_rd_data_vld(fwd_rd_data_vld),
         
         //Interface to packet mem
 		.mem_addr(mem_addr),
-		.mem_rd_data(mem_rd_data),
-		.mem_rd_data_vld(mem_rd_data_vld)
+		.mem_rd_data(mem_rd_data)
     );
     
     fakemem # (

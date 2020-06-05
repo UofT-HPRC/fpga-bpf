@@ -33,12 +33,10 @@ module fwd_width_adapter # (
     //Interface to forwarder
     input wire [FWD_ADDR_WIDTH-1:0] fwd_addr,
     output wire [FWD_WIDTH-1:0] fwd_rd_data,
-    output wire fwd_rd_data_vld,
     
     //Interface to packet mem
     output wire [MEM_ADDR_WIDTH-1:0] mem_addr,
-    input wire [MEM_WIDTH-1:0] mem_rd_data,
-    input wire mem_rd_data_vld
+    input wire [MEM_WIDTH-1:0] mem_rd_data
 );
     
     `localparam N = FWD_ADDR_WIDTH - MEM_ADDR_WIDTH;
@@ -73,7 +71,6 @@ end endgenerate
     
     //Endianness... UGH!
     assign fwd_rd_data = segments[(RATIO-1) - offset_r[MEM_LAT-1]];
-    assign fwd_rd_data_vld = mem_rd_data_vld;
     
 endmodule
 
