@@ -1,19 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri Jun  5 20:56:06 2020
+[*] Fri Jun  5 21:11:58 2020
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/other_testbenches/N_eq_4_32_bit/axistream_packetfilt.vcd"
-[dumpfile_mtime] "Fri Jun  5 20:55:57 2020"
+[dumpfile_mtime] "Fri Jun  5 21:09:25 2020"
 [dumpfile_size] 1990352
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/other_testbenches/N_eq_4_32_bit/axistream_packetfilt.gtkw"
-[timestart] 636000
+[timestart] 1040300
 [size] 1916 1060
 [pos] -1 -1
-*-14.894510 785000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-16.055441 1415000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] axistream_packetfilt_tb.
 [treeopen] axistream_packetfilt_tb.DUT.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.
+[treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.the_p3_system.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.snooper_arbiter.genblk1.
@@ -138,7 +139,7 @@ axistream_packetfilt_tb.DUT.the_forwarder.fwd_rd_data_vld
 @22
 axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.mem_addr[7:0]
 axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.mem_rd_data[63:0]
-@29
+@28
 axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.offset
 @1000200
 -fwd_rd_adapter
