@@ -14,7 +14,7 @@ module fwd_width_adapter_tb # (
     parameter FWD_WIDTH = 32,
     parameter MEM_ADDR_WIDTH = 9,
     parameter FWD_ADDR_WIDTH = 10,
-    parameter MEM_LAT = 1
+    parameter MEM_LAT = 3
 ) ();
 
     reg clk = 0;

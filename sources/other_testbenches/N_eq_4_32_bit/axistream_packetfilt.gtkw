@@ -1,26 +1,28 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri May 22 14:54:00 2020
+[*] Fri Jun  5 20:56:06 2020
 [*]
 [dumpfile] "/home/mahkoe/research/fpga-bpf/sources/other_testbenches/N_eq_4_32_bit/axistream_packetfilt.vcd"
-[dumpfile_mtime] "Fri May 22 14:53:15 2020"
-[dumpfile_size] 1094702
+[dumpfile_mtime] "Fri Jun  5 20:55:57 2020"
+[dumpfile_size] 1990352
 [savefile] "/home/mahkoe/research/fpga-bpf/sources/other_testbenches/N_eq_4_32_bit/axistream_packetfilt.gtkw"
-[timestart] 0
+[timestart] 636000
 [size] 1916 1060
 [pos] -1 -1
-*-17.894510 875010 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.894510 785000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] axistream_packetfilt_tb.
 [treeopen] axistream_packetfilt_tb.DUT.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.the_p3_system.
-[treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.snooper_arbiter.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.snooper_arbiter.genblk1.
 [treeopen] axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.snooper_arbiter.genblk1.the_tag_tree.
+[treeopen] axistream_packetfilt_tb.DUT.the_forwarder.
+[treeopen] axistream_packetfilt_tb.DUT.the_forwarder.genblk2.
+[treeopen] axistream_packetfilt_tb.DUT.the_snooper.genblk10.
 [sst_width] 318
-[signals_width] 206
+[signals_width] 238
 [sst_expanded] 1
 [sst_vpaned_height] 575
 @28
@@ -36,17 +38,16 @@ axistream_packetfilt_tb.sn_TDATA[31:0]
 axistream_packetfilt_tb.sn_TVALID
 axistream_packetfilt_tb.sn_TREADY
 axistream_packetfilt_tb.sn_TLAST
-@23
+@22
 [color] 2
 axistream_packetfilt_tb.fwd_TDATA[31:0]
-@29
+@28
 [color] 2
 axistream_packetfilt_tb.fwd_TVALID
 [color] 2
 axistream_packetfilt_tb.fwd_TREADY
 [color] 2
 axistream_packetfilt_tb.fwd_TLAST
-@28
 axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.snooper_arbiter.rdy
 @22
 axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.snooper_arbiter.rdy_for_sn[3:0]
@@ -62,10 +63,6 @@ axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.snooper_arbiter.genblk1.th
 @28
 axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.rdy_for_sn
 axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.rdy_for_sn_ack
-@22
-axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.sn_addr[8:0]
-axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.sn_wr_data[31:0]
-@28
 axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.sn_wr_en
 @22
 axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.the_cpu.byte_rd_addr[10:0]
@@ -104,5 +101,46 @@ axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.the_p3_sys
 axistream_packetfilt_tb.DUT.genblk1.the_actual_filter.genblk1[0].filt.the_p3_system.pong_sel[1:0]
 @1000200
 -cpu0
+@28
+axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.clk
+@800200
+-sn_width_adapter
+@22
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.in_wr_data[31:0]
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.in_addr[8:0]
+@28
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.in_wr_en
+@24
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.in_byte_inc[2:0]
+@28
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.in_done
+@22
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.out_wr_data[63:0]
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.out_addr[7:0]
+@28
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.out_wr_en
+@24
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.out_byte_inc[3:0]
+@28
+axistream_packetfilt_tb.DUT.the_snooper.genblk10.width_adapter.out_done
+@1000200
+-sn_width_adapter
+@800200
+-fwd_rd_adapter
+@22
+axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.fwd_addr[8:0]
+@28
+axistream_packetfilt_tb.DUT.the_forwarder.fwd_rd_en
+@22
+axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.fwd_rd_data[31:0]
+@28
+axistream_packetfilt_tb.DUT.the_forwarder.fwd_rd_data_vld
+@22
+axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.mem_addr[7:0]
+axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.mem_rd_data[63:0]
+@29
+axistream_packetfilt_tb.DUT.the_forwarder.genblk2.width_adapter.offset
+@1000200
+-fwd_rd_adapter
 [pattern_trace] 1
 [pattern_trace] 0

@@ -2,12 +2,33 @@
 
 `include "sn_width_adapter.v"
 
+`define CLOG2(x) (\
+   (((x) <= 1) ? 0 : \
+   (((x) <= 2) ? 1 : \
+   (((x) <= 4) ? 2 : \
+   (((x) <= 8) ? 3 : \
+   (((x) <= 16) ? 4 : \
+   (((x) <= 32) ? 5 : \
+   (((x) <= 64) ? 6 : \
+   (((x) <= 128) ? 7 : \
+   (((x) <= 256) ? 8 : \
+   (((x) <= 512) ? 9 : \
+   (((x) <= 1024) ? 10 : \
+   (((x) <= 2048) ? 11 : \
+   (((x) <= 4096) ? 12 : \
+   (((x) <= 8192) ? 13 : \
+   (((x) <= 16384) ? 14 : \
+   (((x) <= 32768) ? 15 : \
+   (((x) <= 65536) ? 16 : \
+   -1))))))))))))))))))
+
 module sn_width_adapter_tb # (
     parameter OUT_WIDTH = 64,
     parameter IN_WIDTH = 32,
     parameter OUT_ADDR_WIDTH = 9,
     parameter IN_ADDR_WIDTH = 10,
-    parameter INC_WIDTH = 8
+    parameter OUT_INC_WIDTH = `CLOG2(OUT_WIDTH/8),
+    parameter IN_INC_WIDTH = `CLOG2(IN_WIDTH/8)
 ) ();
     reg clk = 0;
     reg rst = 0;
@@ -16,14 +37,14 @@ module sn_width_adapter_tb # (
     reg [IN_ADDR_WIDTH-1:0] in_addr = 0;
     reg [IN_WIDTH-1:0] in_wr_data = 0;
     reg in_wr_en = 0;
-    reg [INC_WIDTH-1:0] in_byte_inc = 0;
+    reg [IN_INC_WIDTH-1:0] in_byte_inc = 0;
     reg in_done = 0;
     
     //Inputs to packet mem
     wire [OUT_ADDR_WIDTH-1:0] out_addr;
     wire [OUT_WIDTH-1:0] out_wr_data;
     wire out_wr_en;
-    wire [INC_WIDTH-1:0] out_byte_inc;
+    wire [OUT_INC_WIDTH-1:0] out_byte_inc;
     wire out_done;
     
     integer fd, dummy;
@@ -77,8 +98,7 @@ module sn_width_adapter_tb # (
         .OUT_WIDTH(OUT_WIDTH),
         .IN_WIDTH(IN_WIDTH),
         .OUT_ADDR_WIDTH(OUT_ADDR_WIDTH),
-        .IN_ADDR_WIDTH(IN_ADDR_WIDTH),
-        .INC_WIDTH(INC_WIDTH)
+        .IN_ADDR_WIDTH(IN_ADDR_WIDTH)
     ) DUT (
 		.clk(clk),
 		.rst(rst),
@@ -99,3 +119,5 @@ module sn_width_adapter_tb # (
     );
 
 endmodule
+
+`undef CLOG2

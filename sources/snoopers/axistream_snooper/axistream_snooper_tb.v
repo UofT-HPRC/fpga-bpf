@@ -5,13 +5,11 @@ axistream_snooper.v
 
 */
 
-`ifdef FROM_AXISTREAM_SNOOPER
 `include "axistream_snooper.v"
-`endif
 
 `define SN_FWD_DATA_WIDTH   64
 `define SN_FWD_ADDR_WIDTH   9
-`define INC_WIDTH           8
+`define INC_WIDTH           3
 `define PESS                0
 
 module testbench_template;
@@ -92,7 +90,7 @@ module testbench_template;
     axistream_snooper # (
         .SN_FWD_DATA_WIDTH(`SN_FWD_DATA_WIDTH),
         .SN_FWD_ADDR_WIDTH(`SN_FWD_ADDR_WIDTH),
-        .INC_WIDTH        (`INC_WIDTH        ),
+        .SN_INC_WIDTH     (`INC_WIDTH        ),
         .PESS             (`PESS             ),
         .ENABLE_BACKPRESSURE(1)
     ) DUT (

@@ -210,9 +210,10 @@ module axistream_forwarder # (
         end
     end
     
+    //Jun 5 / 2020
+    //If packet memory is wider than forwarder, need to use width adapter
     wire [PACKMEM_ADDR_WIDTH -1:0] addr_i_adapted;
     wire [SN_FWD_DATA_WIDTH -1:0] fwd_rd_data_adapted;
-    //If packet memory is wider than forwarder, need to use width adapter
 generate if (PACKMEM_DATA_WIDTH > SN_FWD_DATA_WIDTH) begin
     fwd_width_adapter # (
         .MEM_WIDTH(PACKMEM_DATA_WIDTH),

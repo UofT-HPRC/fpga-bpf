@@ -55,9 +55,9 @@ end endgenerate
 generate for (i = 0; i < MEM_LAT; i = i + 1) begin
     initial offset_r[i] = 0;
     if (i == 0) begin
-        always @(posedge clk) offset_r[i] = offset;
+        always @(posedge clk) offset_r[i] <= offset;
     end else begin
-        always @(posedge clk) offset_r[i] = offset_r[i - 1];
+        always @(posedge clk) offset_r[i] <= offset_r[i - 1];
     end
 end endgenerate
     
@@ -69,8 +69,7 @@ end endgenerate
     
     assign mem_addr = fwd_addr[FWD_ADDR_WIDTH -1: N];
     
-    //Endianness... UGH!
-    assign fwd_rd_data = segments[(RATIO-1) - offset_r[MEM_LAT-1]];
+    assign fwd_rd_data = segments[offset_r[MEM_LAT-1]];
     
 endmodule
 

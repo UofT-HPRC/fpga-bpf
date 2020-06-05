@@ -93,7 +93,8 @@ module snoop_arb # (
     tag_tree # (
         .N(N),
         .TAG_SZ(TAG_SZ),
-        .DELAY_CONF(DELAY_CONF) 
+        .DELAY_CONF(DELAY_CONF),
+        .CUSTOM_TAGS(0)
     ) the_tag_tree (
         .clk(clk),
         .rst(rst),
@@ -103,7 +104,10 @@ module snoop_arb # (
         .ack(ack),
         
         .rdy_in(rdy_for_sn),
-        .ack_out(rdy_for_sn_ack_i)
+        .ack_out(rdy_for_sn_ack_i),
+        
+        //Dummy value to make (harmless) warning go away
+        .custom_tags({N*TAG_SZ{1'b0}})
     );
     
     //When a handshake completes, we allow selection to update on the next cycle

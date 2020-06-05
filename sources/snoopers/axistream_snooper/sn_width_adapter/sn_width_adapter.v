@@ -12,6 +12,26 @@ take care of that
 
 */
 
+`define CLOG2(x) (\
+   (((x) <= 1) ? 0 : \
+   (((x) <= 2) ? 1 : \
+   (((x) <= 4) ? 2 : \
+   (((x) <= 8) ? 3 : \
+   (((x) <= 16) ? 4 : \
+   (((x) <= 32) ? 5 : \
+   (((x) <= 64) ? 6 : \
+   (((x) <= 128) ? 7 : \
+   (((x) <= 256) ? 8 : \
+   (((x) <= 512) ? 9 : \
+   (((x) <= 1024) ? 10 : \
+   (((x) <= 2048) ? 11 : \
+   (((x) <= 4096) ? 12 : \
+   (((x) <= 8192) ? 13 : \
+   (((x) <= 16384) ? 14 : \
+   (((x) <= 32768) ? 15 : \
+   (((x) <= 65536) ? 16 : \
+   -1))))))))))))))))))
+
 `ifdef ICARUS_VERILOG
 `define localparam parameter
 `else /* For Vivado */
@@ -23,7 +43,8 @@ module sn_width_adapter # (
     parameter IN_WIDTH = 32,
     parameter OUT_ADDR_WIDTH = 9,
     parameter IN_ADDR_WIDTH = 10,
-    parameter INC_WIDTH = 8
+    parameter OUT_INC_WIDTH = `CLOG2(OUT_WIDTH/8),
+    parameter IN_INC_WIDTH = `CLOG2(IN_WIDTH/8)
 ) (
     input wire clk,
     input wire rst,
@@ -32,14 +53,14 @@ module sn_width_adapter # (
     input wire [IN_ADDR_WIDTH-1:0] in_addr,
     input wire [IN_WIDTH-1:0] in_wr_data,
     input wire in_wr_en,
-    input wire [INC_WIDTH-1:0] in_byte_inc,
+    input wire [IN_INC_WIDTH-1:0] in_byte_inc,
     input wire in_done,
     
     //Inputs to packet mem
     output wire [OUT_ADDR_WIDTH-1:0] out_addr,
     output wire [OUT_WIDTH-1:0] out_wr_data,
     output wire out_wr_en,
-    output wire [INC_WIDTH-1:0] out_byte_inc,
+    output wire [OUT_INC_WIDTH-1:0] out_byte_inc,
     output wire out_done
 );
     
@@ -67,7 +88,7 @@ end endgenerate
     
     
     //Maintain byte count
-    reg [INC_WIDTH -1:0] inc = 0;    
+    reg [OUT_INC_WIDTH -1:0] inc = 0;    
     always @(posedge clk) begin
         if (in_wr_en) inc <= inc + in_byte_inc;
         
@@ -89,3 +110,4 @@ end endgenerate
 endmodule
 
 `undef localparam
+`undef CLOG2
