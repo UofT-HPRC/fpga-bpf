@@ -73,7 +73,13 @@ module sn_width_adapter_tb # (
         );
     end
 
-    sn_width_adapter DUT (
+    sn_width_adapter DUT #(
+        .OUT_WIDTH(OUT_WIDTH),
+        .IN_WIDTH(IN_WIDTH),
+        .OUT_ADDR_WIDTH(OUT_ADDR_WIDTH),
+        .IN_ADDR_WIDTH(IN_ADDR_WIDTH),
+        .INC_WIDTH(INC_WIDTH)
+    )(
 		.clk(clk),
 		.rst(rst),
     

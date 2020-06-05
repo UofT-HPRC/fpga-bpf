@@ -6,7 +6,7 @@ $(MODULE).vcd:	$(MODULE).vvp
 	vvp $(MODULE).vvp
 
 $(MODULE).vvp:	$(MODULE).v $(MODULE)_tb.v $(MODULE)_drivers.mem
-	iverilog -Wall -DICARUS_VERILOG -g2012 -o $(MODULE).vvp $(MODULE)_tb.v
+	iverilog -Wall -Wno-timescale -DICARUS_VERILOG -g2012 -o $(MODULE).vvp $(MODULE)_tb.v
 
 open:	$(MODULE).vcd
 	gtkwave $(MODULE).vcd --autosavename &

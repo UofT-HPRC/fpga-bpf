@@ -52,7 +52,7 @@ generate if ((OUT_WIDTH/IN_WIDTH) != 2**N || (OUT_WIDTH % IN_WIDTH) != 0) begin
 end endgenerate
     
     //Offset into bigword where next value is written
-    wire offset = in_addr[N-1:0];
+    wire [N -1:0] offset = in_addr[N-1:0];
     
     //Build up big word for writing to memory
     reg [IN_WIDTH -1:0] bigword[0:RATIO-1];
