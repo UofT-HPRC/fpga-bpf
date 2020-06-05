@@ -247,7 +247,7 @@ end else begin
     wire [PACKMEM_ADDR_WIDTH -1:0] addr_i_adapted;
     wire [PACKMEM_DATA_WIDTH -1:0] sn_wr_data_i_adapted;
     wire sn_wr_en_i_adapted;
-    wire [PACKMEM_INC_WIDTH] sn_byte_inc_i_adapted;
+    wire [PACKMEM_INC_WIDTH -1:0] sn_byte_inc_i_adapted;
     wire sn_done_i_adapted;
 `genif (PACKMEM_DATA_WIDTH > SN_FWD_DATA_WIDTH) begin
     sn_width_adapter # (

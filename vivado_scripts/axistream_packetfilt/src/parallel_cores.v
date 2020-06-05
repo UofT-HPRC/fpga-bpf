@@ -43,7 +43,7 @@ module parallel_cores # (
     parameter N = 4,
     parameter PACKET_MEM_BYTES = 2048,
     parameter INST_MEM_DEPTH = 512,
-    parameter SN_FWD_DATA_WIDTH = 64,
+    parameter PACKMEM_DATA_WIDTH = 64,
     parameter BUF_IN = 0,
     parameter BUF_OUT = 0,
     parameter PESS = 0,
@@ -62,8 +62,8 @@ module parallel_cores # (
     parameter CODE_ADDR_WIDTH = `CLOG2(INST_MEM_DEPTH),
     parameter CODE_DATA_WIDTH = 64,
     parameter BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES),
-    parameter SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8),
-    parameter INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1,
+    parameter PACKMEM_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(PACKMEM_DATA_WIDTH/8),
+    parameter INC_WIDTH = `CLOG2(PACKMEM_DATA_WIDTH/8)+1,
     parameter PLEN_WIDTH = 32,
     
     parameter DBG_INFO_WIDTH = 
@@ -82,8 +82,8 @@ module parallel_cores # (
     
     
     //Interface to snooper
-    input wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr,
-    input wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr,
+    input wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data,
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     input wire sn_done,
@@ -91,9 +91,9 @@ module parallel_cores # (
     input wire rdy_for_sn_ack, //Yeah, I'm ready for a snack
     
     //Interface to forwarder
-    input wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] fwd_addr,
     input wire fwd_rd_en,
-    output wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data,
+    output wire [PACKMEM_DATA_WIDTH-1:0] fwd_rd_data,
     output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     input wire fwd_done,
@@ -115,8 +115,8 @@ module parallel_cores # (
     //Interface to packetfilter_cores
     wire [N-1:0] rdy_for_sn_i;
     
-    wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr_i;
-    wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data_i;
+    wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr_i;
+    wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data_i;
     wire [N-1:0] sn_wr_en_i;
     wire [INC_WIDTH-1:0] sn_byte_inc_i;
     wire [N-1:0] sn_done_i;
@@ -125,9 +125,9 @@ module parallel_cores # (
     /************************************/
     /***fwd_arb <=> packetfilter_cores***/
     /************************************/
-    wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr_i;
+    wire [PACKMEM_ADDR_WIDTH-1:0] fwd_addr_i;
     wire [N-1:0] fwd_rd_en_i;
-    wire [N*SN_FWD_DATA_WIDTH-1:0] fwd_rd_data_i;
+    wire [N*PACKMEM_DATA_WIDTH-1:0] fwd_rd_data_i;
     wire [N-1:0] fwd_rd_data_vld_i;
     wire [N*PLEN_WIDTH-1:0] fwd_byte_len_i;
     wire [N-1:0] fwd_done_i;
@@ -144,7 +144,7 @@ module parallel_cores # (
         packetfilter_core # (
             .PACKET_MEM_BYTES(PACKET_MEM_BYTES),
             .INST_MEM_DEPTH(INST_MEM_DEPTH),
-            .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+            .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
             .BUF_IN(BUF_IN),
             .BUF_OUT(BUF_OUT),
             .PESS(PESS)
@@ -165,7 +165,7 @@ module parallel_cores # (
             //Interface to forwarder
             .fwd_addr(fwd_addr_i),
             .fwd_rd_en(fwd_rd_en_i[i]),
-            .fwd_rd_data(fwd_rd_data_i[SN_FWD_DATA_WIDTH*(i+1)-1 -: SN_FWD_DATA_WIDTH]),
+            .fwd_rd_data(fwd_rd_data_i[PACKMEM_DATA_WIDTH*(i+1)-1 -: PACKMEM_DATA_WIDTH]),
             .fwd_rd_data_vld(fwd_rd_data_vld_i[i]),
             .fwd_byte_len(fwd_byte_len_i[PLEN_WIDTH*(i+1)-1 -: PLEN_WIDTH]),
             .fwd_done(fwd_done_i[i]),
@@ -184,8 +184,8 @@ module parallel_cores # (
     
     //Yes I'm the arbiter, my word is laaaaaawwww-aaww-aw...
     snoop_arb # (
-        .SN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
-        .DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .N(N),
         .TAG_SZ(TAG_SZ),
@@ -219,8 +219,8 @@ module parallel_cores # (
     //...from step one I'll be watching all... 2^6....
     fwd_arb # (
         .N(N),
-        .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
-        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .DELAY_CONF(DELAY_CONF)
     ) forwarder_arbiter (

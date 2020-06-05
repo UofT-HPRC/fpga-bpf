@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 /*
 
@@ -33,6 +34,7 @@ TODO: Update rest of code to do this
 `endif
 
 `define CLOG2(x) (\
+   (((x) <= 1) ? 0 : \
    (((x) <= 2) ? 1 : \
    (((x) <= 4) ? 2 : \
    (((x) <= 8) ? 3 : \
@@ -49,7 +51,7 @@ TODO: Update rest of code to do this
    (((x) <= 16384) ? 14 : \
    (((x) <= 32768) ? 15 : \
    (((x) <= 65536) ? 16 : \
-   -1)))))))))))))))))
+   -1))))))))))))))))))
 
 `define KEEP_WIDTH (SN_FWD_DATA_WIDTH/8)
 module axistream_packetfilt # (
@@ -142,8 +144,11 @@ module axistream_packetfilt # (
     //`localparam CODE_DATA_WIDTH = 64;
     //`localparam BYTE_ADDR_WIDTH = `CLOG2(PACKET_MEM_BYTES);
     `localparam SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8);
-    `localparam INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1;
     `localparam PLEN_WIDTH = 32;
+    `localparam PACKMEM_DATA_WIDTH = (SN_FWD_DATA_WIDTH < 64) ? 64 : SN_FWD_DATA_WIDTH;
+    `localparam PACKMEM_ADDR_WIDTH = SN_FWD_ADDR_WIDTH - `CLOG2(PACKMEM_DATA_WIDTH/SN_FWD_DATA_WIDTH);
+    `localparam MEM_LAT = 1 + BUF_IN + BUF_OUT;
+    `localparam PACKMEM_INC_WIDTH = `CLOG2(PACKMEM_DATA_WIDTH/8)+1;
     
     `localparam DBG_INFO_WIDTH = 
 			  BYTE_ADDR_WIDTH	//byte_rd_addr
@@ -157,23 +162,35 @@ module axistream_packetfilt # (
 			+ CODE_DATA_WIDTH	//inst_rd_data
     ;
 
+`ifdef ICARUS_VERILOG
+    initial begin
+        $display("SN_FWD_ADDR_WIDTH: %d", SN_FWD_ADDR_WIDTH);
+        $display("SN_FWD_DATA_WIDTH: %d", SN_FWD_DATA_WIDTH);
+        
+        $display("PACKMEM_ADDR_WIDTH: %d", PACKMEM_ADDR_WIDTH);
+        $display("PACKMEM_DATA_WIDTH: %d", PACKMEM_DATA_WIDTH);
+        
+        $display("MEM_LAT: %d", MEM_LAT);
+    end
+`endif
+
     /***********************************/
     /***CONNECTIONS TO PARALLEL CORES***/
     /***********************************/
     
-    //Interface to snooper
-    wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr;
-    wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data;
+    //Interface from packet mem to snooper
+    wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr;
+    wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data;
     wire sn_wr_en;
-    wire [INC_WIDTH-1:0] sn_byte_inc;
+    wire [PACKMEM_INC_WIDTH-1:0] sn_byte_inc;
     wire sn_done;
     wire rdy_for_sn;
     wire rdy_for_sn_ack; //Yeah, I'm ready for a snack
     
-    //Interface to forwarder
-    wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr;
+    //Interface from packet mem to forwarder
+    wire [PACKMEM_ADDR_WIDTH-1:0] fwd_addr;
     wire fwd_rd_en;
-    wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data;
+    wire [PACKMEM_DATA_WIDTH-1:0] fwd_rd_data;
     wire fwd_rd_data_vld;
     wire [PLEN_WIDTH-1:0] fwd_byte_len;
     wire fwd_done;
@@ -190,6 +207,8 @@ module axistream_packetfilt # (
     wire [31:0] inst_low_value; // Value of register 'inst_low', field 'value'
     wire inst_high_strobe; // Strobe logic for register 'inst_high' (pulsed when the register is written from the bus)
     wire [31:0] inst_high_value; // Value of register 'inst_high', field 'value'
+`else
+    reg control_start = 1;
 `endif
     
     //Maintain count of dropped packets
@@ -283,7 +302,9 @@ module axistream_packetfilt # (
     axistream_snooper # (
         .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
         .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
-        .INC_WIDTH(INC_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH), 
+        .PACKMEM_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .PACKMEM_INC_WIDTH(PACKMEM_INC_WIDTH),
         .PESS(PESS),
         .ENABLE_BACKPRESSURE(ENABLE_BACKPRESSURE)
     ) the_snooper (
@@ -322,7 +343,7 @@ generate if (N > 1) begin
         .N(N),
         .PACKET_MEM_BYTES(PACKET_MEM_BYTES),
         .INST_MEM_DEPTH(INST_MEM_DEPTH),
-        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT),
         .PESS(PESS)
@@ -365,7 +386,7 @@ end else begin
     packetfilter_core # (
         .PACKET_MEM_BYTES(PACKET_MEM_BYTES),
         .INST_MEM_DEPTH(INST_MEM_DEPTH),
-        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT),
         .PESS(PESS)
@@ -420,6 +441,9 @@ end endgenerate
     axistream_forwarder # (
         .SN_FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
         .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
+        .MEM_LAT(MEM_LAT),
         .PLEN_WIDTH(PLEN_WIDTH)
     ) the_forwarder (
         .clk(clk),

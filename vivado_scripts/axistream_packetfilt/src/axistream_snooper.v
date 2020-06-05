@@ -8,19 +8,45 @@ This is basically an AXI to BRAM bridge, but with the extra byte_inc logic
 
 */
 
+
+
 `define genif generate if
 `define endgen end endgenerate
 
 `ifdef ICARUS_VERILOG
+`include "sn_width_adapter.v"
 `define localparam parameter
 `else /*For Vivado*/
 `define localparam localparam
 `endif
 
+`define CLOG2(x) (\
+   (((x) <= 1) ? 0 : \
+   (((x) <= 2) ? 1 : \
+   (((x) <= 4) ? 2 : \
+   (((x) <= 8) ? 3 : \
+   (((x) <= 16) ? 4 : \
+   (((x) <= 32) ? 5 : \
+   (((x) <= 64) ? 6 : \
+   (((x) <= 128) ? 7 : \
+   (((x) <= 256) ? 8 : \
+   (((x) <= 512) ? 9 : \
+   (((x) <= 1024) ? 10 : \
+   (((x) <= 2048) ? 11 : \
+   (((x) <= 4096) ? 12 : \
+   (((x) <= 8192) ? 13 : \
+   (((x) <= 16384) ? 14 : \
+   (((x) <= 32768) ? 15 : \
+   (((x) <= 65536) ? 16 : \
+   -1))))))))))))))))))
+   
 module axistream_snooper # (
+    parameter SN_FWD_ADDR_WIDTH = 8,
     parameter SN_FWD_DATA_WIDTH = 64,
-    parameter SN_FWD_ADDR_WIDTH = 9,
-    parameter INC_WIDTH = 8,
+    parameter SN_INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1,
+    parameter PACKMEM_ADDR_WIDTH = SN_FWD_ADDR_WIDTH,
+    parameter PACKMEM_DATA_WIDTH = SN_FWD_DATA_WIDTH,
+    parameter PACKMEM_INC_WIDTH = `CLOG2(PACKMEM_DATA_WIDTH/8)+1,
     parameter PESS = 0,
     parameter ENABLE_BACKPRESSURE = 0,
     
@@ -40,10 +66,10 @@ module axistream_snooper # (
     input wire sn_TLAST,
     
     //Interface to parallel_cores
-    output wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr,
-    output wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data,
+    output wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr,
+    output wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data,
     output wire sn_wr_en,
-    output wire [INC_WIDTH-1:0] sn_byte_inc,
+    output wire [PACKMEM_INC_WIDTH-1:0] sn_byte_inc,
     output wire sn_done,
     input wire rdy_for_sn,
     output wire rdy_for_sn_ack, //Yeah, I'm ready for a snack
@@ -65,7 +91,7 @@ module axistream_snooper # (
     //Interface to parallel_cores
     wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data_i;
     wire sn_wr_en_i;
-    wire [INC_WIDTH-1:0] sn_byte_inc_i;
+    wire [SN_INC_WIDTH-1:0] sn_byte_inc_i;
     wire sn_done_i;
     wire rdy_for_sn_i;
     wire rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
@@ -215,12 +241,54 @@ end else begin
     /****************************************/
     /**Assign outputs from internal signals**/
     /****************************************/
+    
+    //Jun 5 / 2020
+    //If packet memory is wider than forwarder, need to use width adapter
+    wire [PACKMEM_ADDR_WIDTH -1:0] addr_i_adapted;
+    wire [PACKMEM_DATA_WIDTH -1:0] sn_wr_data_i_adapted;
+    wire sn_wr_en_i_adapted;
+    wire [PACKMEM_INC_WIDTH -1:0] sn_byte_inc_i_adapted;
+    wire sn_done_i_adapted;
+`genif (PACKMEM_DATA_WIDTH > SN_FWD_DATA_WIDTH) begin
+    sn_width_adapter # (
+        .OUT_WIDTH(PACKMEM_DATA_WIDTH),
+        .IN_WIDTH(SN_FWD_DATA_WIDTH),
+        .OUT_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .IN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
+        .OUT_INC_WIDTH(PACKMEM_INC_WIDTH),
+        .IN_INC_WIDTH(SN_INC_WIDTH)
+    ) width_adapter (
+		.clk(clk),
+		.rst(rst),
+        
+        //Outputs from snooper
+		.in_addr(addr_i),
+		.in_wr_data(sn_wr_data_i),
+		.in_wr_en(sn_wr_en_i),
+		.in_byte_inc(sn_byte_inc_i),
+		.in_done(sn_done_i),
+        
+        //Inputs to packet mem
+		.out_addr(addr_i_adapted),
+		.out_wr_data(sn_wr_data_i_adapted),
+		.out_wr_en(sn_wr_en_i_adapted),
+		.out_byte_inc(sn_byte_inc_i_adapted),
+		.out_done(sn_done_i_adapted)
+    );
+end else begin
+    assign addr_i_adapted = addr_i;
+    assign sn_wr_data_i_adapted = sn_wr_data_i;
+    assign sn_wr_en_i_adapted = sn_wr_en_i;
+    assign sn_byte_inc_i_adapted = sn_byte_inc_i;
+    assign sn_done_i_adapted = sn_done_i;
+`endgen
+
     //Interface to parallel_cores
-    assign sn_addr = addr_i;
-    assign sn_wr_data = sn_wr_data_i;
-    assign sn_wr_en = sn_wr_en_i;
-    assign sn_byte_inc = sn_byte_inc_i;
-    assign sn_done = sn_done_i;
+    assign sn_addr = addr_i_adapted;
+    assign sn_wr_data = sn_wr_data_i_adapted;
+    assign sn_wr_en = sn_wr_en_i_adapted;
+    assign sn_byte_inc = sn_byte_inc_i_adapted;
+    assign sn_done = sn_done_i_adapted;
     assign rdy_for_sn_ack = rdy_for_sn_ack_i; //Yeah, I'm ready for a snack
     
     //AXI Stream interface
@@ -231,3 +299,6 @@ end else begin
 endmodule
 
 `undef localparam
+`undef CLOG2
+`undef genif
+`undef endgen

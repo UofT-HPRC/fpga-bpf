@@ -7,16 +7,16 @@ This is the simplest adapter, I guess
  */
 
 module sn_adapter # (
-    parameter SN_ADDR_WIDTH = 8,
-    parameter DATA_WIDTH = 64,
+    parameter PACKMEM_ADDR_WIDTH = 8,
+    parameter PACKMEM_DATA_WIDTH = 64,
     parameter INC_WIDTH = 8
 )(
     input wire clk,
     input wire rst,
     
     //Interface to snooper
-    input wire [SN_ADDR_WIDTH-1:0] sn_addr,
-    input wire [DATA_WIDTH-1:0] sn_wr_data,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr,
+    input wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data,
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     input wire sn_done,
@@ -25,9 +25,9 @@ module sn_adapter # (
     output wire rdy_for_sn,
     
     //Interface to P3 system
-    output wire [SN_ADDR_WIDTH+1-1:0] addr,
+    output wire [PACKMEM_ADDR_WIDTH+1-1:0] addr,
     output wire wr_en,
-    output wire [DATA_WIDTH-1:0] wr_data,
+    output wire [PACKMEM_DATA_WIDTH-1:0] wr_data,
     output wire [INC_WIDTH-1:0] byte_inc,
     output wire done,
     output wire rdy_ack,
@@ -39,8 +39,8 @@ module sn_adapter # (
     /************************************/
     
     //Interface to snooper
-    wire [SN_ADDR_WIDTH-1:0] sn_addr_i;
-    wire [DATA_WIDTH-1:0] sn_wr_data_i;
+    wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr_i;
+    wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data_i;
     wire sn_wr_en_i;
     wire [INC_WIDTH-1:0] sn_byte_inc_i;
     wire sn_done_i;
@@ -49,9 +49,9 @@ module sn_adapter # (
     wire rdy_for_sn_i;
     
     //Interface to P3 system
-    wire [SN_ADDR_WIDTH+1-1:0] addr_i;
+    wire [PACKMEM_ADDR_WIDTH+1-1:0] addr_i;
     wire wr_en_i;
-    wire [DATA_WIDTH-1:0] wr_data_i;
+    wire [PACKMEM_DATA_WIDTH-1:0] wr_data_i;
     wire [INC_WIDTH-1:0] byte_inc_i;
     wire done_i;
     wire rdy_ack_i;

@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 `ifdef FROM_P3
 `include "p3ctrl/p3ctrl.v"
@@ -41,10 +42,10 @@ with! So I gotta clean this up
 */
 
 module p3 # (
-    parameter SN_FWD_ADDR_WIDTH = 9,
-    parameter ADDR_WIDTH = 10,
+    parameter PACKMEM_ADDR_WIDTH = 9,
+	parameter PACKMEM_DATA_WIDTH = 64,
+    parameter INTERNAL_ADDR_WIDTH = PACKMEM_ADDR_WIDTH+1,
     parameter BYTE_ADDR_WIDTH = 12,
-	parameter SN_FWD_DATA_WIDTH = 64,
     parameter INC_WIDTH = 8,
 	parameter PLEN_WIDTH = 32,
     parameter BUF_IN = 0,
@@ -55,8 +56,8 @@ module p3 # (
     input wire rst,
     
     //Interface to snooper
-    input wire [SN_FWD_ADDR_WIDTH-1:0] sn_addr,
-    input wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] sn_addr,
+    input wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data,
     input wire sn_wr_en,
     input wire [INC_WIDTH-1:0] sn_byte_inc,
     
@@ -80,9 +81,9 @@ module p3 # (
     input wire rdy_for_cpu_ack,
     
     //Interface to forwarder
-    input wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr,
+    input wire [PACKMEM_ADDR_WIDTH-1:0] fwd_addr,
     input wire fwd_rd_en,
-    output wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data,
+    output wire [PACKMEM_DATA_WIDTH-1:0] fwd_rd_data,
     output wire fwd_rd_data_vld,
     output wire [PLEN_WIDTH-1:0] fwd_byte_len,
     
@@ -90,7 +91,8 @@ module p3 # (
     
     output wire rdy_for_fwd,
     input wire rdy_for_fwd_ack
-);      
+);    
+    
     //p3ctrl inputs
     wire A_done;
     wire rdy_for_A_ack;
@@ -121,64 +123,64 @@ module p3 # (
     //thinking, and I'm not even sure if these are paths that will fail timing.
     
     //snooper adapter ports
-    wire [ADDR_WIDTH-1:0] sn_addr_i;
+    wire [INTERNAL_ADDR_WIDTH-1:0] sn_addr_i;
     wire sn_wr_en_i;
-    wire [SN_FWD_DATA_WIDTH-1:0] sn_wr_data_i;
+    wire [PACKMEM_DATA_WIDTH-1:0] sn_wr_data_i;
     wire [INC_WIDTH-1:0] sn_byte_inc_i;
     
     //CPU adapter ports    
-    wire [ADDR_WIDTH-1:0] cpu_addr_i;
+    wire [INTERNAL_ADDR_WIDTH-1:0] cpu_addr_i;
     wire cpu_rd_en_i;
-    wire [SN_FWD_DATA_WIDTH-1:0] cpu_bigword_i;
+    wire [PACKMEM_DATA_WIDTH-1:0] cpu_bigword_i;
     wire cpu_bigword_vld_i;
     wire [PLEN_WIDTH-1:0] cpu_byte_len_i;
     
     //Forwarder adapter ports    
-    wire [ADDR_WIDTH-1:0] fwd_addr_i;
+    wire [INTERNAL_ADDR_WIDTH-1:0] fwd_addr_i;
     wire fwd_rd_en_i;
-    wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data_i;
+    wire [PACKMEM_DATA_WIDTH-1:0] fwd_rd_data_i;
     wire fwd_rd_data_vld_i;
     wire [PLEN_WIDTH-1:0] fwd_byte_len_i;   
     
     //ping inputs
     wire ping_rd_en; 
     wire ping_wr_en; 
-    wire [ADDR_WIDTH-1:0] ping_addr; 
-    wire [SN_FWD_DATA_WIDTH-1:0] ping_idata;
+    wire [INTERNAL_ADDR_WIDTH-1:0] ping_addr; 
+    wire [PACKMEM_DATA_WIDTH-1:0] ping_idata;
     wire [INC_WIDTH-1:0] ping_byte_inc;
     wire ping_reset_len;
     //ping outputs
-    wire [SN_FWD_DATA_WIDTH-1:0] ping_odata;
+    wire [PACKMEM_DATA_WIDTH-1:0] ping_odata;
     wire ping_odata_vld;
     wire [PLEN_WIDTH-1:0] ping_byte_length;
     
     //pang inputs
     wire pang_rd_en; 
     wire pang_wr_en; 
-    wire [ADDR_WIDTH-1:0] pang_addr; 
-    wire [SN_FWD_DATA_WIDTH-1:0] pang_idata;
+    wire [INTERNAL_ADDR_WIDTH-1:0] pang_addr; 
+    wire [PACKMEM_DATA_WIDTH-1:0] pang_idata;
     wire [INC_WIDTH-1:0] pang_byte_inc;
     wire pang_reset_len;
     //pang outputs
-    wire [SN_FWD_DATA_WIDTH-1:0] pang_odata;
+    wire [PACKMEM_DATA_WIDTH-1:0] pang_odata;
     wire pang_odata_vld;
     wire [PLEN_WIDTH-1:0] pang_byte_length;
     
     //pong inputs
     wire pong_rd_en; 
     wire pong_wr_en; 
-    wire [ADDR_WIDTH-1:0] pong_addr; 
-    wire [SN_FWD_DATA_WIDTH-1:0] pong_idata;
+    wire [INTERNAL_ADDR_WIDTH-1:0] pong_addr; 
+    wire [PACKMEM_DATA_WIDTH-1:0] pong_idata;
     wire [INC_WIDTH-1:0] pong_byte_inc;
     wire pong_reset_len;
     //pong outputs
-    wire [SN_FWD_DATA_WIDTH-1:0] pong_odata;
+    wire [PACKMEM_DATA_WIDTH-1:0] pong_odata;
     wire pong_odata_vld;
     wire [PLEN_WIDTH-1:0] pong_byte_length;
     
     sn_adapter # (
-        .SN_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
-        .DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH)
     ) to_snoop (
         .clk(clk),
@@ -205,8 +207,8 @@ module p3 # (
     
     cpu_adapter # (
         .BYTE_ADDR_WIDTH(BYTE_ADDR_WIDTH),
-        .ADDR_WIDTH(ADDR_WIDTH),
-        .SN_FWD_DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .ADDR_WIDTH(INTERNAL_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
         .BUF_OUT(BUF_OUT),
@@ -240,8 +242,8 @@ module p3 # (
     );
     
     fwd_adapter # (
-        .FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
-        .DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .PACKMEM_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .PACKMEM_DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         //These control pessimistic registers in the p_ng buffers
         .BUF_IN(BUF_IN),
@@ -293,15 +295,9 @@ module p3 # (
         .pong_sel(pong_sel)
     );
 
-
-    //I've been trying really hard to eliminate hacky code, but this is one 
-    //case where it's a lot easier to do
-    //When the CPU rejects a buffer or the forwarder finishes, reset memory 
-    //length to zero
-
     muxes # (
-        .ADDR_WIDTH(ADDR_WIDTH),
-        .DATA_WIDTH(SN_FWD_DATA_WIDTH),
+        .ADDR_WIDTH(INTERNAL_ADDR_WIDTH),
+        .DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH)
     ) themux (
@@ -337,8 +333,8 @@ module p3 # (
     );
 
     p_ng # (
-        .ADDR_WIDTH(ADDR_WIDTH),
-        .SN_FWD_WIDTH(SN_FWD_DATA_WIDTH),
+        .ADDR_WIDTH(INTERNAL_ADDR_WIDTH),
+        .DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
@@ -357,8 +353,8 @@ module p3 # (
     );
 
     p_ng # (
-        .ADDR_WIDTH(ADDR_WIDTH),
-        .SN_FWD_WIDTH(SN_FWD_DATA_WIDTH),
+        .ADDR_WIDTH(INTERNAL_ADDR_WIDTH),
+        .DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),
@@ -377,8 +373,8 @@ module p3 # (
     );
 
     p_ng # (
-        .ADDR_WIDTH(ADDR_WIDTH),
-        .SN_FWD_WIDTH(SN_FWD_DATA_WIDTH),
+        .ADDR_WIDTH(INTERNAL_ADDR_WIDTH),
+        .DATA_WIDTH(PACKMEM_DATA_WIDTH),
         .INC_WIDTH(INC_WIDTH),
         .PLEN_WIDTH(PLEN_WIDTH),
         .BUF_IN(BUF_IN),

@@ -41,7 +41,7 @@ Modules are structured as:
 //The actual module we're after is here
 module p_ng # (
     parameter ADDR_WIDTH = 10,
-    parameter SN_FWD_WIDTH = 64,
+    parameter DATA_WIDTH = 64,
     parameter INC_WIDTH = 8,
     parameter PLEN_WIDTH = 32,
     //parameters controlling addition of pessmistic registers
@@ -53,15 +53,15 @@ module p_ng # (
     input wire rd_en, //@0
     input wire wr_en, //@0
     input wire [ADDR_WIDTH-1:0] addr, //@0
-    input wire [SN_FWD_WIDTH-1:0] idata, //@0
+    input wire [DATA_WIDTH-1:0] idata, //@0
     input wire [INC_WIDTH-1:0] byte_inc, //@0
-    output wire [SN_FWD_WIDTH-1:0] odata, //@1 + BUF_IN + BUF_OUT
+    output wire [DATA_WIDTH-1:0] odata, //@1 + BUF_IN + BUF_OUT
     output wire odata_vld,
     output wire [PLEN_WIDTH-1:0] byte_length //@1 + BUF_IN + BUF_OUT
 );
 
     //Width of each port is half the total width
-    localparam PORT_WIDTH = (SN_FWD_WIDTH>>1);
+    localparam PORT_WIDTH = (DATA_WIDTH>>1);
 
 
     //Real quick, let's get the length logic out of the way:
@@ -89,8 +89,8 @@ module p_ng # (
     wire rd_en_i;
     wire wr_en_i; 
     wire [ADDR_WIDTH-1:0] addr_i; 
-    wire [SN_FWD_WIDTH-1:0] idata_i;
-    wire [SN_FWD_WIDTH-1:0] odata_i;
+    wire [DATA_WIDTH-1:0] idata_i;
+    wire [DATA_WIDTH-1:0] odata_i;
     reg odata_vld_i;
     
     /***************************************/
@@ -103,7 +103,7 @@ generate
         reg rd_en_r = 0;                     
         reg wr_en_r = 0;                     
         reg [ADDR_WIDTH-1:0] addr_r = 0;
-        reg [SN_FWD_WIDTH-1:0] idata_r = 0;
+        reg [DATA_WIDTH-1:0] idata_r = 0;
         
         always @(posedge clk) begin
             if (!rst) begin
@@ -148,12 +148,12 @@ endgenerate
         .addra(addr_i), //@0
         .addrb(addrb), //@0
 
-        .dia(idata_i[SN_FWD_WIDTH-1:PORT_WIDTH]), //@0
+        .dia(idata_i[DATA_WIDTH-1:PORT_WIDTH]), //@0
         .dib(idata_i[PORT_WIDTH-1:0]), //@0
         .wr_ena(wr_en_i), //@0
         .wr_enb(wr_en_i), //@0
         
-        .doa(odata_i[SN_FWD_WIDTH-1:PORT_WIDTH]), //@1
+        .doa(odata_i[DATA_WIDTH-1:PORT_WIDTH]), //@1
         .dob(odata_i[PORT_WIDTH-1:0]) //@1
     );
     
@@ -173,7 +173,7 @@ endgenerate
     //Select whether the outputs are buffered or not
 generate
     if (BUF_OUT) begin
-        reg [SN_FWD_WIDTH-1:0] odata_r = 0;
+        reg [DATA_WIDTH-1:0] odata_r = 0;
         reg odata_vld_r = 0;
         
         always @(posedge clk) begin
