@@ -19,3 +19,7 @@ clean:
 force:
 	touch $(MODULE)_tb.v
 	make
+
+syntax_check: $(MODULE).v
+	iverilog -DICARUS_VERILOG -Ifwd_width_adapter/ -g2012 -Wall -Wno-timescale -o tmp.vvp $(MODULE).v
+	rm -rf tmp.vvp

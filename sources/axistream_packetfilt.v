@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 /*
 
@@ -144,6 +145,8 @@ module axistream_packetfilt # (
     `localparam SN_FWD_ADDR_WIDTH = BYTE_ADDR_WIDTH - `CLOG2(SN_FWD_DATA_WIDTH/8);
     `localparam INC_WIDTH = `CLOG2(SN_FWD_DATA_WIDTH/8)+1;
     `localparam PLEN_WIDTH = 32;
+    `localparam PACKMEM_DATA_WIDTH = (SN_FWD_DATA_WIDTH < 64) ? 64 : SN_FWD_DATA_WIDTH;
+    `localparam PACKMEM_ADDR_WIDTH = SN_FWD_ADDR_WIDTH - `CLOG2(PACKMEM_ADDR_WIDTH/SN_FWD_DATA_WIDTH);
     
     `localparam DBG_INFO_WIDTH = 
 			  BYTE_ADDR_WIDTH	//byte_rd_addr

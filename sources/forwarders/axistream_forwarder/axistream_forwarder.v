@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`default_nettype none
 
 /*
 
@@ -18,6 +19,7 @@ TODOs from the code:
 */
 
 `ifdef ICARUS_VERILOG
+`include "fwd_width_adapter.v"
 `define localparam parameter
 `else /*For Vivado*/
 `define localparam localparam
@@ -45,6 +47,9 @@ TODOs from the code:
 module axistream_forwarder # (
     parameter SN_FWD_ADDR_WIDTH = 8,
     parameter SN_FWD_DATA_WIDTH = 64,
+    parameter PACKMEM_ADDR_WIDTH = 8,
+    parameter PACKMEM_DATA_WIDTH = 64,
+    parameter MEM_LAT = 2,
     parameter PLEN_WIDTH = 32,
     
     //Probably don't set these parameters
@@ -61,9 +66,9 @@ module axistream_forwarder # (
     input wire fwd_TREADY,
     
     //Interface to parallel_cores
-    output wire [SN_FWD_ADDR_WIDTH-1:0] fwd_addr,
+    output wire [PACKMEM_ADDR_WIDTH-1:0] fwd_addr,
     output wire fwd_rd_en,
-    input wire [SN_FWD_DATA_WIDTH-1:0] fwd_rd_data,
+    input wire [PACKMEM_DATA_WIDTH-1:0] fwd_rd_data,
     input wire fwd_rd_data_vld,
     input wire [PLEN_WIDTH-1:0] fwd_byte_len,
     
@@ -89,9 +94,6 @@ module axistream_forwarder # (
     reg TLAST_fifo[0:FIFO_DEPTH-1];
     
     //Cant initialize regs inline, so use a for loop.
-    //While we're at it, also put in the reset logic. Cross my fingers that I
-    //don't run into trouble for having two always blocks setting the same 
-    //variable...
     genvar i;
     for (i = 0; i < FIFO_DEPTH; i = i + 1) begin
         initial TDATA_fifo[i] = 0;
@@ -208,6 +210,32 @@ module axistream_forwarder # (
         end
     end
     
+    wire [PACKMEM_ADDR_WIDTH -1:0] addr_i_adapted;
+    wire [SN_FWD_DATA_WIDTH -1:0] fwd_rd_data_adapted;
+    //If packet memory is wider than forwarder, need to use width adapter
+generate if (PACKMEM_DATA_WIDTH > SN_FWD_DATA_WIDTH) begin
+    fwd_width_adapter # (
+        .MEM_WIDTH(PACKMEM_DATA_WIDTH),
+        .FWD_WIDTH(SN_FWD_DATA_WIDTH),
+        .MEM_ADDR_WIDTH(PACKMEM_ADDR_WIDTH),
+        .FWD_ADDR_WIDTH(SN_FWD_ADDR_WIDTH),
+        .MEM_LAT(MEM_LAT)
+    ) width_adapter (
+        .clk(clk),
+        
+        //Interface to forwarder
+        .fwd_addr(addr_i),
+        .fwd_rd_data(fwd_rd_data_adapted),
+        
+        //Interface to packet mem
+        .mem_addr(addr_i_adapted),
+        .mem_rd_data(fwd_rd_data)
+    );
+end else begin
+    assign addr_i_adapted = addr_i;
+    assign fwd_rd_data_adapted = fwd_rd_data;
+end endgenerate
+    
     //AXI Stream signals
     //TODO: have pessimistic mode gate these with a bhand?
     assign fwd_TDATA = TDATA_fifo[rd_ptr];
@@ -223,7 +251,7 @@ module axistream_forwarder # (
     //Update FIFO values
     always @(posedge clk) begin
         if (wr_to_fifo && !rst) begin
-            TDATA_fifo[TDATA_wr_ptr] <= fwd_rd_data;
+            TDATA_fifo[TDATA_wr_ptr] <= fwd_rd_data_adapted;
         end 
         
         if (wr_to_keep_last && !rst) begin
@@ -244,7 +272,7 @@ module axistream_forwarder # (
         end
     end
     
-    assign fwd_addr = addr_i;
+    assign fwd_addr = addr_i_adapted;
 
 endmodule
 
