@@ -1,3 +1,7 @@
+Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+whose license information can be found at 
+https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
 This module essentially acts as a bridge between an AXI Stream and the modified 
 BRAM interface on the packetfilter_core.
 

@@ -1,4 +1,10 @@
-# Copied from Clark's traffic generator project
+# Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+# whose license information can be found at 
+# https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
+
+
+# Initially copied from Clark's traffic generator project
 # Modified to match the particular project
 
 # Call as:

@@ -1,3 +1,7 @@
+Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+whose license information can be found at 
+https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
 This is a "ping-pang-pong" controller. The idea is as follows:
 We have three agents that all need to share memory. To make it possible
 for all three to run concurrently, we need three buffers. 

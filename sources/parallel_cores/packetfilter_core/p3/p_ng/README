@@ -1,3 +1,7 @@
+Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+whose license information can be found at 
+https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
 This Verilog file should synthesize to a dual-port BRAM. 
 
 Suppose I want my snooper/forwarder to have a data width of 128. Internally, I 

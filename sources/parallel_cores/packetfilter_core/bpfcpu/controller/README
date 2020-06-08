@@ -1,3 +1,7 @@
+Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+whose license information can be found at 
+https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
 THIS FILE IS OUT OF DATE. Most of it is still correct, but I made some small 
 decisions while writing the code that need to be explained in here.
 

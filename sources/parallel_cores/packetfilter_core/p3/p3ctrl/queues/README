@@ -1,3 +1,7 @@
+Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+whose license information can be found at 
+https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
 I've really been making an effort to keep kludges to a minimum, but this part 
 of the code is still really stinky. I copied this code from my old project and 
 made no changes to it. I mean, it _does_ work...

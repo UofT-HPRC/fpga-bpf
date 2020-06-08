@@ -1,3 +1,7 @@
+Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+whose license information can be found at 
+https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
 This tricky bit of generic Verilog can generate a fully pipelined MUX up to 
 4096 nodes wide. It has an II of 1, and a latency of ceil(log_4(num_inputs)).
 

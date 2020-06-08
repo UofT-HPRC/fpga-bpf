@@ -1,4 +1,6 @@
-# Copied from Clark's traffic generator project.
+# Copyright 2020 Juan Camilo Vega. This file is part of the fpga-bpf 
+# project, whose license information can be found at 
+# https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
 
 # Call this script as 
 # vivado_hls hls.tcl module_name part_name period

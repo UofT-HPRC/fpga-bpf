@@ -1,3 +1,7 @@
+Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+whose license information can be found at 
+https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
 Unfortunately, I can't use the same arbiter for both snooper and forwarder. So,
 this module is a top-level wrapper for this guy 
                                              |

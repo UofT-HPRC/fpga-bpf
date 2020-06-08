@@ -1,3 +1,7 @@
+Copyright 2020 Marco Merlini. This file is part of the fpga-bpf project,
+whose license information can be found at 
+https://github.com/UofT-HPRC/fpga-bpf/blob/master/LICENSE
+
 I wanted to draw a diagram for myself (just to help me visualize while I wrote 
 Verilog) and decided that if I was going to do it, I should put in the README.
 
