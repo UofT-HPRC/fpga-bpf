@@ -219,7 +219,19 @@ end else begin
 `genif (ENABLE_BACKPRESSURE == 0) begin
     assign valid_i = (state == STARTED) && sn_TVALID_i  && sn_TREADY_i;
 end else begin
-    assign valid_i = (state == STARTED) && sn_TVALID_i;
+    // assign valid_i = (state == STARTED) && sn_TVALID_i;
+    if (PESS) begin
+        reg valid_i_r = 0;
+        always @(posedge clk) begin
+            if(rst)
+                valid_i_r <= 0;
+            else
+                valid_i_r <= (state == STARTED) && sn_TVALID_i;
+        end
+        assign valid_i = valid_i_r;
+    end else begin
+        assign valid_i = (state == STARTED) && sn_TVALID_i;
+    end
 `endgen
     assign done_i = (state == STARTED) && lastrdyvalid;
 
