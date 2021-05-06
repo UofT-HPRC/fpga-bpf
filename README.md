@@ -17,7 +17,7 @@ All Makefiles and simulations performed using Icarus Verilog.
 
 # Extensions
 
-Two extensions of this project have been built. The first can be found [here](https://github.com/rozariot/FFShark_Wireshark_Integration) which links FFShark with an actual wireshark interface. This extension was built by Tobias Rozario, Alex Buck, and Kanver Bhadal. The second extension can be found [here](https://github.com/simulatingannealing/ECE496-project2) solves the packet reordering issue initially found in FFShark. This extension was built by Bruno Almeida, and Tianyi Zhang.
+Two extensions of this project have been built. The first can be found [here](https://github.com/rozariot/FFShark_Wireshark_Integration) which links FFShark with an actual wireshark interface. This extension was built by Tobias Rozario, Alex Buck, and Kanver Bhadal. The second extension can be found [here](https://github.com/simulatingannealing/ECE496-project2) solves the packet reordering issue initially found in FFShark. This extension was built by Bruno Almeida, Tianyi Zhang, and Danny Ding.
 
 # Intro
 
