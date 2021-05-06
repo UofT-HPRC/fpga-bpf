@@ -15,6 +15,10 @@ http://stable.ascii-flow.appspot.com/#Draw
 
 All Makefiles and simulations performed using Icarus Verilog.
 
+# Extensions
+
+Two extensions of this project have been built. The first can be found [here](https://github.com/rozariot/FFShark_Wireshark_Integration) which links FFShark with an actual wireshark interface. This extension was built by Tobias Rozario, Alex Buck, and Kanver Bhadal. The second extension can be found [here](https://github.com/simulatingannealing/ECE496-project2) solves the packet reordering issue initially found in FFShark. This extension was built by Bruno Almeida, and Tianyi Zhang.
+
 # Intro
 
 In 1992/1993, Steve McCanne and Van Jacobson of Lawrence Berkely Labs [proposed the BSD packet filter](https://www.tcpdump.org/papers/bpf-usenix93.pdf) architecture, as part of the [`tcpdump` project](https://www.tcpdump.org/). `tcpdump` was a network analysis utility which, along with the help of some code added to the Linux kernel, copied any incoming or outgoing network packet into userspace. Then, the `tcpdump` program could be used to run some basic analytics. In particular, there was a simple query language to filter out certain packets (for example, "show me all incoming TCP packets on port 4444").
@@ -54,3 +58,22 @@ This project essentially builds a soft CPU for FPGAs which runs BPF as its nativ
 - Create a whole bunch of different forwarders (e.g. off-chip storage, sending out over the network, maybe even saving to a hard drive, etc)
 - Reduce logic/area cost
 - Try to find an outlet to publish this work. Workshop at a conference, maybe?
+
+# Citation
+
+If using this work, please cite the following paper.
+
+## BibText
+@INPROCEEDINGS{9114665,
+  author={Vega, Juan Camilo and Merlini, Marco Antonio and Chow, Paul},
+  booktitle={2020 IEEE 28th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)}, 
+  title={FFShark: A 100G FPGA Implementation of BPF Filtering for Wireshark}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={47-55},
+  doi={10.1109/FCCM48280.2020.00016}}
+  
+## Plain Text Citation
+
+J. C. Vega, M. A. Merlini and P. Chow, "FFShark: A 100G FPGA Implementation of BPF Filtering for Wireshark," 2020 IEEE 28th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM), 2020, pp. 47-55, doi: 10.1109/FCCM48280.2020.00016.
