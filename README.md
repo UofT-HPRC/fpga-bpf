@@ -8,6 +8,11 @@ https://github.com/esophagus-now/fpga-bpf
 This repo does two things: moves all the stuff over to the UofT-HPRC git,
 and lets me reorganize everything properly. 
 
+Extensions of this work are also available in the extensions directory. This includes:
+FFIVE, a project that incorporates FFShark to build a 100Gbps VXLAN connected firewall
+An extension that resolves the packet reordering issues with this project
+An extension that integrates FFShark with the GUI Wireshark
+
 
 All ASCII diagrams drawn using ASCIIflow:
 http://stable.ascii-flow.appspot.com/#Draw

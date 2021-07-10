@@ -1,0 +1,9 @@
+[submodule "extensions/Wireshark_Integration"]
+	path = extensions/Wireshark_Integration
+	url = https://github.com/rozariot/FFShark_Wireshark_Integration
+[submodule "extensions/Packet_Reordering_Correction"]
+	path = extensions/Packet_Reordering_Correction
+	url = https://github.com/simulatingannealing/ECE496-project2
+[submodule "extensions/FFIVE"]
+	path = extensions/FFIVE
+	url = https://github.com/UofT-HPRC/FFIVE
